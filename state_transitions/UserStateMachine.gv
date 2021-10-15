@@ -1,0 +1,5 @@
+// UserStateMachine
+digraph {
+	active -> dormant [label=deregister]
+	dormant -> active [label=register]
+}

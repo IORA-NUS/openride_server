@@ -1,0 +1,7 @@
+// WorkflowStateMachine
+digraph {
+	dormant -> offline [label=register]
+	offline -> dormant [label=deregister]
+	offline -> online [label=login]
+	online -> offline [label=logout]
+}
