@@ -65,7 +65,10 @@ class PassengerTripController:
                 'location': updates.get('current_loc', document['current_loc']),
                 'state': updates.get('state', document['state']),
             },
-            'entity': 'passenger',
+            'agent': {
+                'type': 'passenger',
+                'id': document['passenger']
+            }
         }
 
         if updates.get('sim_clock') is not None:
@@ -79,6 +82,12 @@ class PassengerTripController:
             raise Exception(resp[0])
 
         waypoint_id = resp[0]['_id']
+        res = db['passenger_trip'].update({'_id': document['_id']},
+                                        {
+                                            "$inc": {
+                                                'num_waypoints': 1
+                                            },
+                                        })
 
         # Update Trip stats from waypoint if is_active is updated from True to False
         if (updates.get('is_active') == False) and (document.get('is_active') == True):
@@ -87,10 +96,10 @@ class PassengerTripController:
             # print(f"{waypoint=}")
 
             if waypoint is not None:
-                res = db['passenger_trip'].update_one({'_id': document['_id']},
+                res = db['passenger_trip'].update({'_id': document['_id']},
                                                         {
                                                             "$set": {
                                                                 'stats': waypoint['cumulative_stats'],
                                                                 'latest_waypoint': waypoint['_id']
-                                                            }
+                                                            },
                                                         })

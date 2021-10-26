@@ -27,7 +27,7 @@ from api.views import (DriverTripWorkflowView, PassengerTripWorkflowView)
 # from api.views import DriverTripBP
 
 from api.utils import OpenRideValidator #, add_user_on_insert
-# from api.utils import swaggerify
+from api.utils import swaggerify, generate_everything
 
 from eve.io.mongo import validation
 
@@ -124,6 +124,8 @@ def register_blueprints(app):
     #     }]
     # }}}})
 
+    # add_documentation(swagger, generate_everything(app, 'test', '1.0'))
+
 
 def register_hooks(app):
     '''register all hooks for application
@@ -156,7 +158,7 @@ def register_hooks(app):
     app.on_updated_passenger_trip += PassengerTripView.on_updated
 
     app.on_insert_waypoint += WaypointView.on_insert
-    app.on_fetched_resource_waypoint += WaypointView.on_fetched
+    # app.on_fetched_resource_waypoint += WaypointView.on_fetched
 
     app.on_insert_engine += EngineView.on_insert
     app.on_update_engine += EngineView.on_update

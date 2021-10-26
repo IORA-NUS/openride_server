@@ -42,9 +42,9 @@ class WaypointView:
         except Exception as e:
             abort(Response(str(e), status=403))
 
-    @classmethod
-    def on_fetched(cls, documents):
-        print(request.args)
+    # @classmethod
+    # def on_fetched(cls, documents):
+    #     print(request.args)
 
 
 

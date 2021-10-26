@@ -137,6 +137,12 @@ class PassengerTrip:
             'required': False,
             'readonly': True
         },
+        'num_waypoints': {
+            'type': 'integer',
+            # 'default': 0,
+            'readonly': True
+        },
+
         'force_quit': {
             'type': 'boolean',
             'required': False,

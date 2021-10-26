@@ -66,7 +66,10 @@ class DriverTripController:
                 'location': updates.get('current_loc', document['current_loc']),
                 'state': updates.get('state', document['state']),
             },
-            'entity': 'driver',
+            'agent': {
+                'type': 'driver',
+                'id': document['driver']
+            }
         }
 
         if updates.get('sim_clock') is not None:
@@ -86,6 +89,13 @@ class DriverTripController:
 
         waypoint_id = resp[0]['_id']
 
+        res = db['driver_trip'].update({'_id': document['_id']},
+                                        {
+                                            "$inc": {
+                                                'num_waypoints': 1
+                                            },
+                                        })
+
         # Update Trip stats from waypoint if is_active is updated from True to False
         if (updates.get('is_active') == False) and (document.get('is_active') == True):
             # # waypoint = db['waypoint'].find_one({'trip': document['_id']}, sort=[('_created', -1)])
@@ -93,10 +103,12 @@ class DriverTripController:
             # print(f"{waypoint=}")
 
             if waypoint is not None:
-                res = db['driver_trip'].update_one({'_id': document['_id']},
-                                                    {
-                                                        "$set": {
-                                                            'stats': waypoint['cumulative_stats'],
-                                                            'latest_waypoint': waypoint['_id']
-                                                        }
-                                                    })
+                res = db['driver_trip'].update({'_id': document['_id']},
+                                                {
+                                                    "$set": {
+                                                        'stats': waypoint['cumulative_stats'],
+                                                        'latest_waypoint': waypoint['_id']
+                                                    },
+                                                })
+
+                print(res)

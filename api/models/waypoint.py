@@ -52,6 +52,19 @@ class Waypoint:
         # },
     }
 
+    agent_schema = {
+        'type': {
+            'type': 'string',
+            'allowed': ['driver', 'passenger'],
+            'required': True,
+        },
+        'id': {
+            'type': 'objectid',
+            'required': True,
+        }
+
+    }
+
     stats_schema = {
         'distance': {
             'type': 'float',
@@ -106,12 +119,18 @@ class Waypoint:
             'readonly': True
         },
 
-        'entity': {
-            'type': 'string',
-            'allowed': ['driver', 'passenger'],
+        # 'entity': {
+        #     'type': 'string',
+        #     'allowed': ['driver', 'passenger'],
+        #     'required': True
+        # },
+
+        'agent': {
+            'type': 'dict',
+            'schema': agent_schema,
+            # 'allowed': ['driver', 'passenger'],
             'required': True
         },
-
         'sim_clock': {
             'type': 'datetime',
             'required': False
@@ -154,10 +173,19 @@ class Waypoint:
                     ('_updated', 1),
                 ]
             ),
-            'updated_entity_index': (
+            'updated_agent_type_index': (
                 [
                     ('run_id', 1),
-                    ('entity', 1),
+                    # ('entity', 1),
+                    ('agent.type', 1),
+                    ('_updated', 1),
+                ]
+            ),
+            'updated_agent_id_index': (
+                [
+                    ('run_id', 1),
+                    # ('agent.type', 1),
+                    ('agent.id', 1),
                     ('_updated', 1),
                 ]
             ),

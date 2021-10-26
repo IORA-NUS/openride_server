@@ -46,8 +46,8 @@ class PassengerTripView:
         try:
             # print('validating before update PassengerTripView')
             PassengerTripController.validate(document, updates)
-            if document.get('sim_clock') is not None:
-                document['_updated'] = updates['sim_clock']
+            if updates.get('sim_clock') is not None:
+                updates['_updated'] = updates['sim_clock']
         except Exception as e:
             print(traceback.format_exc())
             abort(Response(str(e), status=403))
@@ -97,7 +97,7 @@ class PassengerTripWorkflowView(FlaskView):
             updates = request.json
             PassengerTripController.validate(document, updates)
 
-
+        # print(f"{request.json.get('sim_clock')=}")
         if request.json.get('sim_clock') is not None:
             if name in []:
                 request.json['_created'] = request.json['sim_clock']
@@ -221,7 +221,7 @@ class PassengerTripWorkflowView(FlaskView):
 
         payload = request.json
         payload['transition'] =  RidehailPassengerTripStateMachine.cancel.identifier
-        print(f"{payload=}")
+        # print(f"{payload=}")
 
         response = patch_internal('passenger_trip',
                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -285,6 +285,8 @@ class PassengerTripWorkflowView(FlaskView):
         payload = request.json
 
         payload['transition'] =  RidehailPassengerTripStateMachine.wait_for_pickup.identifier
+
+        # print(f"{payload=}")
 
         response = patch_internal('passenger_trip',
                                     skip_validation=True, # Done to ensure sim_clock is updatable

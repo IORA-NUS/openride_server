@@ -212,6 +212,11 @@ class DriverTrip:
             'required': False,
             'readonly': True
         },
+        'num_waypoints': {
+            'type': 'integer',
+            # 'default': 0,
+            'readonly': True
+        },
 
         'sim_clock': {
             'type': 'datetime',

@@ -100,7 +100,7 @@ class DriverTripWorkflowView(FlaskView):
             updates = request.json
             DriverTripController.validate(document, updates)
 
-
+        # print(f"{request.json.get('sim_clock')=}")
         if request.json.get('sim_clock') is not None:
             if name in []:
                 request.json['_created'] = request.json['sim_clock']
@@ -491,6 +491,7 @@ class DriverTripWorkflowView(FlaskView):
 
         payload = request.json
 
+        payload['transition'] =  RidehailDriverTripStateMachine.cancel.identifier
         payload['is_active'] =  False
         payload['force_quit'] =  True
 

@@ -4,6 +4,7 @@ DEBUG = Env.bool('DEBUG', True)
 SECRET_KEY = Env.string('SECRET_KEY', 'changeme')
 
 MONGODB_HOST = Env.string('MONGODB_HOST', 'localhost')
+# MONGODB_HOST = '172.27.114.105'
 MONGODB_PORT = Env.int('MONGODB_PORT', 27017)
 MONGODB_NAME = Env.string('MONGODB_NAME', 'db_openride')
 
