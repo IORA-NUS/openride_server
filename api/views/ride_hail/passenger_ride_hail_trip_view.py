@@ -1,4 +1,4 @@
-from api.lib import RidehailPassengerTripStateMachine
+from api.state_machine import RidehailPassengerTripStateMachine
 from flask import current_app as app, Blueprint
 from flask import abort, Response, make_response, request
 from flask_classful import FlaskView, route

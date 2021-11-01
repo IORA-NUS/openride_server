@@ -2,7 +2,7 @@ from datetime import datetime
 from api.utils import Status
 from statemachine import State, StateMachine
 
-from api.lib import RidehailDriverTripStateMachine, RidehailPassengerTripStateMachine
+from api.state_machine import RidehailDriverTripStateMachine, RidehailPassengerTripStateMachine
 
 # from trip import TripStates
 # from .driver_trip import DriverTripStates

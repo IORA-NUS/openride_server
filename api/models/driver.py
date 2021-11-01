@@ -4,7 +4,7 @@ import json
 # from api.utils import Status
 # from .waypoint import WaypointEventSchema
 
-from api.lib import WorkflowStateMachine
+from api.state_machine import WorkflowStateMachine
 # from statemachine import State, StateMachine
 # from .user import WorkflowStates
 

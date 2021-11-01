@@ -2,7 +2,7 @@ from flask import current_app as app
 from flask import abort, Response, jsonify
 import json, logging
 
-from api.lib import RidehailPassengerTripStateMachine
+from api.state_machine import RidehailPassengerTripStateMachine
 # from api.utils import Status
 # from api.models import PassengerTripStates
 from eve.methods.post import post_internal

@@ -20,7 +20,7 @@ from eve.methods.get import get_internal
 from eve.auth import auth_field_and_value
 
 from eve.methods.patch import patch_internal
-from api.lib import RidehailDriverTripStateMachine
+from api.state_machine import RidehailDriverTripStateMachine
 
 
 class DriverRideHailTripView:

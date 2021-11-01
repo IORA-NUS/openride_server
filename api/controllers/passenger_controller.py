@@ -5,7 +5,7 @@ import json
 # from api.utils import Status
 # from api.models import WorkflowStates
 
-from api.lib import WorkflowStateMachine
+from api.state_machine import WorkflowStateMachine
 
 class PassengerController:
     ''' '''

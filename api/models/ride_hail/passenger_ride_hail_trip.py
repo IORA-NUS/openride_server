@@ -1,6 +1,6 @@
 from datetime import datetime
 from api.utils import Status
-from api.lib import RidehailPassengerTripStateMachine
+from api.state_machine import RidehailPassengerTripStateMachine
 
 
 

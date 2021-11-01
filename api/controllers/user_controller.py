@@ -6,7 +6,7 @@ from eve.methods.patch import patch_internal
 
 # from api.utils import Status
 # from api.models import UserStates # , VehicleStates, DriverStates
-from api.lib import UserStateMachine
+from api.state_machine import UserStateMachine
 
 class UserController:
     ''' '''

@@ -1,7 +1,7 @@
 from flask import abort, Response
 from statemachine import State, StateMachine
 
-from api.lib import UserStateMachine
+from api.state_machine import UserStateMachine
 # from api.utils import Status
 
 

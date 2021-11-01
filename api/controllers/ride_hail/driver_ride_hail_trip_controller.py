@@ -6,7 +6,7 @@ import traceback
 # from api.utils import Status
 # from api.models import DriverTripStates
 from eve.methods.post import post, post_internal
-from api.lib import RidehailDriverTripStateMachine
+from api.state_machine import RidehailDriverTripStateMachine
 
 class DriverRideHailTripStateMachine_Managed(RidehailDriverTripStateMachine):
 
