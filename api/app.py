@@ -7,23 +7,27 @@ from eve_swagger import get_swagger_blueprint, add_documentation
 from api.extensions import jwt
 
 from api.models import (User,
-                        Driver, DriverTrip,
+                        Driver, #RideHailDriverTrip,
                         Vehicle,
-                        Passenger, PassengerTrip,
+                        Passenger, #RideHailPassengerTrip,
                         Waypoint,
-                        Engine, EngineHistory)
+                        Engine, EngineHistory,
+                        DriverRideHailTrip, PassengerRideHailTrip)
 
 from api.views.auth import auth_view
 from api.views.admin import admin_view
 
 from api.views import (UserView, #user_bp,
-                        DriverView, DriverTripView,
-                        PassengerView, PassengerTripView,
+                        DriverView, #DriverTripView,
+                        PassengerView, #PassengerTripView,
                         VehicleView, #vehicle_bp,
                         WaypointView, WaypointHistoryView,
-                        EngineView, EngineHistoryView)
+                        EngineView, EngineHistoryView,
+                        DriverRideHailTripView, PassengerRideHailTripView,
+                        DriverRideHailTripWorkflowView, PassengerRideHailTripWorkflowView,
+                        )
 
-from api.views import (DriverTripWorkflowView, PassengerTripWorkflowView)
+# from api.views import (DriverTripWorkflowView, PassengerTripWorkflowView)
 # from api.views import DriverTripBP
 
 from api.utils import OpenRideValidator #, add_user_on_insert
@@ -88,8 +92,8 @@ def get_settings_with_domain():
         'vehicle': Vehicle.model,
         'passenger': Passenger.model,
 
-        'driver_trip': DriverTrip.model,
-        'passenger_trip': PassengerTrip.model,
+        'driver_ride_hail_trip': DriverRideHailTrip.model,
+        'passenger_ride_hail_trip': PassengerRideHailTrip.model,
 
         'waypoint': Waypoint.model,
         'trip_waypoints': Waypoint.trip_waypoints,
@@ -147,15 +151,15 @@ def register_hooks(app):
     app.on_insert_vehicle += VehicleView.on_insert
     app.on_update_vehicle += VehicleView.on_update
 
-    app.on_insert_driver_trip += DriverTripView.on_insert
-    app.on_update_driver_trip += DriverTripView.on_update
-    app.on_inserted_driver_trip += DriverTripView.on_inserted
-    app.on_updated_driver_trip += DriverTripView.on_updated
+    app.on_insert_driver_ride_hail_trip += DriverRideHailTripView.on_insert
+    app.on_update_driver_ride_hail_trip += DriverRideHailTripView.on_update
+    app.on_inserted_driver_ride_hail_trip += DriverRideHailTripView.on_inserted
+    app.on_updated_driver_ride_hail_trip += DriverRideHailTripView.on_updated
 
-    app.on_insert_passenger_trip += PassengerTripView.on_insert
-    app.on_update_passenger_trip += PassengerTripView.on_update
-    app.on_inserted_passenger_trip += PassengerTripView.on_inserted
-    app.on_updated_passenger_trip += PassengerTripView.on_updated
+    app.on_insert_passenger_ride_hail_trip += PassengerRideHailTripView.on_insert
+    app.on_update_passenger_ride_hail_trip += PassengerRideHailTripView.on_update
+    app.on_inserted_passenger_ride_hail_trip += PassengerRideHailTripView.on_inserted
+    app.on_updated_passenger_ride_hail_trip += PassengerRideHailTripView.on_updated
 
     app.on_insert_waypoint += WaypointView.on_insert
     # app.on_fetched_resource_waypoint += WaypointView.on_fetched
@@ -169,6 +173,7 @@ def register_hooks(app):
 
 def register_flask_classful_views(app):
     ''' '''
-    DriverTripWorkflowView.register(app)
-    PassengerTripWorkflowView.register(app)
+    DriverRideHailTripWorkflowView.register(app)
+    PassengerRideHailTripWorkflowView.register(app)
+
     WaypointHistoryView.register(app)

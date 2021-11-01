@@ -1,6 +1,6 @@
 from flask import current_app as app
 from flask import abort, Response, jsonify
-import json
+import json, logging
 
 from api.lib import RidehailPassengerTripStateMachine
 # from api.utils import Status
@@ -8,7 +8,7 @@ from api.lib import RidehailPassengerTripStateMachine
 from eve.methods.post import post_internal
 
 
-class PassengerTripStateMachine_Managed(RidehailPassengerTripStateMachine):
+class PassengerRideHailTripStateMachine_Managed(RidehailPassengerTripStateMachine):
 
     def on_end_trip(self, doc):
         doc['is_active'] = False
@@ -17,7 +17,7 @@ class PassengerTripStateMachine_Managed(RidehailPassengerTripStateMachine):
         doc['is_active'] = False
 
 
-class PassengerTripController:
+class PassengerRideHailTripController:
     ''' '''
 
     @classmethod
@@ -28,11 +28,12 @@ class PassengerTripController:
             # On Update
             # allow update only if trip is_active=True
             if document['is_active'] == False:
-                raise Exception('Cannot update when is_active is False')
+                # raise Exception('Cannot update when is_active is False')
+                logging.info(f'Cannot update when is_active is False. PassengerRideHailTripController', document['_id'], updates)
 
             # Update state
             try:
-                machine = PassengerTripStateMachine_Managed(start_value=document['state'])
+                machine = PassengerRideHailTripStateMachine_Managed(start_value=document['state'])
                 machine.run(updates.get('transition'), updates)
                 updates['state'] = machine.current_state.identifier
                 updates['feasible_transitions'] = [t.identifier for t in machine.current_state.transitions]
@@ -49,12 +50,12 @@ class PassengerTripController:
             #     updates['is_active'] = False
         else:
             # On Insert, check to ensure Only one active trip is allowed
-            passenger_trip = db['passenger_trip'].find_one({'passenger': document['passenger'], 'is_active': True})
+            passenger_ride_hail_trip = db['passenger_ride_hail_trip'].find_one({'passenger': document['passenger'], 'is_active': True})
 
-            if passenger_trip is None:
+            if passenger_ride_hail_trip is None:
                 document['is_active'] = True
             else:
-                raise Exception(f"Passenger cannot have more than one active trip: {passenger_trip['_id']}")
+                raise Exception(f"Passenger cannot have more than one active trip: {passenger_ride_hail_trip['_id']}")
 
     @classmethod
     def add_waypoint(cls, document, updates={}):
@@ -82,7 +83,7 @@ class PassengerTripController:
             raise Exception(resp[0])
 
         waypoint_id = resp[0]['_id']
-        res = db['passenger_trip'].update({'_id': document['_id']},
+        res = db['passenger_ride_hail_trip'].update({'_id': document['_id']},
                                         {
                                             "$inc": {
                                                 'num_waypoints': 1
@@ -96,7 +97,7 @@ class PassengerTripController:
             # print(f"{waypoint=}")
 
             if waypoint is not None:
-                res = db['passenger_trip'].update({'_id': document['_id']},
+                res = db['passenger_ride_hail_trip'].update({'_id': document['_id']},
                                                         {
                                                             "$set": {
                                                                 'stats': waypoint['cumulative_stats'],

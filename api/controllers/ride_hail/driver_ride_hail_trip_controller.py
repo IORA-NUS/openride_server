@@ -1,6 +1,6 @@
 from flask import current_app as app
 from flask import abort, Response, jsonify
-import json
+import json, logging
 import traceback
 
 # from api.utils import Status
@@ -8,7 +8,7 @@ import traceback
 from eve.methods.post import post, post_internal
 from api.lib import RidehailDriverTripStateMachine
 
-class DriverTripStateMachine_Managed(RidehailDriverTripStateMachine):
+class DriverRideHailTripStateMachine_Managed(RidehailDriverTripStateMachine):
 
     # def on_end_trip(self, doc):
     def on_end_trip(self, doc):
@@ -22,7 +22,7 @@ class DriverTripStateMachine_Managed(RidehailDriverTripStateMachine):
 
 
 
-class DriverTripController:
+class DriverRideHailTripController:
     ''' '''
     @classmethod
     def validate(cls, document, updates={}):
@@ -32,11 +32,12 @@ class DriverTripController:
             # On Update
             # allow update only if trip is_active=True
             if document['is_active'] == False:
-                raise Exception('Cannot update when is_active is False')
+                # raise Exception('Cannot update when is_active is False')
+                logging.info(f'Cannot update when is_active is False. DriverRideHailTripController', document['_id'], updates)
 
             # Update state
             try:
-                machine = DriverTripStateMachine_Managed(start_value=document['state'])
+                machine = DriverRideHailTripStateMachine_Managed(start_value=document['state'])
                 machine.run(updates.get('transition'), updates)
                 updates['state'] = machine.current_state.identifier
                 updates['feasible_transitions'] = [t.identifier for t in machine.current_state.transitions]
@@ -46,12 +47,12 @@ class DriverTripController:
 
         else:
             # On Insert, check to ensure Only one active trip is allowed
-            driver_trip = db['driver_trip'].find_one({'driver': document['driver'], 'is_active': True})
+            driver_ride_hail_trip = db['driver_ride_hail_trip'].find_one({'driver': document['driver'], 'is_active': True})
 
-            if driver_trip is None:
+            if driver_ride_hail_trip is None:
                 document['is_active'] = True
             else:
-                raise Exception(f"Driver cannot have more than one active trip: {driver_trip['_id']}")
+                raise Exception(f"Driver cannot have more than one active trip: {driver_ride_hail_trip['_id']}")
 
 
     @classmethod
@@ -89,7 +90,7 @@ class DriverTripController:
 
         waypoint_id = resp[0]['_id']
 
-        res = db['driver_trip'].update({'_id': document['_id']},
+        res = db['driver_ride_hail_trip'].update({'_id': document['_id']},
                                         {
                                             "$inc": {
                                                 'num_waypoints': 1
@@ -103,7 +104,7 @@ class DriverTripController:
             # print(f"{waypoint=}")
 
             if waypoint is not None:
-                res = db['driver_trip'].update({'_id': document['_id']},
+                res = db['driver_ride_hail_trip'].update({'_id': document['_id']},
                                                 {
                                                     "$set": {
                                                         'stats': waypoint['cumulative_stats'],
@@ -111,4 +112,4 @@ class DriverTripController:
                                                     },
                                                 })
 
-                print(res)
+                # print(res)

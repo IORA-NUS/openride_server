@@ -16,9 +16,23 @@ class Engine:
             'type': 'string',
         },
 
-        'area': {
-            'type': 'multipolygon',
-            'required': False
+        # 'area': {
+        #     'type': 'multipolygon',
+        #     'required': False
+        # },
+        'planning_area': {
+            'type': 'dict',
+            'schema': {
+                'name': {
+                    'type': 'string',
+                    'required': True
+                },
+                'geometry': {
+                    # 'type': 'multipolygon',
+                    'required': True
+                },
+            },
+            'required': True
         },
 
         'offline_params': {

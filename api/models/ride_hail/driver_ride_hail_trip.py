@@ -3,7 +3,7 @@ from api.utils import Status
 from api.lib import RidehailDriverTripStateMachine
 
 
-class DriverTrip:
+class DriverRideHailTrip:
 
     stats_schema = {
         'distance': {
@@ -93,12 +93,12 @@ class DriverTrip:
             'required': False,
         },
 
-        'passenger_trip': {
+        'passenger_ride_hail_trip': {
             'type': 'objectid',
-            'data_relation': {
-                'resource': 'passenger_trip',
-                'field': '_id'
-            },
+            # 'data_relation': {
+            #     'resource': 'passenger_ride_hail_trip',
+            #     'field': '_id'
+            # },
             'required': False,
         },
 
@@ -227,9 +227,9 @@ class DriverTrip:
 
     model = {
         'datasource': {
-            'source': 'driver_trip',
+            'source': 'driver_ride_hail_trip',
         },
-        'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/driver/trip',
+        'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/driver/ride_hail/trip',
         'schema': schema,
         'auto_add_user': True,
         'mongo_indexes': {
