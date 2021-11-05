@@ -50,7 +50,12 @@ class PassengerRideHailTripController:
             #     updates['is_active'] = False
         else:
             # On Insert, check to ensure Only one active trip is allowed
-            passenger_ride_hail_trip = db['passenger_ride_hail_trip'].find_one({'passenger': document['passenger'], 'is_active': True})
+            passenger_ride_hail_trip = db['passenger_ride_hail_trip'].find_one({
+                                                                        'run_id': document['run_id'],
+                                                                        'user': document['user'],
+                                                                        'passenger': document['passenger'],
+                                                                        'is_active': True
+                                                                    })
 
             if passenger_ride_hail_trip is None:
                 document['is_active'] = True

@@ -86,9 +86,11 @@ class Passenger:
         },
         'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/passenger',
         'schema': schema,
+        # 'auto_add_user': True,
         'mongo_indexes': {
             'state_index': [
                 ('run_id', 1),
+                ('user', 1),
                 ('state', 1)
             ],
             'unique_user_index': (

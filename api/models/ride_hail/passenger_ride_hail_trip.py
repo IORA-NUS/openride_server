@@ -163,28 +163,43 @@ class PassengerRideHailTrip:
         },
         'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/passenger/ride_hail/trip',
         'schema': schema,
-        'auto_add_user': True,
+        # 'auto_add_user': True,
         'mongo_indexes': {
             'passenger_trip_index':[
                 ('run_id', 1),
+                ('user', 1),
                 ('passenger', 1),
                 ('is_active', 1),
             ],
 
             'passenger_history_index': [
                 ('run_id', 1),
+                ('user', 1),
                 ('passenger', 1),
                 ('_created', -1),
             ],
             'pickup_loc_index': [
                 ('run_id', 1),
+                ('user', 1),
                 ('state', 1),
                 ('pickup_loc', '2dsphere'),
                 ('is_active', 1),
                 # ('_created', -1),
             ],
+           'active_trips_index': [
+                ('run_id', 1),
+                ('user', 1),
+                ('is_active', 1),
+            ],
+            'recenttrips_by_state_index': [
+                ('run_id', 1),
+                ('user', 1),
+                ('state', 1),
+                ('sim_clock', 1),
+            ],
             'dropoff_loc_index': [
                 ('run_id', 1),
+                ('user', 1),
                 ('state', 1),
                 ('dropoff_loc', '2dsphere'),
                 ('is_active', 1),
@@ -194,6 +209,7 @@ class PassengerRideHailTrip:
             'force_quit_index': (
                 [
                     ('run_id', 1),
+                    ('user', 1),
                     ('force_quit', 1),
                 ],
                 {'sparse': 1}

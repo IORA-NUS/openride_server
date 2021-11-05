@@ -145,7 +145,7 @@ class Waypoint:
         },
         'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/waypoint',
         'schema': schema,
-        'auto_add_user': True,
+        # 'auto_add_user': True,
         'mongo_indexes': {
             # 'latest_state_index': [
             #     ('run_id', 1),
@@ -161,6 +161,7 @@ class Waypoint:
             'unique_counter_index': (
                 [
                     ('run_id', 1),
+                    ('user', 1),
                     ('trip', 1),
                     ('counter', 1),
                 ],
@@ -169,6 +170,7 @@ class Waypoint:
             'updated_trip_index': (
                 [
                     ('run_id', 1),
+                    ('user', 1),
                     ('trip', 1),
                     ('_updated', 1),
                 ]
@@ -176,6 +178,7 @@ class Waypoint:
             'updated_agent_type_index': (
                 [
                     ('run_id', 1),
+                    ('user', 1),
                     # ('entity', 1),
                     ('agent.type', 1),
                     ('_updated', 1),
@@ -184,6 +187,7 @@ class Waypoint:
             'updated_agent_id_index': (
                 [
                     ('run_id', 1),
+                    ('user', 1),
                     # ('agent.type', 1),
                     ('agent.id', 1),
                     ('_updated', 1),
@@ -192,6 +196,7 @@ class Waypoint:
             'updated_alltrips_index': (
                 [
                     ('run_id', 1),
+                    ('user', 1),
                     ('_updated', 1),
                 ]
             ),
@@ -207,7 +212,7 @@ class Waypoint:
         },
         'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/trip/<regex("[a-f0-9]{24}"):trip>/waypoint',
         'schema': schema,
-        'auto_add_user': True,
+        # 'auto_add_user': True,
         # 'mongo_indexes': {
         # #     'latest_state_index': [
         # #         ('event.state', 1),

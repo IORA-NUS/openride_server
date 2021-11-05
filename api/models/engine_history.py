@@ -39,6 +39,7 @@ class EngineHistory:
         },
         'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/engine/<regex("[a-f0-9]{24}"):engine>/history',
         'schema': schema,
+        # 'auto_add_user': True,
         'allowed_roles': ['admin'],
         'mongo_indexes': {
             'history_index':[

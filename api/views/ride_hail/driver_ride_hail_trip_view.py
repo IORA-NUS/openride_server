@@ -10,7 +10,7 @@ from eve.utils import config
 from eve.render import send_response
 
 
-# from flask_jwt_extended import get_jwt, jwt_required
+from flask_jwt_extended import get_jwt, jwt_required, verify_jwt_in_request
 from bson.objectid import ObjectId
 
 from api.utils import Status
@@ -88,7 +88,12 @@ class DriverRideHailTripWorkflowView(FlaskView):
         if config.IF_MATCH:
             kwargs[config.ETAG] = request.headers['If-Match']
 
-        # print(name, args, kwargs)
+        # verify_jwt_in_request()
+        # id_payload = get_jwt()[app.config["JWT_IDENTITY_CLAIM"]]
+        # kwargs[app.config["AUTH_FIELD"]] = id_payload['_id']
+        # print(kwargs)
+
+        # print(f"{name=}, {args=}, {kwargs=}")
 
         if name in []:  # NOTE Include validation for all methods that use POST / PUT
             document = request.json

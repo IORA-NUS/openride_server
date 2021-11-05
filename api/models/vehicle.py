@@ -154,11 +154,12 @@ class Vehicle:
         },
         'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/vehicle',
         'schema': schema,
-        'auto_add_user': True,
+        # 'auto_add_user': True,
         'mongo_indexes': {
             # 'status_index': [('status', 1)],
             'state_index': [
                 ('run_id', 1),
+                ('user', 1),
                 ('state', 1)
             ],
             'unique_registration_index': (

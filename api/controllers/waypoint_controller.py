@@ -22,7 +22,13 @@ class WaypointController:
         waypoint_resource = app.data.driver.db['waypoint']
         # prev_waypoint = waypoint_resource.find_one({'trip': trip, '_created': {"$lt": document['_created']}})
         # prev_waypoint = waypoint_resource.find_one({'trip': trip,}, sort=[('_created', pymongo.DESCENDING)])
-        prev_waypoint = waypoint_resource.find_one({'trip': trip,}, sort=[('counter', pymongo.DESCENDING)])
+        prev_waypoint = waypoint_resource.find_one({
+                                            'run_id': document['run_id'],
+                                            'user': document['user'],
+                                            'trip': trip,
+                                        },
+                                        sort=[('counter', pymongo.DESCENDING)]
+                                    )
 
         # print(prev_waypoint)
 

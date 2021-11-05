@@ -231,21 +231,24 @@ class DriverRideHailTrip:
         },
         'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/driver/ride_hail/trip',
         'schema': schema,
-        'auto_add_user': True,
+        # 'auto_add_user': True,
         'mongo_indexes': {
             'driver_trip_index':[
                 ('run_id', 1),
+                ('user', 1),
                 ('driver', 1),
                 ('is_active', 1),
             ],
             'driver_history_index': [
                 ('run_id', 1),
+                ('user', 1),
                 ('driver', 1),
                 # ('is_occupied', 1),
                 ('_created', -1),
             ],
             'vehicle_history_index': [
                 ('run_id', 1),
+                ('user', 1),
                 ('vehicle', 1),
                 ('driver', 1),
                 # ('is_occupied', 1),
@@ -253,19 +256,28 @@ class DriverRideHailTrip:
             ],
             'passenger_history_index': [
                 ('run_id', 1),
+                ('user', 1),
                 ('passenger', 1),
                 ('driver', 1),
                 ('_created', -1),
             ],
             'driver_trip_occupied_index':[
                 ('run_id', 1),
+                ('user', 1),
                 ('is_occupied', 1),
             ],
             'driver_assignment_index':[
                 ('run_id', 1),
+                ('user', 1),
                 ('is_occupied', 1),
                 ('is_active', 1),
+                ('state', 1),
                 ('current_loc', '2dsphere'),
+            ],
+           'active_trips_index': [
+                ('run_id', 1),
+                ('user', 1),
+                ('is_active', 1),
             ],
 
             # 'driver_distance_index': [
@@ -284,18 +296,21 @@ class DriverRideHailTrip:
             # ],
             'current_loc_index': [
                 ('run_id', 1),
+                ('user', 1),
                 ('current_loc', '2dsphere'),
                 ('is_active', 1),
                 # ('_created', -1),
             ],
             'pickup_loc_index': [
                 ('run_id', 1),
+                ('user', 1),
                 ('pickup_loc', '2dsphere'),
                 ('is_active', 1),
                 # ('_created', -1),
             ],
             'dropoff_loc_index': [
                 ('run_id', 1),
+                ('user', 1),
                 ('dropoff_loc', '2dsphere'),
                 ('is_active', 1),
                 # ('_created', -1),
@@ -303,6 +318,7 @@ class DriverRideHailTrip:
             'force_quit_trip_index': (
                 [
                     ('run_id', 1),
+                    ('user', 1),
                     ('force_quit', 1)
                     # ('_created', -1),
                 ],

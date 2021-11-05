@@ -10,4 +10,5 @@ RUN pip install -r requirements.txt
 # copy the rest of our application
 COPY . .
 # run the application
-CMD python service.py
+CMD gunicorn --log-level=INFO --limit-request-line 0 -w 16 -k eventlet -b 0.0.0.0:11654 wsgi:app --reload
+

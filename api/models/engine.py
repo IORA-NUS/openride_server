@@ -60,6 +60,7 @@ class Engine:
         },
         'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/engine',
         'schema': schema,
+        # 'auto_add_user': True,
         'allowed_roles': ['admin'],
         'mongo_indexes': {
             'unique_name_index': (

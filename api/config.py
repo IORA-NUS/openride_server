@@ -6,6 +6,7 @@ SECRET_KEY = Env.string('SECRET_KEY', 'changeme')
 # If Docker
 MONGODB_HOST = 'host.docker.internal'   # NOTE Works only on Docker for Mac. For linus, see https://stackoverflow.com/questions/31324981/how-to-access-host-port-from-docker-container
 # Else
+# MONGODB_HOST = '192.168.10.135'   # NOTE Home network
 # MONGODB_HOST = Env.string('MONGODB_HOST', 'localhost')
 MONGODB_PORT = Env.int('MONGODB_PORT', 27017)
 MONGODB_NAME = Env.string('MONGODB_NAME', 'db_openride')
@@ -57,6 +58,8 @@ settings = {
 
     # important settings
     'AUTH_FIELD': 'user',
+    'OPTIMIZE_PAGINATION_FOR_SPEED': True,
+
     # 'ALLOW_CUSTOM_FIELDS_IN_GEOJSON': True,
     # 'NORMALIZE_ON_PATCH': False,
 
