@@ -35,6 +35,10 @@ from api.utils import swaggerify, generate_everything
 
 from eve.io.mongo import validation
 
+# import flask_monitoringdashboard as dashboard
+from prometheus_flask_exporter import PrometheusMetrics
+
+
 def create_app(config=None, testing=False, cli=False):
     '''Application factory, used to create application
     '''
@@ -52,6 +56,10 @@ def create_app(config=None, testing=False, cli=False):
     # app.add_route('/plot_state_machines', state_machine_plotter())
 
     register_flask_classful_views(app)
+
+    # dashboard.bind(app)
+    metrics = PrometheusMetrics(app)
+    metrics.info('Openroad', 'OpenRoad API', version='0.0.1')
 
     # print(app.url_map)
 

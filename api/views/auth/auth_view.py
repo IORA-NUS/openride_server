@@ -243,19 +243,23 @@ class TokenAuth(TokenAuth):
         # # use Eve's own db driver; no additional connections/resources are used
         # accounts = app.data.driver.db['accounts']
         # return accounts.find_one({'token': token})
-        db = app.data.driver.db
-        user_resource = db['user']
+        try:
+            db = app.data.driver.db
+            user_resource = db['user']
 
-        id_payload = get_jwt()[app.config["JWT_IDENTITY_CLAIM"]]
+            id_payload = get_jwt()[app.config["JWT_IDENTITY_CLAIM"]]
 
-        lookup = {'_id': ObjectId(id_payload['_id'])}
-        if allowed_roles:
-            lookup['role'] = {'$in': allowed_roles}
+            lookup = {'_id': ObjectId(id_payload['_id'])}
+            if allowed_roles:
+                lookup['role'] = {'$in': allowed_roles}
 
-        user = user_resource.find_one(lookup)
+            user = user_resource.find_one(lookup)
 
-        if user['role'] != 'admin':
-            self.set_request_auth_value(id_payload['_id'])
+            if user['role'] != 'admin':
+                self.set_request_auth_value(id_payload['_id'])
 
-        return user is not None
+            return user is not None
+        except Exception as e:
+            print(e)
+            raise e
 

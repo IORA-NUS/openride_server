@@ -4,7 +4,7 @@ from flask import abort, Response, make_response, request
 from flask_classful import FlaskView, route
 
 import json, traceback
-from flask_jwt_extended import get_jwt, jwt_required, verify_jwt_in_request
+# from flask_jwt_extended import get_jwt, jwt_required, verify_jwt_in_request
 from bson.objectid import ObjectId
 
 from api.utils import Status

@@ -10,7 +10,7 @@ from eve.utils import config
 from eve.render import send_response
 
 
-from flask_jwt_extended import get_jwt, jwt_required, verify_jwt_in_request
+# from flask_jwt_extended import get_jwt, jwt_required, verify_jwt_in_request
 from bson.objectid import ObjectId
 
 from api.utils import Status

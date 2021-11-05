@@ -167,7 +167,7 @@ class Waypoint:
                 ],
                 {'unique': True}
             ),
-            'updated_trip_index': (
+            'updated_trip_and_user_index': (
                 [
                     ('run_id', 1),
                     ('user', 1),
@@ -193,10 +193,23 @@ class Waypoint:
                     ('_updated', 1),
                 ]
             ),
-            'updated_alltrips_index': (
+            'updated_trips_by_user_index': (
                 [
                     ('run_id', 1),
                     ('user', 1),
+                    ('_updated', 1),
+                ]
+            ),
+            'updated_trip_index': (
+                [
+                    ('run_id', 1),
+                    ('trip', 1),
+                    ('_updated', 1),
+                ]
+            ),
+            'updated_trip_index': (
+                [
+                    ('run_id', 1),
                     ('_updated', 1),
                 ]
             ),
