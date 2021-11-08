@@ -9,7 +9,7 @@ SECRET_KEY = Env.string('SECRET_KEY', 'changeme')
 # MONGODB_HOST = '192.168.10.135'   # NOTE Home network
 MONGODB_HOST = Env.string('MONGODB_HOST', 'localhost')
 MONGODB_PORT = Env.int('MONGODB_PORT', 27017)
-MONGODB_NAME = Env.string('MONGODB_NAME', 'db_openride')
+MONGODB_NAME = Env.string('MONGODB_NAME', 'OpenRoadDB')
 
 # MONGODB_SETTINGS = [{
 #     'db': MONGODB_NAME,
