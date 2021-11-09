@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+    app:
+        build: openroad_platform
+        # image: 192.168.10.135:43210/openroad_platform  # goes to local registry
+
+    nginx:
+        container_name: nginx
+        # image: 192.168.10.135:43210/openroad_nginx  # goes to local registry
+        build: nginx
+        ports:
+            - 11654:11654
+        depends_on:
+           - app
