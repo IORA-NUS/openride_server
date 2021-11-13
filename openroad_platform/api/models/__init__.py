@@ -14,3 +14,5 @@ from .ride_hail import DriverRideHailTrip #, DriverTripStates
 
 
 from .waypoint import Waypoint
+
+from .kpi import Kpi

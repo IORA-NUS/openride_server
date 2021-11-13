@@ -127,13 +127,18 @@ class PassengerRideHailTrip:
             'schema': routes_schema,
         },
 
-        'latest_waypoint': {
-            'type': 'objectid',
-            'required': False,
-        },
-        'stats': {
+        # 'latest_waypoint': {
+        #     'type': 'objectid',
+        #     'required': False,
+        # },
+        # 'stats': {
+        #     'type': 'dict',
+        #     'schema': stats_schema,
+        #     'required': False,
+        #     'readonly': True
+        # },
+        'last_waypoint': {
             'type': 'dict',
-            'schema': stats_schema,
             'required': False,
             'readonly': True
         },

@@ -506,8 +506,12 @@ class PassengerRideHailTripWorkflowView(FlaskView):
 
         payload = request.json
 
+        try:
+            payload['transition'] =  RidehailPassengerTripStateMachine.force_quit.identifier
+            payload['force_quit'] =  True
+        except: pass
+
         payload['is_active'] =  False
-        payload['force_quit'] =  True
 
         response = patch_internal('passenger_ride_hail_trip',
                                     skip_validation=True, # Done to ensure sim_clock is updatable

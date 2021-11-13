@@ -1,3 +1,4 @@
+import traceback
 from flask import current_app as app
 from flask import abort, Response, jsonify
 import json, logging
@@ -82,30 +83,49 @@ class PassengerRideHailTripController:
         elif document.get('sim_clock') is not None:
             waypoint['sim_clock'] = document['sim_clock']
 
-        resp =  post_internal('waypoint', waypoint)
+        try:
+            resp =  post_internal('waypoint', waypoint)
+        except Exception as e:
+            logging.exception(traceback.format_exc())
+            raise e
+
         # print(f"{resp[0]=}")
         if resp[0].get('_status') == 'ERR':
             raise Exception(resp[0])
 
         waypoint_id = resp[0]['_id']
-        res = db['passenger_ride_hail_trip'].update({'_id': document['_id']},
-                                        {
-                                            "$inc": {
-                                                'num_waypoints': 1
-                                            },
-                                        })
 
-        # Update Trip stats from waypoint if is_active is updated from True to False
-        if (updates.get('is_active') == False) and (document.get('is_active') == True):
-            # waypoint = db['waypoint'].find_one({'trip': document['_id']}, sort=[('_created', -1)])
-            waypoint = db['waypoint'].find_one({'_id': waypoint_id})
-            # print(f"{waypoint=}")
+        # res = db['passenger_ride_hail_trip'].update({'_id': document['_id']},
+        #                                 {
+        #                                     "$inc": {
+        #                                         'num_waypoints': 1
+        #                                     },
+        #                                 })
 
-            if waypoint is not None:
-                res = db['passenger_ride_hail_trip'].update({'_id': document['_id']},
-                                                        {
-                                                            "$set": {
-                                                                'stats': waypoint['cumulative_stats'],
-                                                                'latest_waypoint': waypoint['_id']
-                                                            },
-                                                        })
+        # # Update Trip stats from waypoint if is_active is updated from True to False
+        # if (updates.get('is_active') == False) and (document.get('is_active') == True):
+        #     # waypoint = db['waypoint'].find_one({'trip': document['_id']}, sort=[('_created', -1)])
+        #     waypoint = db['waypoint'].find_one({'_id': waypoint_id})
+        #     # print(f"{waypoint=}")
+
+        #     if waypoint is not None:
+        #         res = db['passenger_ride_hail_trip'].update({'_id': document['_id']},
+        #                                                 {
+        #                                                     "$set": {
+        #                                                         'stats': waypoint['cumulative_stats'],
+        #                                                         'latest_waypoint': waypoint['_id']
+        #                                                     },
+        #                                                 })
+
+        waypoint = db['waypoint'].find_one({'_id': waypoint_id})
+
+        if waypoint is not None:
+            res = db['passenger_ride_hail_trip'].update_one({'_id': document['_id']},
+                {
+                    "$set": {
+                        'last_waypoint': waypoint
+                    },
+                    "$inc": {
+                        'num_waypoints': 1
+                    },
+                })

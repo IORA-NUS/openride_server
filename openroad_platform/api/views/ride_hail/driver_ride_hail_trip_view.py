@@ -496,7 +496,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
         payload = request.json
 
-        payload['transition'] =  RidehailDriverTripStateMachine.cancel.identifier
+        payload['transition'] =  RidehailDriverTripStateMachine.force_quit.identifier
         payload['is_active'] =  False
         payload['force_quit'] =  True
 

@@ -11,6 +11,7 @@ from api.models import (User,
                         Vehicle,
                         Passenger, #RideHailPassengerTrip,
                         Waypoint,
+                        Kpi,
                         Engine, EngineHistory,
                         DriverRideHailTrip, PassengerRideHailTrip)
 
@@ -22,6 +23,7 @@ from api.views import (UserView, #user_bp,
                         PassengerView, #PassengerTripView,
                         VehicleView, #vehicle_bp,
                         WaypointView, WaypointHistoryView,
+                        KpiView, KpiHistoryView,
                         EngineView, EngineHistoryView,
                         DriverRideHailTripView, PassengerRideHailTripView,
                         DriverRideHailTripWorkflowView, PassengerRideHailTripWorkflowView,
@@ -106,6 +108,9 @@ def get_settings_with_domain():
         'waypoint': Waypoint.model,
         'trip_waypoints': Waypoint.trip_waypoints,
 
+        'kpi': Kpi.model,
+        'metric': Kpi.metric,
+
         'engine': Engine.model,
         'engine_history': EngineHistory.model,
     }
@@ -172,6 +177,8 @@ def register_hooks(app):
     app.on_insert_waypoint += WaypointView.on_insert
     # app.on_fetched_resource_waypoint += WaypointView.on_fetched
 
+    app.on_insert_kpi += KpiView.on_insert
+
     app.on_insert_engine += EngineView.on_insert
     app.on_update_engine += EngineView.on_update
     app.on_updated_engine += EngineView.on_updated
@@ -185,3 +192,4 @@ def register_flask_classful_views(app):
     PassengerRideHailTripWorkflowView.register(app)
 
     WaypointHistoryView.register(app)
+    KpiHistoryView.register(app)

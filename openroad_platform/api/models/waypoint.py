@@ -223,7 +223,7 @@ class Waypoint:
         'datasource': {
             'source': 'waypoint',
         },
-        'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/trip/<regex("[a-f0-9]{24}"):trip>/waypoint',
+        'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/waypoint/<regex("[a-f0-9]{24}"):trip>',
         'schema': schema,
         # 'auto_add_user': True,
         # 'mongo_indexes': {

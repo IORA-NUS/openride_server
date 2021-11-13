@@ -1,0 +1,16 @@
+// HLDeliveryPackageTripStateMachine
+digraph {
+	package_assigned_driver -> package_waiting_for_pickup [label=ready_for_pickup]
+	package_assigned_driver -> package_pickedup [label=driver_arrived_for_pickup]
+	package_completed_leg -> package_completed_delivery [label=end_delivery]
+	package_completed_leg -> package_delivery_requested [label=request_next_leg_delivery]
+	package_delivery_requested -> package_assigned_driver [label=assign]
+	package_droppedoff -> package_completed_leg [label=end_leg]
+	package_droppedoff_failed -> package_moving_for_dropoff [label=returning_package]
+	package_moving_for_dropoff -> package_waiting_for_dropoff [label=driver_arrived_for_dropoff]
+	package_pickedup -> package_moving_for_dropoff [label=driver_move_for_dropoff]
+	package_waiting_for_dropoff -> package_droppedoff [label=dropoff_success]
+	package_waiting_for_dropoff -> package_droppedoff_failed [label=dropoff_failed]
+	package_waiting_for_pickup -> package_pickedup [label=driver_arrived_for_pickup]
+	package_waiting_for_pickup -> package_delivery_requested [label=driver_cancelled_trip]
+}
