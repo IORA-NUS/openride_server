@@ -70,6 +70,7 @@ class PassengerRideHailTripController:
             'trip': document['_id'],
             'event': {
                 'location': updates.get('current_loc', document['current_loc']),
+                'traversed_path': updates.get('traversed_path', None),
                 'state': updates.get('state', document['state']),
             },
             'agent': {

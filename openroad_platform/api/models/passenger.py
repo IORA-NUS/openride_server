@@ -26,7 +26,7 @@ from api.state_machine import WorkflowStateMachine
 
 class Passenger:
 
-    settings_schema = {
+    profile_schema = {
         'market': { # patience in Seconds
             'type': 'string',
             'required': True,
@@ -68,9 +68,9 @@ class Passenger:
             # 'nullable': True
         },
 
-        'settings': {
+        'profile': {
             'type': 'dict',
-            'schema': settings_schema,
+            'schema': profile_schema,
             'required': True,
         },
 

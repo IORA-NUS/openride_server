@@ -166,7 +166,13 @@ class DriverRideHailTrip:
             'required': False,
             'schema': routes_schema,
         },
-        'current_route_coords': {
+        'traversed_path': {
+            'type': 'list',
+            'required': False,
+            'nullable': True,
+        },
+        # 'current_route_coords': {
+        'projected_path': {
             'type': 'list',
             'required': False,
             'nullable': True,
@@ -212,6 +218,11 @@ class DriverRideHailTrip:
         #     'required': False,
         #     'readonly': True
         # },
+        'stats': {
+            'type': 'dict',
+            'required': False,
+            'readonly': True
+        },
         'last_waypoint': {
             'type': 'dict',
             'required': False,
@@ -227,6 +238,11 @@ class DriverRideHailTrip:
             'type': 'datetime',
             'required': False
         },
+
+        'meta': {
+            'type': 'dict',
+            'required': False
+        }
 
     }
 

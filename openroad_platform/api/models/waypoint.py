@@ -37,6 +37,11 @@ class Waypoint:
             'type': 'point',
             'required': True,
         },
+        'traversed_path': {
+            'type': 'list',
+            'required': False,
+            'nullable': True,
+        },
         'state': {
             'type': 'string',
             'allowed': [s.identifier for s in RidehailDriverTripStateMachine().states] + [s.identifier for s in RidehailPassengerTripStateMachine().states],
@@ -211,6 +216,14 @@ class Waypoint:
                 [
                     ('run_id', 1),
                     ('_updated', 1),
+                ]
+            ),
+            'trip_state_index': (
+                [
+                    ('run_id', 1),
+                    ('user', 1),
+                    ('trip', 1),
+                    ('event.state', 1),
                 ]
             ),
         },

@@ -23,7 +23,7 @@ from api.state_machine import WorkflowStateMachine
 
 class Driver:
 
-    settings_schema = {
+    profile_schema = {
         'market': { # patience in Seconds
             'type': 'string',
             'required': True,
@@ -106,9 +106,9 @@ class Driver:
             'required': False,
         },
 
-        'settings': {
+        'profile': {
             'type': 'dict',
-            'schema': settings_schema,
+            'schema': profile_schema,
             'required': True,
             'default': {
                 'patience': 300,

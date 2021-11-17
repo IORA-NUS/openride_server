@@ -73,7 +73,7 @@ class PassengerRideHailTrip:
             'type': 'point',
             'required': True,
         },
-        'trip_value': {
+        'trip_price': {
             'type': 'number',
             'required': True,
             'default': 0,
@@ -137,6 +137,11 @@ class PassengerRideHailTrip:
         #     'required': False,
         #     'readonly': True
         # },
+        'stats': {
+            'type': 'dict',
+            'required': False,
+            'readonly': True
+        },
         'last_waypoint': {
             'type': 'dict',
             'required': False,
@@ -159,6 +164,11 @@ class PassengerRideHailTrip:
             'type': 'datetime',
             'required': False
         },
+
+        'meta': {
+            'type': 'dict',
+            'required': False
+        }
 
     }
 

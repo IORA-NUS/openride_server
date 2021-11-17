@@ -27,6 +27,7 @@ from api.views import (UserView, #user_bp,
                         EngineView, EngineHistoryView,
                         DriverRideHailTripView, PassengerRideHailTripView,
                         DriverRideHailTripWorkflowView, PassengerRideHailTripWorkflowView,
+                        # DriverRideHailTripCollectionView, PassengerRideHailTripCollectionView,
                         )
 
 # from api.views import (DriverTripWorkflowView, PassengerTripWorkflowView)
@@ -189,7 +190,10 @@ def register_hooks(app):
 def register_flask_classful_views(app):
     ''' '''
     DriverRideHailTripWorkflowView.register(app)
+    # DriverRideHailTripCollectionView.register(app)
+
     PassengerRideHailTripWorkflowView.register(app)
+    # PassengerRideHailTripCollectionView.register(app)
 
     WaypointHistoryView.register(app)
     KpiHistoryView.register(app)

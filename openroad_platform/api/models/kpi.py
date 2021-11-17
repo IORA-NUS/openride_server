@@ -43,7 +43,8 @@ class Kpi:
         },
         'value': {
             'type': 'float',
-            'readonly': True,
+            'default': 0,
+            'required': True,
         },
 
         'sim_clock': {

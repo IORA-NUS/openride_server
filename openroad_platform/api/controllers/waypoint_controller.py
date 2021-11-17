@@ -4,6 +4,8 @@ from flask import abort, Response
 import json, pymongo
 import haversine as hs
 
+from api.utils.utils import itransform_lonlat_webmercator
+from shapely.geometry import LineString
 
 # from api.utils import Status
 # from api.models import DriverStates, PassengerStates
@@ -30,14 +32,17 @@ class WaypointController:
                                         sort=[('counter', pymongo.DESCENDING)]
                                     )
 
-        # print(prev_waypoint)
 
         if prev_waypoint is not None:
             try:
-                # print(prev_waypoint['event']['location']['coordinates'], document['event']['location']['coordinates'])
-                distance = hs.haversine(prev_waypoint['event']['location']['coordinates'][:2], document['event']['location']['coordinates'][:2], unit=hs.Unit.METERS)
-                # # print(f"document: {document}")
-                # # print(f"prev_waypoint: {prev_waypoint}")
+                # if document['event']['traversed_path'] is not None:
+                try:
+                    traversed_path =  [(lon, lat) for (lat, lon) in document['event']['traversed_path']]
+                    traversed_path = list(itransform_lonlat_webmercator(traversed_path))
+                    distance = LineString(traversed_path).length
+                    # print(f"{distance=}")
+                except:
+                    distance = hs.haversine(prev_waypoint['event']['location']['coordinates'][:2], document['event']['location']['coordinates'][:2], unit=hs.Unit.METERS)
 
                 duration = (document['_created'].replace(tzinfo=None) - prev_waypoint['_created'].replace(tzinfo=None)).total_seconds()
                 # print(document['_created'], prev_waypoint['_created'].replace(tzinfo=None), duration)
