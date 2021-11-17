@@ -108,6 +108,7 @@ class WaypointHistoryView(FlaskView):
             '_id': 0,
             "event.state": 1,
             "event.location.coordinates": 1,
+            "event.traversed_path": 1,
             "trip": 1,
             "_updated": 1,
         }
@@ -127,12 +128,16 @@ class WaypointHistoryView(FlaskView):
             'trip_id': None,
             'tripclass': None,
             'path': [],
+            'traversed_path': [],
             'timestamps': [],
         }
         paths = []
         for document in cursor:
             trip_id = str(document['trip'])
             coord = [round(x, 5) for x in document['event']['location']['coordinates']]
+            traversed_path = document['event'].get('traversed_path') \
+                                if document['event'].get('traversed_path') is not None \
+                                else []
             tripclass = document['event']['state']
             ts = document['_updated']
 
@@ -141,10 +146,12 @@ class WaypointHistoryView(FlaskView):
                     'trip_id': trip_id,
                     'tripclass': tripclass,
                     'path': [coord],
+                    'traversed_path': traversed_path,
                     'timestamps': [(ts-from_dt).seconds],
                 }
             elif (trip['trip_id'] == trip_id) and (trip['tripclass'] == tripclass):
                 trip['path'].append(coord)
+                trip['traversed_path'].extend(traversed_path)
                 trip['timestamps'].append((ts-from_dt).seconds)
             else:
                 if len(trip['path']) > 1:
@@ -153,6 +160,7 @@ class WaypointHistoryView(FlaskView):
                     'trip_id': trip_id,
                     'tripclass': tripclass,
                     'path': [coord],
+                    'traversed_path': traversed_path,
                     'timestamps': [(ts-from_dt).seconds],
                 }
 
