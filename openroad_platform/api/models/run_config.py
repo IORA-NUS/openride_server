@@ -16,9 +16,24 @@ class RunConfig:
             'type': 'string',
             'required': True,
         },
-        'profile': {
+        'status': {
+            'type': 'string',
+            'required': False,
+            'nullable': True,
+        },
+        'meta': {
             'type': 'dict',
             'required': True,
+        },
+        'execution_time': {
+            'type': 'float',
+            'required': False,
+            'nullable': True,
+        },
+        'step_metrics': {
+            'type': 'dict',
+            'required': False,
+            'nullable': True,
         },
 
     }
@@ -27,7 +42,7 @@ class RunConfig:
         'datasource': {
             'source': 'run_config',
         },
-        'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/run_config',
+        'url': 'run_config',
         'schema': schema,
         'mongo_indexes': {
             # 'latest_state_index': [
@@ -41,21 +56,22 @@ class RunConfig:
             #     ('trip', 1),
             #     ('counter', 1),
             # ],
-            'unique_name_index': (
-                [
-                    ('name', 1),
-                ],
-                {'unique': True}
-            ),
+            'name_index': [
+                ('name', 1),
+            ],
             'unique_run_id_index': (
                 [
                     ('run_id', 1),
                 ],
                 {'unique': True}
             ),
+            'status_index': [
+                ('status', 1),
+                ('_updated', 1),
+            ],
 
         },
         'resource_methods': ['GET', 'POST'], # , 'POST'
-        'item_methods': ['GET'],
+        'item_methods': ['GET', 'PATCH'],
     }
 
