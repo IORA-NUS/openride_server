@@ -13,7 +13,9 @@ from api.models import (User,
                         Waypoint,
                         Kpi,
                         Engine, EngineHistory,
-                        DriverRideHailTrip, PassengerRideHailTrip)
+                        DriverRideHailTrip, PassengerRideHailTrip,
+                        RunConfig,
+                    )
 
 from api.views.auth import auth_view
 from api.views.admin import admin_view
@@ -28,7 +30,7 @@ from api.views import (UserView, #user_bp,
                         DriverRideHailTripView, PassengerRideHailTripView,
                         DriverRideHailTripWorkflowView, PassengerRideHailTripWorkflowView,
                         # DriverRideHailTripCollectionView, PassengerRideHailTripCollectionView,
-                        )
+                    )
 
 # from api.views import (DriverTripWorkflowView, PassengerTripWorkflowView)
 # from api.views import DriverTripBP
@@ -114,6 +116,8 @@ def get_settings_with_domain():
 
         'engine': Engine.model,
         'engine_history': EngineHistory.model,
+
+        'run_config': RunConfig.model
     }
 
     return settings
