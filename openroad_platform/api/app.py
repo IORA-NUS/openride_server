@@ -1,5 +1,8 @@
+import os, logging
+from unittest.mock import patch
 
 from eve import Eve
+
 from api.config import settings
 from api.extensions import cors #, swagger
 from eve_swagger import get_swagger_blueprint, add_documentation
@@ -32,6 +35,8 @@ from api.views import (UserView, #user_bp,
                         # DriverRideHailTripCollectionView, PassengerRideHailTripCollectionView,
                     )
 
+
+
 # from api.views import (DriverTripWorkflowView, PassengerTripWorkflowView)
 # from api.views import DriverTripBP
 
@@ -40,18 +45,42 @@ from api.utils import swaggerify, generate_everything
 
 from eve.io.mongo import validation
 
-# import flask_monitoringdashboard as dashboard
-from prometheus_flask_exporter import PrometheusMetrics
 
 
 def create_app(config=None, testing=False, cli=False):
     '''Application factory, used to create application
     '''
-    app = Eve(
-        settings=get_settings_with_domain(),
-        auth=auth_view.TokenAuth,
-        validator=OpenRideValidator
-    )
+    # if using docker, monkey patch ensure_mongo_indexes
+    # ENV DOCKER=true
+    if os.environ.get('DOCKER'):
+        with patch('eve.flaskapp.ensure_mongo_indexes') as mock_index_maker:
+            mock_index_maker.return_value = 'Mocked'
+            app = Eve(
+                settings=get_settings_with_domain(),
+                auth=auth_view.TokenAuth,
+                validator=OpenRideValidator
+            )
+    else:
+        # logging.warning('Not Using Docker')
+        app = Eve(
+            settings=get_settings_with_domain(),
+            auth=auth_view.TokenAuth,
+            validator=OpenRideValidator
+        )
+
+
+    # @patch('eve.flaskapp.ensure_mongo_indexes')
+    # def DO_NOT_CREATE_MONGO_INDEX_IN_DOCKER(app, resource, func):
+    #     print('Patched ensure_mongo_indexes')
+    #     return
+
+    # with patch('eve.flaskapp.ensure_mongo_indexes') as mock_index_maker:
+    #     mock_index_maker.return_value = 'Mocked'
+    #     app = Eve(
+    #         settings=get_settings_with_domain(),
+    #         auth=auth_view.TokenAuth,
+    #         validator=OpenRideValidator
+    #     )
 
     configure_app(app, testing)
     configure_extensions(app, cli)
@@ -63,8 +92,6 @@ def create_app(config=None, testing=False, cli=False):
     register_flask_classful_views(app)
 
     # dashboard.bind(app)
-    metrics = PrometheusMetrics(app)
-    metrics.info('Openroad', 'OpenRoad API', version='0.0.1')
 
     # print(app.url_map)
 

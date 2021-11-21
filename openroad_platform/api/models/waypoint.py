@@ -152,6 +152,10 @@ class Waypoint:
         'schema': schema,
         # 'auto_add_user': True,
         'mongo_indexes': {
+            'run_id_index':[
+                ('run_id', 1),
+                ('sim_clock', 1),
+            ],
             # 'latest_state_index': [
             #     ('run_id', 1),
             #     ('event.state', 1),
@@ -212,7 +216,7 @@ class Waypoint:
                     ('_updated', 1),
                 ]
             ),
-            'updated_trip_index': (
+            'updated_index': (
                 [
                     ('run_id', 1),
                     ('_updated', 1),
@@ -224,6 +228,13 @@ class Waypoint:
                     ('user', 1),
                     ('trip', 1),
                     ('event.state', 1),
+                ]
+            ),
+            'state_index': (
+                [
+                    ('run_id', 1),
+                    ('event.state', 1),
+                    ('sim_clock', 1)
                 ]
             ),
         },

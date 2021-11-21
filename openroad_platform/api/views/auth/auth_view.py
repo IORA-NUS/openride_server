@@ -210,22 +210,26 @@ def user_identity_loader_callback(_id):
     }
 
 
-@jwt.user_lookup_loader
-def user_loader_callback(header, jwt_dict):
-    ''' '''
-    # user = app.data.find_one_raw(
-    #     'user', _id=jwt_dict[app.config["JWT_IDENTITY_CLAIM"]])
-    db = app.data.driver.db
-    user_resource = db['user']
+# # NOTE This makes a DB Call and is needed only if get_current_user() is used ainwhere in the service
+# # At the moment It is not needed and hence commenting this section to avoid unnecessary DB Call
+# # Is called at every request ouch.
+# # https://flask-jwt-extended.readthedocs.io/en/stable/api/#flask_jwt_extended.get_current_user
+# @jwt.user_lookup_loader
+# def user_loader_callback(header, jwt_dict):
+#     ''' '''
+#     # user = app.data.find_one_raw(
+#     #     'user', _id=jwt_dict[app.config["JWT_IDENTITY_CLAIM"]])
+#     db = app.data.driver.db
+#     user_resource = db['user']
 
-    id_payload = jwt_dict[app.config["JWT_IDENTITY_CLAIM"]]
-    _id = id_payload['_id']
-    # role = id_payload['role']
-    lookup = {'_id': ObjectId(id_payload['_id'])}
-    # user = app.data.find_one_raw('user', _id=_id)
-    user = user_resource.find_one(lookup)
+#     id_payload = jwt_dict[app.config["JWT_IDENTITY_CLAIM"]]
+#     _id = id_payload['_id']
+#     # role = id_payload['role']
+#     lookup = {'_id': ObjectId(id_payload['_id'])}
+#     # user = app.data.find_one_raw('user', _id=_id)
+#     user = user_resource.find_one(lookup)
 
-    return user
+#     return user
 
 
 # @jwt.token_in_blocklist_loader
@@ -244,21 +248,29 @@ class TokenAuth(TokenAuth):
         # accounts = app.data.driver.db['accounts']
         # return accounts.find_one({'token': token})
         try:
-            db = app.data.driver.db
-            user_resource = db['user']
+          # # NOTE: IN Simulation world Security can be controlled with token alons.
+          # # SO check_auth shall avoid making DB Calls as it is expensive (every request, ouch)
+          #   db = app.data.driver.db
+          #   user_resource = db['user']
+
+          #   id_payload = get_jwt()[app.config["JWT_IDENTITY_CLAIM"]]
+
+          #   lookup = {'_id': ObjectId(id_payload['_id'])}
+          #   if allowed_roles:
+          #       lookup['role'] = {'$in': allowed_roles}
+
+          #   user = user_resource.find_one(lookup)
+
+          #   if user['role'] != 'admin':
+          #       self.set_request_auth_value(id_payload['_id'])
+          #   return user is not None
 
             id_payload = get_jwt()[app.config["JWT_IDENTITY_CLAIM"]]
-
-            lookup = {'_id': ObjectId(id_payload['_id'])}
-            if allowed_roles:
-                lookup['role'] = {'$in': allowed_roles}
-
-            user = user_resource.find_one(lookup)
-
-            if user['role'] != 'admin':
+            if id_payload['role'] != 'admin':
                 self.set_request_auth_value(id_payload['_id'])
 
-            return user is not None
+            return True
+
         except Exception as e:
             print(e)
             raise e

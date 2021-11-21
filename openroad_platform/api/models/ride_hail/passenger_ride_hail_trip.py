@@ -180,6 +180,11 @@ class PassengerRideHailTrip:
         'schema': schema,
         # 'auto_add_user': True,
         'mongo_indexes': {
+            'run_id_index':[
+                ('run_id', 1),
+                ('sim_clock', 1),
+                ('is_active', 1),
+            ],
             'passenger_trip_index':[
                 ('run_id', 1),
                 ('user', 1),
@@ -193,9 +198,9 @@ class PassengerRideHailTrip:
                 ('passenger', 1),
                 ('_created', -1),
             ],
-            'pickup_loc_index': [
+            'assignment_index': [
                 ('run_id', 1),
-                ('user', 1),
+                # ('user', 1),
                 ('state', 1),
                 ('pickup_loc', '2dsphere'),
                 ('is_active', 1),
@@ -206,7 +211,7 @@ class PassengerRideHailTrip:
                 ('user', 1),
                 ('is_active', 1),
             ],
-            'recenttrips_by_state_index': [
+            'user_state_index': [
                 ('run_id', 1),
                 ('user', 1),
                 ('state', 1),
@@ -220,7 +225,16 @@ class PassengerRideHailTrip:
                 ('is_active', 1),
                 # ('_created', -1),
             ],
-
+            'state_loc_index':[
+                ('run_id', 1),
+                ('state', 1),
+                ('pickup_loc', '2dsphere'),
+            ],
+            'state_index':[
+                ('run_id', 1),
+                ('state', 1),
+                ('sim_clock', 1),
+            ],
             'force_quit_index': (
                 [
                     ('run_id', 1),

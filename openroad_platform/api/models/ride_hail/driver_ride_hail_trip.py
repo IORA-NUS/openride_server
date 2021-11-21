@@ -254,6 +254,11 @@ class DriverRideHailTrip:
         'schema': schema,
         # 'auto_add_user': True,
         'mongo_indexes': {
+            'run_id_index':[
+                ('run_id', 1),
+                ('sim_clock', 1),
+                ('is_active', 1),
+            ],
             'driver_trip_index':[
                 ('run_id', 1),
                 ('user', 1),
@@ -264,7 +269,6 @@ class DriverRideHailTrip:
                 ('run_id', 1),
                 ('user', 1),
                 ('driver', 1),
-                # ('is_occupied', 1),
                 ('_created', -1),
             ],
             'vehicle_history_index': [
@@ -289,10 +293,10 @@ class DriverRideHailTrip:
             ],
             'driver_assignment_index':[
                 ('run_id', 1),
-                ('user', 1),
+                ('state', 1),
+                # ('user', 1),
                 ('is_occupied', 1),
                 ('is_active', 1),
-                ('state', 1),
                 ('current_loc', '2dsphere'),
             ],
            'active_trips_index': [
@@ -300,7 +304,22 @@ class DriverRideHailTrip:
                 ('user', 1),
                 ('is_active', 1),
             ],
-
+            'state_loc_index':[
+                ('run_id', 1),
+                ('state', 1),
+                ('current_loc', '2dsphere'),
+            ],
+            'state_index':[
+                ('run_id', 1),
+                ('state', 1),
+                ('sim_clock', 1),
+            ],
+            'state_index':[
+                ('run_id', 1),
+                ('state', 1),
+                ('is_occupied', 1),
+                ('sim_clock', 1),
+            ],
             # 'driver_distance_index': [
             #     ('is_occupied', 1),
             #     ('driver', 1),

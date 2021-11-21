@@ -61,7 +61,7 @@ settings = {
     'OPTIMIZE_PAGINATION_FOR_SPEED': True,
 
     # 'ALLOW_CUSTOM_FIELDS_IN_GEOJSON': True,
-    # 'NORMALIZE_ON_PATCH': False,
+    'NORMALIZE_ON_PATCH': False,
 
 }
 

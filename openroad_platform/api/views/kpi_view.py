@@ -3,7 +3,6 @@ from flask import abort, Response, request, jsonify, Blueprint, make_response
 import json
 # from flask_jwt_extended import get_jwt, jwt_required
 from bson.objectid import ObjectId
-from numpy.lib.twodim_base import tri
 from werkzeug.datastructures import MultiDict
 
 from flask_classful import FlaskView, route

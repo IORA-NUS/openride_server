@@ -14,4 +14,4 @@ RUN pip install -r requirements.txt
 COPY . .
 # run the application
 # CMD gunicorn --statsd-host=localhost:9125 --statsd-prefix=helloworld --log-level=INFO --limit-request-line 0 --workers 8 --worker-class eventlet  --bind 0.0.0.0:11654 wsgi:app --reload
-CMD gunicorn --log-level=INFO --limit-request-line 0 --workers 8 --worker-class eventlet  --bind 0.0.0.0:11654 wsgi:app --reload
+CMD gunicorn --log-level=WARNING --limit-request-line 0 --workers 8 --worker-class eventlet  --bind 0.0.0.0:11654 wsgi:app --reload

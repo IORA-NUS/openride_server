@@ -88,6 +88,9 @@ class Passenger:
         'schema': schema,
         # 'auto_add_user': True,
         'mongo_indexes': {
+            'run_id_index':[
+                ('run_id', 1),
+            ],
             'state_index': [
                 ('run_id', 1),
                 ('user', 1),

@@ -56,17 +56,21 @@ class RunConfig:
             #     ('trip', 1),
             #     ('counter', 1),
             # ],
-            'name_index': [
-                ('name', 1),
-            ],
             'unique_run_id_index': (
                 [
                     ('run_id', 1),
                 ],
                 {'unique': True}
             ),
+            'name_index': [
+                ('name', 1),
+                ('_updated', 1),
+            ],
             'status_index': [
                 ('status', 1),
+                ('_updated', 1),
+            ],
+            'recent_index': [
                 ('_updated', 1),
             ],
 

@@ -63,6 +63,10 @@ class Engine:
         # 'auto_add_user': True,
         'allowed_roles': ['admin'],
         'mongo_indexes': {
+            'run_id_index':[
+                ('run_id', 1),
+                ('sim_clock', 1),
+            ],
             'unique_name_index': (
                 [
                     ('run_id', 1),
