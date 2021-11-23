@@ -152,22 +152,11 @@ class Waypoint:
         'schema': schema,
         # 'auto_add_user': True,
         'mongo_indexes': {
-            'run_id_index':[
-                ('run_id', 1),
-                ('sim_clock', 1),
-            ],
-            # 'latest_state_index': [
+            # 'run_id_index':[
             #     ('run_id', 1),
-            #     ('event.state', 1),
-            #     ('_created', -1),
+            #     ('sim_clock', 1),
             # ],
-
-            # 'trip_index': [
-            #     ('run_id', 1),
-            #     ('trip', 1),
-            #     ('counter', 1),
-            # ],
-            'unique_counter_index': (
+            'unique_trip_order_index': (
                 [
                     ('run_id', 1),
                     ('user', 1),
@@ -176,67 +165,73 @@ class Waypoint:
                 ],
                 {'unique': True}
             ),
-            'updated_trip_and_user_index': (
-                [
-                    ('run_id', 1),
-                    ('user', 1),
-                    ('trip', 1),
-                    ('_updated', 1),
-                ]
-            ),
-            'updated_agent_type_index': (
-                [
-                    ('run_id', 1),
-                    ('user', 1),
-                    # ('entity', 1),
-                    ('agent.type', 1),
-                    ('_updated', 1),
-                ]
-            ),
-            'updated_agent_id_index': (
-                [
-                    ('run_id', 1),
-                    ('user', 1),
-                    # ('agent.type', 1),
-                    ('agent.id', 1),
-                    ('_updated', 1),
-                ]
-            ),
-            'updated_trips_by_user_index': (
-                [
-                    ('run_id', 1),
-                    ('user', 1),
-                    ('_updated', 1),
-                ]
-            ),
-            'updated_trip_index': (
-                [
-                    ('run_id', 1),
-                    ('trip', 1),
-                    ('_updated', 1),
-                ]
-            ),
-            'updated_index': (
-                [
-                    ('run_id', 1),
-                    ('_updated', 1),
-                ]
-            ),
-            'trip_state_index': (
-                [
-                    ('run_id', 1),
-                    ('user', 1),
-                    ('trip', 1),
-                    ('event.state', 1),
-                ]
-            ),
-            'state_index': (
-                [
-                    ('run_id', 1),
-                    ('event.state', 1),
-                    ('sim_clock', 1)
-                ]
-            ),
+            'path_order_index': ([
+                ('run_id', 1),
+                ('sim_clock', 1),
+                ('trip', 1),
+                ('counter', 1),
+            ]),
+            # 'updated_trip_and_user_index': (
+            #     [
+            #         ('run_id', 1),
+            #         ('user', 1),
+            #         ('trip', 1),
+            #         ('_updated', 1),
+            #     ]
+            # ),
+            # 'updated_agent_type_index': (
+            #     [
+            #         ('run_id', 1),
+            #         ('user', 1),
+            #         # ('entity', 1),
+            #         ('agent.type', 1),
+            #         ('_updated', 1),
+            #     ]
+            # ),
+            # 'updated_agent_id_index': (
+            #     [
+            #         ('run_id', 1),
+            #         ('user', 1),
+            #         # ('agent.type', 1),
+            #         ('agent.id', 1),
+            #         ('_updated', 1),
+            #     ]
+            # ),
+            # 'updated_trips_by_user_index': (
+            #     [
+            #         ('run_id', 1),
+            #         ('user', 1),
+            #         ('_updated', 1),
+            #     ]
+            # ),
+            # 'updated_trip_index': (
+            #     [
+            #         ('run_id', 1),
+            #         ('trip', 1),
+            #         ('_updated', 1),
+            #     ]
+            # ),
+            # 'updated_index': (
+            #     [
+            #         ('run_id', 1),
+            #         ('_updated', 1),
+            #     ]
+            # ),
+            # 'trip_state_index': (
+            #     [
+            #         ('run_id', 1),
+            #         ('user', 1),
+            #         ('trip', 1),
+            #         ('event.state', 1),
+            #     ]
+            # ),
+            # 'state_index': (
+            #     [
+            #         ('run_id', 1),
+            #         ('event.state', 1),
+            #         ('sim_clock', 1)
+            #     ]
+            # ),
         },
         # 'resource_methods': ['GET', 'POST'],
         'resource_methods': ['GET'], # , 'POST'

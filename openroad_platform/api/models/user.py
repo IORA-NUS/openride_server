@@ -125,8 +125,18 @@ class User:
         'url': 'user',
         'schema': schema,
         'mongo_indexes': {
-            'role_index': [('role', 1)],
-            'status_index': [('status', 1)],
+            'role_index': [
+                ('role', 1)
+            ],
+            'status_index': [
+                ('status', 1)
+            ],
+            'email_index': (
+                [
+                    ('email', 1)
+                ],
+                {'unique': True}
+            )
         },
         'resource_methods': ['GET'],
         'item_methods': ['GET', 'PATCH'],

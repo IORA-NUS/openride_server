@@ -96,7 +96,7 @@ class Passenger:
                 ('user', 1),
                 ('state', 1)
             ],
-            'unique_user_index': (
+            'run_id_user_index': (
                 [
                     ('run_id', 1),
                     ('user', 1),

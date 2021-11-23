@@ -8,17 +8,17 @@ import traceback
 from eve.methods.post import post, post_internal
 from api.state_machine import RidehailDriverTripStateMachine
 
-class DriverRideHailTripStateMachine_Managed(RidehailDriverTripStateMachine):
+# class DriverRideHailTripStateMachine_Managed(RidehailDriverTripStateMachine):
 
-    # def on_end_trip(self, doc):
-    def on_end_trip(self, doc):
-        doc['is_active'] = False
+#     # def on_end_trip(self, doc):
+#     def on_end_trip(self, doc):
+#         doc['is_active'] = False
 
-    def on_reject(self, doc):
-        doc['is_active'] = False
+#     def on_reject(self, doc):
+#         doc['is_active'] = False
 
-    def on_cancel(self, doc):
-        doc['is_active'] = False
+#     def on_cancel(self, doc):
+#         doc['is_active'] = False
 
 
 
@@ -37,7 +37,8 @@ class DriverRideHailTripController:
 
             # Update state
             try:
-                machine = DriverRideHailTripStateMachine_Managed(start_value=document['state'])
+                # machine = DriverRideHailTripStateMachine_Managed(start_value=document['state'])
+                machine = RidehailDriverTripStateMachine(start_value=document['state'])
                 machine.run(updates.get('transition'), updates)
                 updates['state'] = machine.current_state.identifier
                 updates['feasible_transitions'] = [t.identifier for t in machine.current_state.transitions]

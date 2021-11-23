@@ -45,18 +45,7 @@ class RunConfig:
         'url': 'run_config',
         'schema': schema,
         'mongo_indexes': {
-            # 'latest_state_index': [
-            #     ('run_id', 1),
-            #     ('event.state', 1),
-            #     ('_created', -1),
-            # ],
-
-            # 'trip_index': [
-            #     ('run_id', 1),
-            #     ('trip', 1),
-            #     ('counter', 1),
-            # ],
-            'unique_run_id_index': (
+            'run_id_index': (
                 [
                     ('run_id', 1),
                 ],
