@@ -133,7 +133,10 @@ def get_settings_with_domain():
         'passenger': Passenger.model,
 
         'driver_ride_hail_trip': DriverRideHailTrip.model,
+        'driver_ride_hail_trip_count': DriverRideHailTrip.count,
+
         'passenger_ride_hail_trip': PassengerRideHailTrip.model,
+        'passenger_ride_hail_trip_count': PassengerRideHailTrip.count,
 
         'waypoint': Waypoint.model,
         'trip_waypoints': Waypoint.trip_waypoints,

@@ -265,9 +265,14 @@ class TokenAuth(TokenAuth):
           #       self.set_request_auth_value(id_payload['_id'])
           #   return user is not None
 
+
             id_payload = get_jwt()[app.config["JWT_IDENTITY_CLAIM"]]
             if id_payload['role'] != 'admin':
                 self.set_request_auth_value(id_payload['_id'])
+
+            if allowed_roles:
+                if not (id_payload['role'] in allowed_roles):
+                    return False
 
             return True
 

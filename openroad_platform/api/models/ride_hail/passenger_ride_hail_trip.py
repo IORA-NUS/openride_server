@@ -249,24 +249,22 @@ class PassengerRideHailTrip:
         'item_methods': ['GET', 'PATCH'],
     }
 
+    count = {
+        'datasource': {
+            'source': 'passenger_ride_hail_trip',
+            'aggregation': {
+                'pipeline': [
+                    {'$match': {'run_id': '$run_id',
+                                'state': '$state'}},
+                    {'$count': 'num_trips'}
+                ]
+            }
+        },
+        'url': 'passenger/ride_hail/trip/count',
+        'pagination': False,
+        'allowed_roles': ['admin'],
+
+    }
 
 
-
-
-
-
-
-
-
-
-# class WaypointEvent(EmbeddedDocument):
-#     location = PointField(required=True)
-#     timestamp = DateTimeField(required=False) #, default=datetime.utcnow)
-#     activity = EnumField(enum=Status, required=False) #, default=ActivityStatus.others)
-
-
-# class WaypointStats(EmbeddedDocument):
-#     distance = IntField(required=True, default=0) # in meters
-#     time = IntField(required=True, default=0) # in seconds
-#     speed = FloatField(required=True, default=0) # m/sec
 

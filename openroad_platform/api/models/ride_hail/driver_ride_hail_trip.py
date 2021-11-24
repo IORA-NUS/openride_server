@@ -380,6 +380,25 @@ class DriverRideHailTrip:
         'item_methods': ['GET', 'PATCH'],
     }
 
+    count = {
+        'datasource': {
+            'source': 'driver_ride_hail_trip',
+            'aggregation': {
+                'pipeline': [
+                    {'$match': {'run_id': '$run_id',
+                                'state': '$state',
+                                'is_occupied': '$is_occupied'}},
+                    {'$count': 'num_trips'}
+                ]
+            }
+        },
+        'url': 'driver/ride_hail/trip/count',
+        'pagination': False,
+        'allowed_roles': ['admin'],
+
+    }
+
+
 
 
 
