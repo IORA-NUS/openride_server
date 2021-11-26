@@ -33,7 +33,6 @@ from api.views import (UserView, #user_bp,
                         DriverRideHailTripView, PassengerRideHailTripView,
                         DriverRideHailTripWorkflowView, PassengerRideHailTripWorkflowView,
                         # DriverRideHailTripCollectionView, PassengerRideHailTripCollectionView,
-                        # GrafanaAnalyticsView, GrafanaRunConfigView
                     )
 
 
@@ -233,5 +232,3 @@ def register_flask_classful_views(app):
     WaypointHistoryView.register(app)
     KpiHistoryView.register(app)
 
-    # GrafanaAnalyticsView.register(app)
-    # GrafanaRunConfigView.register(app)
