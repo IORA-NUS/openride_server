@@ -26,17 +26,23 @@ class KpiView:
     @classmethod
     def on_insert(cls, documents):
         ''' '''
-        document = documents[0]
-        try:
-            # print('Updating Waypoint Stats on_insert()')
+        # document = documents[0]
+        # try:
+            # # print('Updating Waypoint Stats on_insert()')
+            # if document.get('sim_clock') is not None:
+            #     document['_created'] = document['sim_clock']
+            #     document['_updated'] = document['sim_clock']
+            # else:
+            #     print("document.get('sim_clock') is None", document)
+
+        # except Exception as e:
+        #     abort(Response(str(e), status=403))
+        for document in documents:
             if document.get('sim_clock') is not None:
                 document['_created'] = document['sim_clock']
                 document['_updated'] = document['sim_clock']
             else:
                 print("document.get('sim_clock') is None", document)
-
-        except Exception as e:
-            abort(Response(str(e), status=403))
 
 
 

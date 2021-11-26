@@ -1,4 +1,4 @@
-from api.utils import Env
+from analytics.utils import Env
 
 DEBUG = Env.bool('DEBUG', True)
 SECRET_KEY = Env.string('SECRET_KEY', 'changeme')
@@ -19,7 +19,7 @@ MONGODB_NAME = Env.string('MONGODB_NAME', 'OpenRoadDB')
 # }]
 
 SWAGGER_INFO = {
-    'title': 'OpenRoad API',
+    'title': 'OpenRoad Analytics',
     'version': '0.0.1',
     'description': 'an API description',
     'termsOfService': 'my terms of service',

@@ -3,6 +3,10 @@ services:
     api:
         build: openroad_platform
         # image: 192.168.10.135:43210/openroad_platform  # goes to local registry
+    analytics:
+        build: openroad_analytics
+        ports:
+            - 11655:11655
 
     nginx:
         container_name: nginx
