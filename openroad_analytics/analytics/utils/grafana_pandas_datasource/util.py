@@ -32,7 +32,8 @@ def dataframe_to_json_table(target, df):
 
     if isinstance(df, pd.DataFrame):
         response.append({'type': 'table',
-                         'columns': df.columns.map(lambda col: {"text": col}).tolist(),
+                        #  'columns': df.columns.map(lambda col: {"text": col}).tolist(),
+                         'columns': df.columns.map(lambda col: {"time": col} if col == 'sim_clock' else {"text": col} ).tolist(),
                          'rows': df.where(pd.notnull(df), None).values.tolist()})
     else:
         abort(404, Exception('Received object is not a dataframe.'))

@@ -21,7 +21,11 @@ from analytics.views import (
 
 from eve.io.mongo import validation
 
-from analytics.data_factory.registry import register_metric_finders, register_metric_readers
+from analytics.data_factory.registry import (
+    register_metric_finders,
+    register_metric_readers,
+    # register_annotation_readers
+)
 
 
 
@@ -31,8 +35,8 @@ def create_app(config=None, testing=False, cli=False):
     # if using docker, monkey patch ensure_mongo_indexes
     # ENV DOCKER=true
     register_metric_finders()
-
     register_metric_readers()
+    # register_annotation_readers()
 
     if os.environ.get('DOCKER'):
         with patch('eve.flaskapp.ensure_mongo_indexes') as mock_index_maker:

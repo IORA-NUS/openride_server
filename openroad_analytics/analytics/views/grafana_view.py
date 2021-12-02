@@ -14,6 +14,7 @@ import pandas as pd
 from analytics.utils.grafana_pandas_datasource.registry import data_generators as dg
 from analytics.utils.grafana_pandas_datasource.util import dataframe_to_response, dataframe_to_json_table, annotations_to_response
 
+from analytics.utils.utils import infer_run_id_list
 
 class GrafanaView(FlaskView):
     ''' '''
@@ -21,27 +22,6 @@ class GrafanaView(FlaskView):
     route_base = '/'
     # decorators = [requires_auth('kpi')]
     db = None
-    # allowed_metrics = {
-    #     'revenue_step': {'collection': 'kpi',},
-    #     'num_cancelled_step': {'collection': 'kpi',},
-    #     'num_served_step': {'collection': 'kpi',},
-    #     'wait_time_driver_confirm_step': {'collection': 'kpi',},
-    #     'wait_time_total_step': {'collection': 'kpi',},
-    #     'wait_time_assignment_step': {'collection': 'kpi',},
-    #     'wait_time_pickup_step': {'collection': 'kpi',},
-    #     'service_score_step': {'collection': 'kpi',},
-
-    #     # 'revenue_cum': {'collection': 'kpi',},
-    #     # 'num_cancelled_cum': {'collection': 'kpi',},
-    #     # 'num_served_cum': {'collection': 'kpi',},
-    #     # 'wait_time_driver_confirm_cum': {'collection': 'kpi',},
-    #     # 'wait_time_total_cum': {'collection': 'kpi',},
-    #     # 'wait_time_assignment_cum': {'collection': 'kpi',},
-    #     # 'wait_time_pickup_cum': {'collection': 'kpi',},
-    #     # 'service_score_cum': {'collection': 'kpi',},
-
-    # }
-
 
     def before_request(self, name, *args, **kwargs):
         ''' '''
@@ -82,20 +62,20 @@ class GrafanaView(FlaskView):
             return jsonify(metrics)
         else:
             metric_options = dg.metric_finders[finder](target)
-            # print(metric_options[target])
+
+            print(list(metric_options[target]))
+
             return jsonify(list(metric_options[target]))
 
 
     @route('/query', methods=['GET', 'POST'])
     def query(self, **lookup):
         ''' '''
-        print(request.json)
-
+        # print(request.json)
         req = request.get_json()
+        scopedVars = request.json['scopedVars']
 
         results = []
-
-        scopedVars = request.json['scopedVars']
 
         ts_range = {'$gt': pd.Timestamp(req['range']['from']).to_pydatetime(),
                     '$lte': pd.Timestamp(req['range']['to']).to_pydatetime()}
@@ -106,20 +86,28 @@ class GrafanaView(FlaskView):
             freq = None
 
         for target_def in req['targets']:
-            # if ':' not in target.get('target', ''):
-            #     abort(404, Exception('Target must be of type: <finder>:<metric_query>, got instead: ' + target['target']))
+            # print(f"{target_def['payload'] = }")
+            run_id_list = infer_run_id_list(scopedVars, target_def['payload'])
 
-            req_type = target_def.get('type', 'timeserie')
-            formula = target_def['payload'].get('formula')
-
-            # finder, target = target['target'].split(':', 1)
-            finder = target = target_def['target']
-            query_results = dg.metric_readers[finder](target, ts_range, scopedVars, formula)
-
-            if req_type == 'table':
-                results.extend(dataframe_to_json_table(target, query_results))
+            # if type(target_def['payload']) == dict:
+            #     formula = target_def['payload'].get('formula')
+            # else:
+            #     formula = None
+            if type(target_def['payload']) == dict:
+                payload = target_def['payload']
             else:
-                results.extend(dataframe_to_response(target, query_results, freq=freq))
+                payload = {}
+
+            finder = target = target_def['target']
+            query_results = dg.metric_readers[finder](run_id_list, target, ts_range, payload)
+
+            # if req_type == 'table':
+            #     results.extend(dataframe_to_json_table(target, query_results))
+            # elif req_type == 'timeserie':
+            #     results.extend(dataframe_to_response(target, query_results, freq=freq))
+            # else:
+            #     results.extend(dataframe_to_json_table(target, query_results))
+            results.extend(query_results)
 
         return jsonify(results)
 
@@ -136,10 +124,6 @@ def query_annotations():
 
     query = req['annotation']['query']
 
-    # if ':' not in query:
-    #     abort(404, Exception('Target must be of type: <finder>:<metric_query>, got instead: ' + query))
-
-    # finder, target = query.split(':', 1)
     finder = target = query
     results.extend(annotations_to_response(query, dg.annotation_readers[finder](target, ts_range)))
 
