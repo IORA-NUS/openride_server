@@ -18,7 +18,7 @@ from analytics.utils.utils import infer_run_id_list
 
 class GrafanaView(FlaskView):
     ''' '''
-    route_prefix = 'analytics'
+    route_prefix = 'grafana'
     route_base = '/'
     # decorators = [requires_auth('kpi')]
     db = None
@@ -62,8 +62,6 @@ class GrafanaView(FlaskView):
             return jsonify(metrics)
         else:
             metric_options = dg.metric_finders[finder](target)
-
-            print(list(metric_options[target]))
 
             return jsonify(list(metric_options[target]))
 

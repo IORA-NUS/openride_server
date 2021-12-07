@@ -99,5 +99,6 @@ def _series_to_response(df, target):
 
     values = sorted_df.values.tolist()
 
-    return {'target': '%s' % (df.name),
+    return { #'target': '%s' % (df.name),
+            'target': f'{df.name}',
             'datapoints': list(zip(values, timestamps))}
