@@ -249,7 +249,7 @@ class PassengerRideHailTrip:
         'item_methods': ['GET', 'PATCH'],
     }
 
-    count = {
+    count_by_state = {
         'datasource': {
             'source': 'passenger_ride_hail_trip',
             'aggregation': {
@@ -260,10 +260,26 @@ class PassengerRideHailTrip:
                 ]
             }
         },
-        'url': 'passenger/ride_hail/trip/count',
+        'url': 'passenger/ride_hail/trip/count_by_state',
         'pagination': False,
         'allowed_roles': ['admin'],
 
+    }
+
+    count_active = {
+        'datasource': {
+            'source': 'passenger_ride_hail_trip',
+            'aggregation': {
+                'pipeline': [
+                    {'$match': {'run_id': '$run_id',
+                                'is_active': '$is_active'}},
+                    {'$count': 'num_trips'}
+                ]
+            }
+        },
+        'url': 'passenger/ride_hail/trip/count_active',
+        'pagination': False,
+        'allowed_roles': ['admin'],
     }
 
 

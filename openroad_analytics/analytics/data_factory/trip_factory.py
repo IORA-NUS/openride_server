@@ -58,27 +58,27 @@ class TripFactory():
     @classmethod
     def get_active_agents_as_grafana_ts(cls, run_id_list, metric_name, ts_range, payload):
 
-        if payload.get('type') not in ['value', 'cumulative', 'avg_by_time', 'avg_by_trip']:
-            value_type = 'value'
-        else:
-            value_type = payload.get('type')
+        df = cls.get_active_agents(run_id_list, metric_name, ts_range, payload)
 
-        df = cls.get_active_agents(run_id_list, metric_name, ts_range)
+        # if payload.get('type') not in ['value', 'cumulative', 'avg_by_time', 'avg_by_trip']:
+        #     value_type = 'value'
+        # else:
+        #     value_type = payload.get('type')
 
-        df = pd.pivot_table(df,
-                            index='sim_clock',
-                            columns=['run_id', 'metric'],
-                            values=value_type)
-        # print(df)
-        cols = [(run_id, metric_name) for run_id in run_id_list]
-        df = df[cols]
+        # df = pd.pivot_table(df,
+        #                     index='sim_clock',
+        #                     columns=['run_id', 'metric'],
+        #                     values=value_type)
+        # # print(df)
+        # cols = [(run_id, metric_name) for run_id in run_id_list]
+        # df = df[cols]
 
         result = dataframe_to_response(metric_name, df)
 
         return result
 
     @classmethod
-    def get_active_agents(cls, run_id_list, metric, ts_range):
+    def get_active_agents(cls, run_id_list, metric, ts_range, payload):
         ''' NOTE: This should be moved to a precomputed KPI as this query can be rather slow'''
 
         db = app.data.driver.db
@@ -123,22 +123,46 @@ class TripFactory():
             pax_cursor = pax_collection.aggregate(query)
             docs = list(pax_cursor)
 
-        # for doc in docs:
-        #     doc['entered_market'] = doc['entered_market'].replace(tzinfo=pytz.utc)
-        #     doc['exit_market'] = doc['exit_market'].replace(tzinfo=pytz.utc)
+        # for sim_clock in sim_clock_ticks:
+        #     for run_id in run_id_list:
 
-        for sim_clock in sim_clock_ticks:
-            for run_id in run_id_list:
+        #         value = 0
+        #         for doc in docs:
+        #             if (doc['_id']['run_id'] == run_id) and (doc['entered_market'] <= sim_clock) and (doc['exit_market'] >= sim_clock):
+        #                 value += 1
 
-                value = 0
-                for doc in docs:
-                    if (doc['_id']['run_id'] == run_id) and (doc['entered_market'] <= sim_clock) and (doc['exit_market'] >= sim_clock):
-                        value += 1
+        #         df = pd.concat([pd.DataFrame([[sim_clock, run_id, metric, value]],
+        #                                      columns=df.columns),
+        #                         df],ignore_index=True)
 
-                df = pd.concat([pd.DataFrame([[sim_clock, run_id, metric, value]],
-                                             columns=df.columns),
-                                df],ignore_index=True)
+        metric_collection = {(sim_clock, run_id, metric): 0 for sim_clock in sim_clock_ticks for run_id in run_id_list}
+        for run_id in run_id_list:
+            for doc in docs:
+                metric_collection[(doc['entered_market'], run_id, metric)] += 1
+                metric_collection[(doc['exit_market'], run_id, metric)] -= 1
+
+        df = pd.concat([pd.DataFrame([[k[0], k[1], k[2], v] for k, v in metric_collection.items()
+                                        ], columns=df.columns),
+                        df],ignore_index=True)
+
+        df = df.groupby(['metric', 'run_id', 'sim_clock']).sum() \
+                                    .groupby(level=1).cumsum().reset_index()
+
+
 
         df.sort_values(['run_id', 'metric', 'sim_clock'], inplace=True)
+
+        if payload.get('type') not in ['value', 'cumulative', 'avg_by_time', 'avg_by_trip']:
+            value_type = 'value'
+        else:
+            value_type = payload.get('type')
+
+        df = pd.pivot_table(df,
+                            index='sim_clock',
+                            columns=['run_id', 'metric'],
+                            values=value_type)
+        # print(df)
+        cols = [(run_id, metric) for run_id in run_id_list]
+        df = df[cols]
 
         return df

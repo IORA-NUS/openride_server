@@ -380,7 +380,7 @@ class DriverRideHailTrip:
         'item_methods': ['GET', 'PATCH'],
     }
 
-    count = {
+    count_by_state = {
         'datasource': {
             'source': 'driver_ride_hail_trip',
             'aggregation': {
@@ -392,10 +392,25 @@ class DriverRideHailTrip:
                 ]
             }
         },
-        'url': 'driver/ride_hail/trip/count',
+        'url': 'driver/ride_hail/trip/count_by_state',
         'pagination': False,
         'allowed_roles': ['admin'],
+    }
 
+    count_active = {
+        'datasource': {
+            'source': 'driver_ride_hail_trip',
+            'aggregation': {
+                'pipeline': [
+                    {'$match': {'run_id': '$run_id',
+                                'is_active': '$is_active'}},
+                    {'$count': 'num_trips'}
+                ]
+            }
+        },
+        'url': 'driver/ride_hail/trip/count_active',
+        'pagination': False,
+        'allowed_roles': ['admin'],
     }
 
 

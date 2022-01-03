@@ -60,30 +60,32 @@ class KPIFactory():
     @classmethod
     def get_kpi_as_grafana_ts(cls, run_id_list, metric_name, ts_range, payload):
         ''''''
-        df = cls.get_kpi_time_series(run_id_list, [metric_name], ts_range)
-        if payload.get('type') not in ['value', 'cumulative', 'avg_by_time', 'avg_by_trip']:
-            value_type = 'value'
-        else:
-            value_type = payload.get('type')
+        df = cls.get_kpi_time_series(run_id_list, [metric_name], ts_range, payload)
+        # if payload.get('type') not in ['value', 'cumulative', 'avg_by_time', 'avg_by_trip']:
+        #     value_type = 'value'
+        # else:
+        #     value_type = payload.get('type')
 
-        df = pd.pivot_table(df,
-                            index='sim_clock',
-                            columns=['run_id', 'metric'],
-                            values=value_type)
-        cols = [(run_id, metric_name) for run_id in run_id_list]
-        df = df[cols]
+        # df = pd.pivot_table(df,
+        #                     index='sim_clock',
+        #                     columns=['run_id', 'metric'],
+        #                     values=value_type)
+        # cols = [(run_id, metric_name) for run_id in run_id_list]
+        # df = df[cols]
 
-        df = apply_transform(df, list(df.columns), payload.get('transform'))
+        # df = apply_transform(df, list(df.columns), payload.get('transform'))
         result = dataframe_to_response(metric_name, df)
 
         return result
 
 
     @classmethod
-    def get_kpi_time_series(cls, run_id_list, metric_list, ts_range,):
+    def get_kpi_time_series(cls, run_id_list, metric_list, ts_range, payload):
         db = app.data.driver.db
         collection = db.kpi
+        add_num_served = False
         if 'num_served' not in metric_list:
+            add_num_served = True
             metric_list.append('num_served')
 
         cursor = collection.find({
@@ -113,6 +115,25 @@ class KPIFactory():
                 df.loc[slice, 'cumulative'] = df[slice]['value'].cumsum()
                 df.loc[slice, 'avg_by_time'] = df[slice]['cumulative'] / time_step
                 df.loc[slice, 'avg_by_trip'] = df[slice]['cumulative'] / num_served
+
+        if add_num_served:
+            df = df[df['metric'] != 'num_served']
+            metric_list.remove('num_served')
+
+        if payload.get('type') not in ['value', 'cumulative', 'avg_by_time', 'avg_by_trip']:
+            value_type = 'value'
+        else:
+            value_type = payload.get('type')
+
+        df = pd.pivot_table(df,
+                            index='sim_clock',
+                            columns=['run_id', 'metric'],
+                            values=value_type)
+
+        cols = [(run_id, metric) for run_id in run_id_list for metric in metric_list]
+        df = df[cols]
+
+        df = apply_transform(df, list(df.columns), payload.get('transform'))
 
         return df
 

@@ -26,23 +26,23 @@ class EngineFactory():
     @classmethod
     def get_solver_metric_as_grafana_ts(cls, run_id_list, metric_name, ts_range, payload):
         ''''''
-        df = cls.get_solver_metric_time_series(run_id_list, ts_range)
-        if payload.get('type') not in ['value', 'cumulative', 'avg_by_time', 'avg_by_trip']:
-            value_type = 'value'
-        else:
-            value_type = payload.get('type')
+        df = cls.get_solver_metric_time_series(run_id_list, metric_name, ts_range, payload)
+        # if payload.get('type') not in ['value', 'cumulative', 'avg_by_time', 'avg_by_trip']:
+        #     value_type = 'value'
+        # else:
+        #     value_type = payload.get('type')
 
-        df = pd.pivot_table(df,
-                            index='sim_clock',
-                            columns=['run_id', 'engine_name', 'metric'],
-                            values=value_type)
+        # df = pd.pivot_table(df,
+        #                     index='sim_clock',
+        #                     columns=['run_id', 'engine_name', 'metric'],
+        #                     values=value_type)
 
-        if metric_name != 'all_solver_metrics':
-            ''' '''
-            df = df[[c for c in list(df.columns) if cls.metric_mapper[metric_name] in c]]
+        # if metric_name != 'all_solver_metrics':
+        #     ''' '''
+        #     df = df[[c for c in list(df.columns) if cls.metric_mapper[metric_name] in c]]
 
 
-        df = apply_transform(df, list(df.columns), payload.get('transform'))
+        # df = apply_transform(df, list(df.columns), payload.get('transform'))
         result = dataframe_to_response(metric_name, df)
 
         return result
@@ -50,7 +50,7 @@ class EngineFactory():
 
 
     @classmethod
-    def get_solver_metric_time_series(cls, run_id_list, ts_range):
+    def get_solver_metric_time_series(cls, run_id_list, metric_name, ts_range, payload):
         ''''''
         db = app.data.driver.db
         collection = db['engine_history']
@@ -116,6 +116,25 @@ class EngineFactory():
 
         df = df.melt(id_vars=['sim_clock', 'run_id', 'engine_name'],
                      var_name='metric', value_name='value')
+
+
+        if payload.get('type') not in ['value', 'cumulative', 'avg_by_time', 'avg_by_trip']:
+            value_type = 'value'
+        else:
+            value_type = payload.get('type')
+
+        df = pd.pivot_table(df,
+                            index='sim_clock',
+                            columns=['run_id', 'engine_name', 'metric'],
+                            values=value_type)
+
+        if metric_name != 'all_solver_metrics':
+            ''' '''
+            df = df[[c for c in list(df.columns) if cls.metric_mapper[metric_name] in c]]
+
+
+        df = apply_transform(df, list(df.columns), payload.get('transform'))
+
 
         return df
 
