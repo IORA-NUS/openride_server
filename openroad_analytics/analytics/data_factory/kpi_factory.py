@@ -60,6 +60,7 @@ class KPIFactory():
     @classmethod
     def get_kpi_as_grafana_ts(cls, run_id_list, metric_name, ts_range, payload):
         ''''''
+        # print(run_id_list, metric_name, ts_range, payload)
         df = cls.get_kpi_time_series(run_id_list, [metric_name], ts_range, payload)
         # if payload.get('type') not in ['value', 'cumulative', 'avg_by_time', 'avg_by_trip']:
         #     value_type = 'value'

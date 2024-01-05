@@ -18,13 +18,14 @@ itsdangerous==2.0.1
 Jinja2==3.0.3
 MarkupSafe==2.0.1
 mongoengine==0.23.1
+numpy==1.26.3
 passlib==1.7.4
 PyJWT==2.3.0
 pymongo==3.12.1
-pyproj==3.3.0
+pyproj==3.6.1
 python-dateutil==2.8.2
 python-statemachine==0.8.0
-Shapely==1.8.0
+shapely==2.0.2
 simplejson==3.17.6
 six==1.16.0
 undecorated==0.3.0
