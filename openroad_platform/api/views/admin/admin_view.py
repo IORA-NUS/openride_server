@@ -22,6 +22,16 @@ from api.state_machine import (RidehailDriverTripStateMachine,
 
 @blueprint.route('/plot_state_machines', methods=['POST'])
 def state_machine_plotter():
+    """
+    Generates and plots state diagrams for multiple state machine classes.
+
+    This function iterates over a predefined list of state machine classes and calls
+    `plot_state_machine` for each, generating their respective state diagrams. Upon completion,
+    returns a JSON response indicating success.
+
+    Returns:
+        tuple: A JSON response with the message 'Success' and HTTP status code 200.
+    """
     for sm in [UserStateMachine,
             WorkflowStateMachine,
             RidehailDriverTripStateMachine,

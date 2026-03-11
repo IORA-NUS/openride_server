@@ -22,6 +22,21 @@ from api.state_machine import WorkflowStateMachine
 
 
 class Driver:
+    """
+    Driver model schema definition for the OpenRoad platform.
+
+    Attributes:
+        profile_schema (dict): Validation schema for driver profile information, including market type, patience, and service score.
+        license_schema (dict): Validation schema for driver license details, including license number, country, and expiry date.
+        schema (dict): Main schema for the Driver resource, combining license, profile, workflow state, transition, busy status, and simulation clock.
+        model (dict): Configuration for the Driver resource, including datasource, URL pattern, schema, MongoDB indexes, and supported resource/item methods.
+
+    Notes:
+        - The schema enforces required fields and allowed values for driver attributes.
+        - Workflow state and transition values are dynamically populated from WorkflowStateMachine.
+        - MongoDB indexes ensure uniqueness for user and license combinations.
+        - Some fields and features are commented out for future extension (e.g., vehicle list, waypoint).
+    """
 
     profile_schema = {
         'market': { # patience in Seconds

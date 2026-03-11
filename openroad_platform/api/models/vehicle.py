@@ -21,6 +21,21 @@ from api.state_machine import WorkflowStateMachine
 
 
 class Vehicle:
+    """
+    Vehicle model schema definition for the OpenRoad platform API.
+
+    Attributes:
+        RegistrationSchema (dict): Validation schema for vehicle registration details, including number, country, and expiry.
+        schema (dict): Main validation schema for vehicle objects, including fields for run ID, registration, capacity, color, state, transition, authorised drivers, and simulation clock.
+        model (dict): Configuration for the vehicle resource, including datasource, URL pattern, schema, MongoDB indexes, and allowed resource/item methods.
+
+    Key Features:
+        - Supports nested registration details with validation.
+        - Tracks vehicle state and allowed transitions using WorkflowStateMachine.
+        - Allows assignment of authorised drivers via object IDs.
+        - Enforces unique constraints on registration and driver-registration combinations.
+        - Designed for integration with MongoDB and RESTful resource methods.
+    """
 
     RegistrationSchema = {
         'num': {

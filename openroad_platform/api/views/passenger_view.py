@@ -13,7 +13,33 @@ from eve.auth import auth_field_and_value
 
 
 class PassengerView:
-    ''' '''
+    """
+    PassengerView handles API operations related to passenger resources.
+
+    Class Attributes:
+        blueprint (Blueprint): Flask blueprint for passenger-related routes.
+
+    Class Methods:
+        on_insert(documents):
+            Validates and processes passenger documents before insertion.
+            If 'sim_clock' is present in a document, sets '_created' and '_updated' fields accordingly.
+            Aborts with status 403 if validation fails.
+
+        on_update(updates, document):
+            Validates and processes passenger documents before update.
+            If 'sim_clock' is present in updates, sets '_updated' field accordingly.
+            Aborts with status 403 if validation fails.
+
+    Commented Methods:
+        pre_POST_callback(request):
+            (Commented out) Checks if a passenger already exists for the current user before POST.
+            Aborts with status 403 if passenger exists.
+
+        deregister(id):
+            (Commented out) Deregisters a passenger by updating their status to dormant.
+            Only allows the current user to deregister their own passenger resource.
+    """
+
     blueprint = Blueprint('passenger', __name__, url_prefix='/passenger')
 
 
@@ -30,11 +56,23 @@ class PassengerView:
 
     @classmethod
     def on_insert(cls, documents):
-        ''' '''
+        """
+        Handles the insertion of new passenger documents.
+
+        Validates each document using the PassengerController. If the document contains a 'sim_clock' field,
+        sets the '_created' and '_updated' fields to the value of 'sim_clock'. If any exception occurs during
+        processing, aborts the request with a 403 status and the exception message.
+
+        Args:
+            documents (list): A list of passenger document dictionaries to be inserted.
+
+        Raises:
+            Aborts the request with a 403 status if validation or processing fails.
+        """
         try:
             for document in documents:
                 PassengerController.validate(document)
-                if document.get('sim_clock') is not None:
+                if document.get('sim_clock', None) is not None:
                     document['_created'] = document['sim_clock']
                     document['_updated'] = document['sim_clock']
         except Exception as e:
@@ -43,7 +81,16 @@ class PassengerView:
 
     @classmethod
     def on_update(cls, updates, document):
-        ''' '''
+        """
+        Handles updates to a passenger document by validating the updates and setting the '_updated' field if 'sim_clock' is present.
+
+        Args:
+            updates (dict): The dictionary containing fields to update in the passenger document.
+            document (dict): The current passenger document to be updated.
+
+        Raises:
+            Aborts the request with a 403 status code if validation fails or an exception occurs.
+        """
         try:
             PassengerController.validate(document, updates)
             if updates.get('sim_clock') is not None:

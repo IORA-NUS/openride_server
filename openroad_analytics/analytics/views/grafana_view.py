@@ -17,7 +17,26 @@ from analytics.utils.grafana_pandas_datasource.util import dataframe_to_response
 from analytics.utils.utils import infer_run_id_list
 
 class GrafanaView(FlaskView):
-    ''' '''
+    """
+    GrafanaView provides API endpoints for Grafana integration, enabling metric search and query functionality.
+
+    Endpoints:
+        - GET /: Health check endpoint returning status.
+        - GET, POST /search: Searches for available metrics or metric options based on the provided target.
+        - GET, POST /query: Queries metric data for specified targets and time ranges, returning results in Grafana-compatible format.
+
+    Attributes:
+        route_prefix (str): Prefix for all routes in this view.
+        route_base (str): Base route for this view.
+        db: Database connection, initialized before each request.
+
+    Methods:
+        before_request(name, *args, **kwargs): Initializes database connection before handling requests.
+        root(**lookup): Health check endpoint.
+        search(**lookup): Searches for metrics or metric options.
+        query(**lookup): Queries metric data for specified targets and time ranges.
+    """
+
     route_prefix = 'grafana'
     route_base = '/'
     # decorators = [requires_auth('kpi')]

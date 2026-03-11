@@ -2,7 +2,17 @@ from statemachine import State, StateMachine
 
 
 class UserStateMachine(StateMachine):
-    ''' '''
+    """
+    UserStateMachine defines the workflow for a user's state transitions within the platform.
+
+    States:
+        - dormant: The initial state where the user is inactive.
+        - active: The state where the user is active.
+
+    Transitions:
+        - register: Moves the user from dormant to active.
+        - deregister: Moves the user from active back to dormant.
+    """
 
     dormant = State('dormant', initial=True)
     # activation_requested = State('activation_requested')
@@ -14,7 +24,20 @@ class UserStateMachine(StateMachine):
     deregister = active.to(dormant)
 
 class WorkflowStateMachine(StateMachine):
-    ''' '''
+    """
+    WorkflowStateMachine defines the state transitions for an agent's workflow.
+
+    States:
+        - dormant: Initial state, agent is inactive.
+        - offline: Agent is registered but not online.
+        - online: Agent is actively online.
+
+    Transitions:
+        - register: Moves agent from 'dormant' to 'offline'.
+        - deregister: Moves agent from 'offline' to 'dormant'.
+        - login: Moves agent from 'offline' to 'online'.
+        - logout: Moves agent from 'online' to 'offline'.
+    """
 
     dormant = State('dormant', initial=True)
     offline = State('offline')

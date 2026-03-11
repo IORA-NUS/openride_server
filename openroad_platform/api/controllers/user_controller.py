@@ -9,13 +9,24 @@ from eve.methods.patch import patch_internal
 from api.state_machine import UserStateMachine
 
 class UserController:
-    ''' '''
+    """
+    Controller class for user-related operations within the OpenRoad platform.
+
+    Methods
+    -------
+    validate(document, updates={})
+        Validates and updates the user document state based on provided transitions.
+
+    """
 
     @classmethod
-    def validate(cls, document, updates={}):
-        ''' '''
-        # if updates is not None:
+    def validate(cls, document, updates=None):
+        updates = updates or {}
+
         if updates.get('transition') is not None:
+            if 'state' not in document:
+                raise KeyError("The 'state' key is missing in the document.")
+
             machine = UserStateMachine(start_value=document['state'])
             machine.run(updates.get('transition'))
             updates['state'] = machine.current_state.identifier

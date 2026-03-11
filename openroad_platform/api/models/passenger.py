@@ -25,6 +25,31 @@ from api.state_machine import WorkflowStateMachine
 
 
 class Passenger:
+    """
+    Passenger model definition for the OpenRoad platform.
+
+    Attributes:
+        profile_schema (dict): Schema for passenger profile, including market and patience.
+        schema (dict): Main schema for passenger data, including run_id, state, transition, is_busy, profile, and sim_clock.
+        model (dict): Model configuration for data source, URL routing, schema, MongoDB indexes, and allowed resource/item methods.
+
+    Schema Fields:
+        - run_id (str): Unique identifier for the run. Required.
+        - state (str): Current workflow state. Allowed values are dynamically generated from WorkflowStateMachine. Required and read-only.
+        - transition (str): Workflow transition identifier. Allowed values are dynamically generated from WorkflowStateMachine. Optional.
+        - is_busy (bool): Indicates if the passenger is busy. Optional.
+        - profile (dict): Passenger profile, validated against profile_schema. Required.
+        - sim_clock (datetime): Simulation clock timestamp. Optional.
+
+    MongoDB Indexes:
+        - run_id_index: Index on run_id.
+        - state_index: Compound index on run_id, user, and state.
+        - run_id_user_index: Unique compound index on run_id and user.
+
+    Resource Methods:
+        - GET, POST for collection-level operations.
+        - GET, PATCH for item-level operations.
+    """
 
     profile_schema = {
         'market': { # patience in Seconds

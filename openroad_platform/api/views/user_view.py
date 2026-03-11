@@ -10,11 +10,40 @@ from api.controllers import UserController
 
 
 class UserView:
-    ''' '''
+    """
+    UserView provides hooks for handling user document insertion and updates in the API.
+
+    Class Methods:
+        on_insert(documents):
+            Validates and processes user documents before insertion.
+            - Validates each document using UserController.
+            - If 'sim_clock' is present, sets '_created' and '_updated' timestamps accordingly.
+            - Aborts with HTTP 403 if validation fails.
+
+        on_update(updates, document):
+            Validates and processes user documents before update.
+            - Validates the update using UserController.
+            - If 'sim_clock' is present in updates, sets '_updated' timestamp accordingly.
+            - Aborts with HTTP 403 if validation fails.
+    """
 
     @classmethod
     def on_insert(cls, documents):
-        ''' '''
+        """
+        Handles the insertion of new user documents.
+
+        This method is called when new user documents are being inserted into the database.
+        It validates each document using the UserController's validation logic. If a document
+        contains a 'sim_clock' field, it sets the '_created' and '_updated' fields to the value
+        of 'sim_clock'. If any exception occurs during processing, the request is aborted with
+        a 403 status and the exception message.
+
+        Args:
+            documents (list): A list of user document dictionaries to be inserted.
+
+        Raises:
+            Aborts the request with a 403 status if validation fails or any exception occurs.
+        """
         try:
             for document in documents:
                 # UserStates.validate(document)
@@ -23,12 +52,22 @@ class UserView:
                     document['_created'] = document['sim_clock']
                     document['_updated'] = document['sim_clock']
         except Exception as e:
+            app.logger.error(f"Exception occurred: {e}")
             abort(Response(str(e), status=403))
 
 
     @classmethod
     def on_update(cls, updates, document):
-        ''' '''
+        """
+        Handles updates to a user document by validating the updates and setting the '_updated' field if 'sim_clock' is present.
+
+        Args:
+            updates (dict): The dictionary containing the fields to be updated.
+            document (dict): The current state of the user document before updates.
+
+        Raises:
+            werkzeug.exceptions.HTTPException: If validation fails, aborts the request with a 403 status and logs the exception.
+        """
         # print(f'inside userview.on_update')
         try:
             # UserStates.validate(document, updates)
@@ -36,6 +75,7 @@ class UserView:
             if updates.get('sim_clock') is not None:
                 updates['_updated'] = updates['sim_clock']
         except Exception as e:
+            app.logger.error(f"Exception occurred: {e}")
             abort(Response(str(e), status=403))
 
 

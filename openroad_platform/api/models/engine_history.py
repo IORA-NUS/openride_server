@@ -3,6 +3,26 @@ import json
 
 
 class EngineHistory:
+    """
+    EngineHistory model defines the schema and configuration for storing and accessing engine history records.
+
+    Attributes:
+        schema (dict): Defines the structure of engine history documents, including:
+            - run_id (str): Unique identifier for the engine run. Required.
+            - engine (ObjectId): Reference to the engine resource (_id). Required.
+            - online_params (dict): Parameters used during online operation.
+            - runtime_performance (dict): Performance metrics collected during runtime.
+            - sim_clock (datetime, optional): Simulation clock timestamp.
+
+        model (dict): Configuration for the data source and API resource, including:
+            - datasource (dict): Specifies the MongoDB collection ('engine_history').
+            - url (str): URL pattern for accessing engine history by run_id and engine.
+            - schema (dict): Reference to the schema definition.
+            - allowed_roles (list): Roles permitted to access this resource (e.g., 'admin').
+            - mongo_indexes (dict): MongoDB indexes for efficient querying.
+            - resource_methods (list): Allowed HTTP methods on the resource (e.g., 'GET', 'POST').
+            - item_methods (list): Allowed HTTP methods on individual items (e.g., 'GET').
+    """
 
     schema = {
         'run_id': {

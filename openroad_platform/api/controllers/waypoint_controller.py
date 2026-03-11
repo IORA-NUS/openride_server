@@ -12,12 +12,27 @@ from shapely.geometry import LineString
 from eve.methods.patch import patch_internal
 
 class WaypointController:
-    ''' '''
+    """
+    Controller for managing waypoint statistics within a trip.
+
+    Methods
+    -------
+    update_stats(document):
+        Updates the current and cumulative statistics (distance, duration, speed) for a waypoint document.
+        - Calculates distance using traversed path if available, otherwise uses haversine formula.
+        - Computes duration between waypoints.
+        - Updates the document with current and cumulative stats.
+        - Increments the waypoint counter.
+        - Raises KeyError if 'trip' key is missing in the document.
+    """
     @classmethod
     def update_stats(cls, document):
         ''' '''
         # print("indise WaypointController.update_stats")
         # print(document)
+        if 'trip' not in document:
+            raise KeyError("The 'trip' key is missing in the document.")
+
         trip = document['trip']
         # print(trip)
 

@@ -23,17 +23,57 @@ from api.state_machine import RidehailDriverTripStateMachine
 
 
 class DriverRideHailTripController:
-    ''' '''
+    """
+    Controller for managing driver ride hail trip operations, including validation and waypoint management.
+
+    This class provides methods to:
+    - Validate trip documents during insert and update operations, enforcing business rules such as single active trip per driver and valid state transitions.
+    - Add waypoints to trips, updating trip statistics and maintaining trip state consistency.
+
+    Methods
+    -------
+    validate(document: dict, updates: dict = {}) -> None
+        Validates and updates trip documents during insert and update operations, ensuring only one active trip per driver and handling state transitions.
+
+    add_waypoint(document: dict, updates: dict = {}) -> None
+        Adds a waypoint to a trip, posts the waypoint to the internal endpoint, and updates the trip document with the new waypoint and incremented waypoint count.
+
+    Raises
+    ------
+    Exception
+        If validation fails, state transitions are invalid, or database updates are unsuccessful.
+    """
+
     @classmethod
     def validate(cls, document, updates={}):
-        ''' Additional validation checks and fields auto-added during pre_insert, pre_update hooks '''
+        """
+        Performs additional validation and auto-adds fields during pre-insert and pre-update hooks for driver ride hail trips.
+
+        On update:
+            - Allows updates only if the trip is active (`is_active=True`).
+            - Handles state transitions using the RidehailDriverTripStateMachine.
+            - Updates the trip's state and feasible transitions.
+            - Logs and raises exceptions for invalid state transitions or updates when inactive.
+
+        On insert:
+            - Ensures that only one active trip exists per driver, run, and user.
+            - Sets `is_active=True` if no active trip exists, otherwise raises an exception.
+
+        Args:
+            document (dict): The trip document to validate.
+            updates (dict, optional): Fields to update in the document. Defaults to {}.
+
+        Raises:
+            Exception: If an invalid update or state transition is attempted, or if more than one active trip is detected for a driver.
+        """
+
         db = app.data.driver.db
         if updates != {}:
             # On Update
             # allow update only if trip is_active=True
-            if document['is_active'] == False:
+            if not document['is_active']:
                 # raise Exception('Cannot update when is_active is False')
-                logging.info(f'Cannot update when is_active is False. DriverRideHailTripController', document['_id'], updates)
+                logging.info(f'Cannot update when is_active is False. DriverRideHailTripController: document_id={document["_id"]}, updates={updates}')
 
             # Update state
             try:
@@ -44,7 +84,7 @@ class DriverRideHailTripController:
                 updates['feasible_transitions'] = [t.identifier for t in machine.current_state.transitions]
             except Exception as e:
                 if updates.get('transition') is not None:
-                    raise e
+                    raise Exception(f"Error during state transition '{updates.get('transition')}' with updates {updates}: {e}")
 
         else:
             # On Insert, check to ensure Only one active trip is allowed
@@ -63,6 +103,23 @@ class DriverRideHailTripController:
 
     @classmethod
     def add_waypoint(cls, document, updates={}):
+        """
+        Adds a waypoint to a driver's ride hail trip and updates the trip document accordingly.
+
+        This method creates a waypoint document based on the provided trip document and optional updates,
+        posts it to the internal 'waypoint' endpoint, and updates the corresponding trip document in the
+        database with the new waypoint and incremented waypoint count.
+
+        Args:
+            document (dict): The trip document containing trip and driver information.
+            updates (dict, optional): A dictionary of updates to apply to the waypoint. Defaults to {}.
+
+        Raises:
+            Exception: If posting the waypoint fails or updating the trip document fails.
+
+        Returns:
+            None
+        """
         db = app.data.driver.db
         # print("inside add_waypoint")
         # print(updates)
@@ -90,10 +147,10 @@ class DriverRideHailTripController:
             resp =  post_internal('waypoint', waypoint)
             # print(f"{resp[0]=}")
         except Exception as e:
-            logging.exception(traceback.format_exc())
+            logging.exception("An error occurred while adding a waypoint: %s", traceback.format_exc())
             raise e
 
-        if resp[0].get('_status') == 'ERR':
+        if not resp or not isinstance(resp, list) or not resp[0] or resp[0].get('_status') == 'ERR':
             raise Exception(resp[0])
 
         waypoint_id = resp[0]['_id']
@@ -134,4 +191,10 @@ class DriverRideHailTripController:
                         'num_waypoints': 1
                     },
                 })
+
+            if res.matched_count == 0:
+                logging.error(f"Failed to update trip with ID {document['_id']}: No matching document found.")
+                raise Exception(f"Failed to update trip with ID {document['_id']}: No matching document found.")
+            elif res.modified_count == 0:
+                logging.warning(f"No changes were made to the trip with ID {document['_id']}.")
 

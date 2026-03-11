@@ -13,16 +13,42 @@ from eve.auth import auth_field_and_value
 
 
 class EngineHistoryView:
-    ''' '''
+    """
+    EngineHistoryView handles the insertion and update of engine history records.
+
+    Class Attributes:
+        blueprint (Blueprint): Flask Blueprint for engine history routes.
+
+    Class Methods:
+        on_insert(documents):
+            Processes a list of documents before insertion. If a document contains a 'sim_clock' field,
+            sets the '_created' and '_updated' fields to the value of 'sim_clock'. Aborts with a 403
+            status if an exception occurs.
+
+        on_update(updates, document):
+            Processes updates to a document. If the updates contain a 'sim_clock' field,
+            sets the '_updated' field to the value of 'sim_clock'. Aborts with a 403 status if an
+            exception occurs.
+    """
+
     blueprint = Blueprint('engine_history', __name__, url_prefix='/engine/<engine>/history')
 
 
     @classmethod
     def on_insert(cls, documents):
-        ''' '''
+        """
+        Handles the insertion of documents by setting the '_created' and '_updated' fields
+        to the value of 'sim_clock' if it exists in each document.
+
+        Args:
+            documents (list): A list of dictionaries representing the documents to be inserted.
+
+        Raises:
+            werkzeug.exceptions.HTTPException: If an exception occurs during processing, aborts the request with a 403 status and the exception message.
+        """
         try:
             for document in documents:
-                if document.get('sim_clock') is not None:
+                if document.get('sim_clock', None) is not None:
                     document['_created'] = document['sim_clock']
                     document['_updated'] = document['sim_clock']
         except Exception as e:
@@ -31,9 +57,19 @@ class EngineHistoryView:
 
     @classmethod
     def on_update(cls, updates, document):
-        ''' '''
+        """
+        Handles updates to a document by setting the '_updated' field to the value of 'sim_clock' if it exists in the updates.
+        If an exception occurs during this process, aborts the request with a 403 status and the exception message.
+
+        Args:
+            updates (dict): Dictionary containing the fields to update.
+            document (dict): The original document being updated.
+
+        Raises:
+            Aborts the request with a 403 status if an exception occurs.
+        """
         try:
-            if updates.get('sim_clock') is not None:
+            if updates.get('sim_clock', None) is not None:
                 updates['_updated'] = updates['sim_clock']
         except Exception as e:
             abort(Response(str(e), status=403))

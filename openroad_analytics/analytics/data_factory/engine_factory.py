@@ -6,6 +6,25 @@ from analytics.utils import apply_transform
 
 
 class EngineFactory():
+    """
+    EngineFactory provides methods to retrieve and process solver engine metrics from the database,
+    transforming them into time series data suitable for visualization and analysis.
+
+    Attributes
+    ----------
+    metric_mapper : dict
+        Maps user-facing metric names to internal metric keys used in data processing.
+
+    Methods
+    -------
+    get_solver_metric_as_grafana_ts(run_id_list, metric_name, ts_range, payload)
+        Retrieves solver metric time series data for specified run IDs and metric, processes it,
+        and formats it for Grafana time series visualization.
+
+    get_solver_metric_time_series(run_id_list, metric_name, ts_range, payload)
+        Queries the database for engine history records, computes performance metrics,
+        reshapes the data into a pivot table, applies transformations, and returns the processed DataFrame.
+    """
 
     metric_mapper = {
         'revenue_step_obj' : 'realtime_revenue_step',
@@ -25,7 +44,20 @@ class EngineFactory():
 
     @classmethod
     def get_solver_metric_as_grafana_ts(cls, run_id_list, metric_name, ts_range, payload):
-        ''''''
+        """
+        Retrieves solver metric time series data and formats it for Grafana time series visualization.
+
+        Args:
+            run_id_list (list): List of run IDs to query metrics for.
+            metric_name (str): Name of the metric to retrieve.
+            ts_range (tuple): Time range for the metric query, typically (start, end).
+            payload (dict): Additional parameters for metric retrieval and transformation.
+
+        Returns:
+            dict: Formatted time series data suitable for Grafana visualization.
+
+        """
+
         df = cls.get_solver_metric_time_series(run_id_list, metric_name, ts_range, payload)
         # if payload.get('type') not in ['value', 'cumulative', 'avg_by_time', 'avg_by_trip']:
         #     value_type = 'value'
@@ -51,7 +83,28 @@ class EngineFactory():
 
     @classmethod
     def get_solver_metric_time_series(cls, run_id_list, metric_name, ts_range, payload):
-        ''''''
+        """
+        Retrieves and processes time series data for solver metrics from the engine history collection.
+
+        This method aggregates data for a single run ID, joins engine metadata, computes performance metrics,
+        and reshapes the data for analysis. It supports filtering by metric name and applying transformations.
+
+        Args:
+            run_id_list (list): List containing a single run ID to query.
+            metric_name (str): Name of the metric to retrieve. If 'all_solver_metrics', returns all metrics.
+            ts_range (dict): Dictionary specifying the time series range for 'sim_clock'.
+            payload (dict): Additional parameters for query, including:
+                - 'type' (str): Type of value to extract ('value', 'cumulative', 'avg_by_time', 'avg_by_trip').
+                - 'transform' (str or None): Optional transformation to apply to the result.
+
+        Returns:
+            pandas.DataFrame: A DataFrame containing the requested metric time series, indexed by 'sim_clock',
+            with columns for run ID, engine name, and metric.
+
+        Raises:
+            Exception: If more than one run ID is provided in run_id_list.
+        """
+
         db = app.data.driver.db
         collection = db['engine_history']
         # formula = payload.get('formula')

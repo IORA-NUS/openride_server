@@ -31,6 +31,24 @@ from api.state_machine import RidehailDriverTripStateMachine, RidehailPassengerT
 
 
 class Waypoint:
+    """
+    Waypoint model schema definition for the OpenRoad platform.
+
+    This class provides schema definitions for waypoints, which represent specific locations and states within a trip for ride-hailing agents (drivers or passengers). The schemas are used for data validation and API resource configuration.
+
+    Attributes:
+        event_schema (dict): Schema for event-related waypoint data, including location, traversed path, and trip state.
+        agent_schema (dict): Schema for agent information, specifying type (driver/passenger) and unique identifier.
+        stats_schema (dict): Schema for waypoint statistics such as distance, duration, and speed.
+        schema (dict): Main schema combining run, trip, event, agent, stats, and simulation clock fields.
+        model (dict): API resource configuration for waypoints, including datasource, URL patterns, schema, MongoDB indexes, and allowed HTTP methods.
+        trip_waypoints (dict): API resource configuration for waypoints filtered by trip, including datasource, URL patterns, schema, and allowed HTTP methods.
+
+    Notes:
+        - The schemas are designed for use with a MongoDB backend and RESTful API endpoints.
+        - Some fields and indexes are commented out for future extension or customization.
+        - State and transition fields leverage identifiers from trip state machines for both drivers and passengers.
+    """
 
     event_schema = {
         'location': {

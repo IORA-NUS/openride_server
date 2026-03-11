@@ -19,17 +19,17 @@ MONGODB_NAME = Env.string('MONGODB_NAME', 'OpenRoadDB')
 # }]
 
 SWAGGER_INFO = {
-    'title': 'OpenRoad Analytics',
-    'version': '0.0.1',
-    'description': 'an API description',
-    'termsOfService': 'my terms of service',
+    'title': 'OpenRoad Analytics',  # The title of the API documentation
+    'version': '0.0.1',  # The version of the API
+    'description': 'This API provides analytics and insights for OpenRoad platform users.',
+    'termsOfService': 'my terms of service',  # URL or text describing the terms of service
     'contact': {
-        'name': 'iora admin',
-        'url': 'http://iora.nus.edu.sg'
+        'name': 'OpenRoad Analytics Team',  # Name of the contact person or organization
+        'url': 'http://iora.nus.edu.sg'  # URL for contacting or learning more
     },
     'license': {
-        'name': 'BSD',
-        'url': 'https://github.com/nicolaiarocci/eve-swagger/blob/master/LICENSE',
+        'name': 'BSD',  # Name of the license under which the API is provided
+        'url': 'https://github.com/nicolaiarocci/eve-swagger/blob/master/LICENSE',  # URL to the license details
     }
 }
 

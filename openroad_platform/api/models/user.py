@@ -5,7 +5,7 @@ from api.state_machine import UserStateMachine
 # from api.utils import Status
 
 
-# class UserStates(StateMachine):
+# class UserStsates(StateMachine):
 #     ''' '''
 
 #     dormant = State('dormant', initial=True)
@@ -33,6 +33,36 @@ from api.state_machine import UserStateMachine
 
 
 class User:
+    """
+    Represents a User model for the OpenRoad platform API.
+
+    Attributes:
+        schema (dict): Validation schema for user fields, including email, password, name, role, public_key, state, transition, and sim_clock.
+        model (dict): Configuration for the user resource, including datasource, projection, authentication, URL, schema, MongoDB indexes, and allowed resource/item methods.
+        registration_model (dict): Configuration for user registration resource, including datasource, schema, allowed resource methods, and internal resource flag.
+
+    Schema Fields:
+        email (str): User's email address. Required, unique, minimum length 1.
+        password (str): User's password. Required.
+        name (dict): User's name, with required first_name and last_name fields (min/max length 1/64).
+        role (str): User's role, allowed values are 'admin' or 'client'. Defaults to 'client'.
+        public_key (str): User's public key. Required.
+        state (str): User's current state, allowed values from UserStateMachine. Required, read-only.
+        transition (str): State transition identifier, allowed values from UserStateMachine. Optional.
+        sim_clock (datetime): Simulation clock timestamp. Optional.
+
+    MongoDB Indexes:
+        role_index: Index on 'role' field.
+        status_index: Index on 'status' field.
+        email_index: Unique index on 'email' field.
+
+    Resource Methods:
+        model: Supports 'GET' for resource and 'GET', 'PATCH' for items.
+        registration_model: Supports 'GET', 'POST' for resource.
+
+    Note:
+        Some fields and relationships (e.g., driver, passenger, status) are commented out and not currently active in the schema.
+    """
     schema = {
         'email': {
             'type': 'string',

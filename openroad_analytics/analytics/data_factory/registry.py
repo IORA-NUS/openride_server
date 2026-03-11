@@ -5,6 +5,16 @@ from .engine_factory import EngineFactory
 from .trip_factory import TripFactory
 
 def register_metric_readers():
+    """
+    Registers various metric readers to the data gateway (`dg`) for analytics purposes.
+
+    The function maps metric names to their corresponding reader functions from different factories:
+    - KPIFactory: Provides time series metrics such as revenue, number of served/cancelled trips, wait times, and service score.
+    - TripFactory: Provides location-based metrics and active agent counts as Grafana tables or time series.
+    - EngineFactory: Provides solver-related metrics including step objectives, weights, performance, and all solver metrics as time series.
+
+    This setup enables the analytics system to retrieve and visualize diverse operational and performance metrics via Grafana.
+    """
 
     dg.add_metric_reader('revenue', KPIFactory.get_kpi_as_grafana_ts)
     dg.add_metric_reader('num_served', KPIFactory.get_kpi_as_grafana_ts)

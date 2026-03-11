@@ -2,6 +2,7 @@ from flask import current_app as app
 from flask import abort, Response, jsonify
 import json
 import traceback
+import logging
 
 # from api.utils import Status
 # from api.models import DriverTripStates
@@ -9,10 +10,26 @@ from eve.methods.post import post, post_internal
 
 
 class EngineController:
-    ''' '''
+    """
+    Controller class for managing engine-related operations.
+
+    Methods
+    -------
+    add_history(document, updates=None):
+        Adds a history record for the specified engine document.
+        Parameters:
+            document (dict): The engine document to record history for.
+            updates (dict, optional): Additional updates to include in the history record.
+        Raises:
+            Exception: If an error occurs while posting the engine history or if the response structure is unexpected.
+    """
+
 
     @classmethod
-    def add_history(cls, document, updates={}):
+    def add_history(cls, document, updates=None):
+        if updates is None:
+            updates = {}
+
         db = app.data.driver.db
 
         engine_history = {
@@ -28,10 +45,20 @@ class EngineController:
             engine_history['sim_clock'] = document['sim_clock']
 
         try:
-            resp =  post_internal('engine_history', engine_history)
-
+            resp, *other_values =  post_internal('engine_history', engine_history)
         except Exception as e:
-            print(traceback.format_exc())
+            logging.error("An error occurred while adding engine history: %s", traceback.format_exc())
 
-        if resp[0].get('_status') == 'ERR':
-            raise Exception(resp[0])
+        # Handle both list and dict response types for _status check
+        if isinstance(resp, list) and len(resp) > 0:
+            status_obj = resp[0]
+        elif isinstance(resp, dict):
+            status_obj = resp
+        else:
+            raise Exception("Unexpected response structure: {}".format(resp))
+
+        if '_status' in status_obj:
+            if status_obj['_status'] == 'ERR':
+                raise Exception(status_obj)
+        else:
+            raise Exception("_status not found in response: {}".format(resp))

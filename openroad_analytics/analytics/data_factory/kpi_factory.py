@@ -5,6 +5,23 @@ from analytics.utils.grafana_pandas_datasource.util import dataframe_to_response
 from analytics.utils import apply_transform
 
 class KPIFactory():
+    """
+    Factory class for handling Key Performance Indicator (KPI) data retrieval and transformation.
+
+    Attributes:
+        metric_mapper (dict): Maps metric names to their corresponding database fields.
+        run_id_mappers (dict): Maps run IDs to their descriptive names.
+
+    Methods:
+        get_run_id(*args):
+            Retrieves the latest run configuration data from the database and returns it as a DataFrame.
+
+        get_kpi_as_grafana_ts(run_id_list, metric_name, ts_range, payload):
+            Fetches KPI time series data for specified run IDs and metric, transforms it for Grafana-compatible time series response.
+
+        get_kpi_time_series(run_id_list, metric_list, ts_range, payload):
+            Retrieves and processes KPI time series data for given run IDs and metrics, computes cumulative, average by time, and average by trip values, applies optional transformations, and returns a pivoted DataFrame.
+    """
 
     metric_mapper = {
         'revenue' : 'revenue',
@@ -31,7 +48,17 @@ class KPIFactory():
 
     @classmethod
     def get_run_id(cls, *args):
-        ''''''
+        """
+        Retrieves the latest run configuration records from the 'run_config' collection in the database.
+
+        Args:
+            *args: Variable length argument list (not used).
+
+        Returns:
+            pd.DataFrame: A DataFrame containing the selected fields ('run_id', 'name', 'value')
+            from the latest run configuration records, sorted by the '_updated' timestamp in descending order.
+        """
+
         db = app.data.driver.db
         run_config_collection = db['run_config']
 
@@ -59,7 +86,19 @@ class KPIFactory():
 
     @classmethod
     def get_kpi_as_grafana_ts(cls, run_id_list, metric_name, ts_range, payload):
-        ''''''
+        """
+        Retrieves KPI time series data for the specified metric and run IDs, formats it for Grafana time series visualization.
+
+        Args:
+            run_id_list (list): List of run IDs to retrieve KPI data for.
+            metric_name (str): Name of the KPI metric to retrieve.
+            ts_range (tuple or list): Time range for the KPI data (e.g., start and end timestamps).
+            payload (dict): Additional parameters for data retrieval and transformation.
+
+        Returns:
+            dict: Formatted time series data suitable for Grafana visualization.
+        """
+
         # print(run_id_list, metric_name, ts_range, payload)
         df = cls.get_kpi_time_series(run_id_list, [metric_name], ts_range, payload)
         # if payload.get('type') not in ['value', 'cumulative', 'avg_by_time', 'avg_by_trip']:
@@ -82,6 +121,27 @@ class KPIFactory():
 
     @classmethod
     def get_kpi_time_series(cls, run_id_list, metric_list, ts_range, payload):
+        """
+        Generates a KPI time series DataFrame for specified runs and metrics.
+
+        Retrieves KPI data from the MongoDB collection for the given run IDs and metrics within the specified time range.
+        Computes cumulative values, average by time, and average by trip for each metric and run.
+        Optionally adds the 'num_served' metric if not present to enable average calculations.
+        Returns a pivoted DataFrame indexed by simulation clock, with columns for each (run_id, metric) pair,
+        and values determined by the requested type ('value', 'cumulative', 'avg_by_time', 'avg_by_trip').
+        Applies optional transformations to the resulting DataFrame.
+
+        Args:
+            run_id_list (list): List of run IDs to include in the time series.
+            metric_list (list): List of metric names to retrieve and compute.
+            ts_range (dict): MongoDB query for the simulation clock time range.
+            payload (dict): Additional options, including:
+                - 'type': Type of value to return ('value', 'cumulative', 'avg_by_time', 'avg_by_trip').
+                - 'transform': Optional transformation to apply to the DataFrame.
+
+        Returns:
+            pandas.DataFrame: Pivoted DataFrame containing the requested KPI time series data.
+        """
         db = app.data.driver.db
         collection = db.kpi
         add_num_served = False

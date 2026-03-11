@@ -14,7 +14,31 @@ from eve.auth import auth_field_and_value
 
 
 class DriverView:
-    ''' '''
+    """
+    DriverView provides API endpoints and hooks for managing driver resources in the OpenRoad platform.
+
+    This class defines methods for validating and processing driver documents during insertion and update operations.
+    It ensures that driver data adheres to business rules by leveraging the DriverController for validation.
+    Special handling is provided for the 'sim_clock' field, which is used to set custom creation and update timestamps.
+
+    Class Attributes:
+        blueprint (Blueprint): Flask blueprint for driver-related routes.
+
+    Class Methods:
+        on_insert(documents):
+            Validates and processes driver documents before insertion.
+            Sets '_created' and '_updated' fields based on 'sim_clock' if present.
+            Aborts with a 403 status code on validation failure or exception.
+
+        on_update(updates, document):
+            Validates updates to a driver document.
+            Sets '_updated' field based on 'sim_clock' if present in updates.
+            Aborts with a 403 status code on validation failure or exception.
+
+    Note:
+        Additional routes and hooks (such as pre_POST_callback and deregister) are present but commented out.
+    """
+    
     blueprint = Blueprint('driver', __name__, url_prefix='/driver')
 
 
@@ -31,20 +55,43 @@ class DriverView:
 
     @classmethod
     def on_insert(cls, documents):
-        ''' '''
+        """
+        Handles the insertion of driver documents into the database.
+
+        Validates each document using DriverController.validate. If a document contains
+        a 'sim_clock' field, sets the '_created' and '_updated' fields to its value.
+        Aborts the operation with a 403 status code if any exception occurs during processing.
+
+        Args:
+            documents (list): List of driver documents to be inserted.
+
+        Raises:
+            Aborts the request with a 403 status code if validation fails or any exception occurs.
+        """
         try:
             for document in documents:
                 DriverController.validate(document)
-                if document.get('sim_clock') is not None:
-                    document['_created'] = document['sim_clock']
-                    document['_updated'] = document['sim_clock']
+                sim_clock = document.get('sim_clock')
+                if sim_clock is not None:
+                    document['_created'] = sim_clock
+                    document['_updated'] = sim_clock
         except Exception as e:
-            abort(Response(str(e), status=403))
+            app.logger.error(f"Error updating driver document: {e}")
+            abort(Response(f"An error occurred while updating the driver document: {str(e)}", status=403))
 
 
     @classmethod
     def on_update(cls, updates, document):
-        ''' '''
+        """
+        Handles updates to a driver document by validating the updates and setting the '_updated' field if 'sim_clock' is present.
+
+        Args:
+            updates (dict): Dictionary containing the fields to be updated.
+            document (dict): The original driver document to be updated.
+
+        Raises:
+            abort: Aborts the request with a 403 status if validation fails or an exception occurs.
+        """
         try:
             DriverController.validate(document, updates)
             if updates.get('sim_clock') is not None:

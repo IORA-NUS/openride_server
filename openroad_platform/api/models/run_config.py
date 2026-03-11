@@ -6,6 +6,26 @@ from api.state_machine import RidehailDriverTripStateMachine, RidehailPassengerT
 
 
 class RunConfig:
+    """
+    RunConfig defines the schema and model configuration for a run configuration resource.
+
+    Attributes:
+        schema (dict): Specifies the validation rules for each field in the run configuration, including types, required status, and nullability.
+            - run_id (str): Unique identifier for the run. Required.
+            - name (str): Name of the run. Required.
+            - status (str, optional): Status of the run. Nullable.
+            - meta (dict): Metadata associated with the run. Required.
+            - execution_time (float, optional): Execution time of the run. Nullable.
+            - step_metrics (dict, optional): Metrics for each step in the run. Nullable.
+
+        model (dict): Contains resource configuration for the run configuration, including:
+            - datasource (dict): Source information for the resource.
+            - url (str): Resource endpoint.
+            - schema (dict): Reference to the schema definition.
+            - mongo_indexes (dict): MongoDB index definitions for efficient querying and uniqueness constraints.
+            - resource_methods (list): Allowed HTTP methods for the resource.
+            - item_methods (list): Allowed HTTP methods for individual items.
+    """
 
     schema = {
         'run_id': {

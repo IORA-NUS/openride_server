@@ -1,6 +1,7 @@
 from flask import current_app as app
 from flask import abort, Response
 import json
+import logging
 
 from eve.methods.patch import patch_internal
 
@@ -9,7 +10,18 @@ from eve.methods.patch import patch_internal
 from api.state_machine import WorkflowStateMachine
 
 class VehicleController:
-    ''' '''
+    """
+    Controller class for vehicle-related operations in the OpenRoad platform.
+
+    Methods
+    -------
+    validate(document, updates=None):
+        Validates and updates the workflow state of a vehicle document based on provided transitions.
+
+    add_driver(vehicle_id, driver_id):
+        Adds a driver to the authorised drivers list of a vehicle.
+
+    """
 
     # @classmethod
     # def check_license_uniqueness(cls, license_list):
@@ -21,22 +33,28 @@ class VehicleController:
 
 
     @classmethod
-    def validate(cls, document, updates={}):
+    def validate(cls, document, updates=None):
         ''' '''
+        updates = updates or {}
         # if updates is not None:
         if updates.get('transition') is not None:
+            if 'state' not in document:
+                raise KeyError("The 'state' key is missing in the document.")
+
             machine = WorkflowStateMachine(start_value=document['state'])
             machine.run(updates.get('transition'))
             updates['state'] = machine.current_state.identifier
 
 
     @classmethod
-    def add_driver(self, vehicle_id, driver_id):
+    def add_driver(cls, vehicle_id, driver_id):
         ''' '''
         try:
             # print(vehicle_id, driver_id)
             # print(WorkflowStates().offline.identifier)
             vehicle = app.data.find_one_raw('vehicle', _id=vehicle_id)
+            if vehicle is None:
+                raise ValueError(f"Vehicle with ID {vehicle_id} does not exist.")
             # # print(vehicle)
             # driver = app.data.find_one_raw('driver', _id=driver_id)
             # # print(driver)
@@ -50,11 +68,11 @@ class VehicleController:
                 # vehicle_set.add(vehicle_id)
                 # print(driver_set, vehicle_set)
             except Exception as e:
-                print(e)
+                logging.error(f"An error occurred: {e}")
                 raise(e)
 
             v_lookup = {'_id': vehicle_id}
-            resp = patch_internal('vehicle', {'authorised_drivers': list(driver_set)},  **v_lookup)
+            resp, *other_values = patch_internal('vehicle', {'authorised_drivers': list(driver_set)},  **v_lookup)
 
             # d_lookup = {'_id': driver_id}
             # resp = patch_internal('driver', {'vehicle_list': list(vehicle_set)},  **d_lookup)
@@ -69,5 +87,6 @@ class VehicleController:
 
 
         except Exception as e:
+            logging.error(f"An error occurred in add_driver method: {e}")
             raise e
 

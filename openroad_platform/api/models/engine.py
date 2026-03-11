@@ -3,6 +3,31 @@ import json
 
 
 class Engine:
+    """
+    Engine model definition for the OpenRoad platform API.
+
+    Attributes:
+        schema (dict): Validation schema for Engine objects, specifying required fields and their types.
+            - run_id (str): Unique identifier for the engine run. Required.
+            - name (str): Name of the engine.
+            - strategy (str): Strategy used by the engine.
+            - planning_area (dict): Planning area details, including:
+                - name (str): Name of the planning area. Required.
+                - geometry: Geometry of the planning area. Required.
+            - offline_params (dict): Parameters for offline operation.
+            - online_params (dict): Parameters for online operation.
+            - last_run_performance (dict): Performance metrics from the last run.
+            - sim_clock (datetime, optional): Simulation clock timestamp.
+
+        model (dict): Configuration for the Engine resource in the API.
+            - datasource (dict): Source configuration for the engine.
+            - url (str): URL pattern for accessing engine resources.
+            - schema (dict): Reference to the validation schema.
+            - allowed_roles (list): Roles allowed to access the resource.
+            - mongo_indexes (dict): MongoDB index definitions for efficient querying.
+            - resource_methods (list): Allowed HTTP methods on the resource.
+            - item_methods (list): Allowed HTTP methods on individual items.
+    """
 
     schema = {
         'run_id': {
