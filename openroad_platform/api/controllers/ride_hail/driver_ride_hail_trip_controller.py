@@ -145,13 +145,27 @@ class DriverRideHailTripController:
 
         try:
             resp =  post_internal('waypoint', waypoint)
-            # print(f"{resp[0]=}")
+            # print(f"Waypoint post response: {resp}")
+            # print(f"Waypoint post response: {resp[0]}")
         except Exception as e:
             logging.exception("An error occurred while adding a waypoint: %s", traceback.format_exc())
             raise e
 
-        if not resp or not isinstance(resp, list) or not resp[0] or resp[0].get('_status') == 'ERR':
-            raise Exception(resp[0])
+        # Handle tuple, list, and dict responses
+        actual_resp = resp
+        if isinstance(resp, tuple):
+            actual_resp = resp[0]
+
+        status_obj = None
+        if isinstance(actual_resp, list) and len(actual_resp) > 0:
+            status_obj = actual_resp[0]
+        elif isinstance(actual_resp, dict):
+            status_obj = actual_resp
+        else:
+            raise Exception(f"Unexpected response structure in add_waypoint: {actual_resp}")
+
+        if not status_obj or status_obj.get('_status') == 'ERR':
+            raise Exception(status_obj)
 
         waypoint_id = resp[0]['_id']
 

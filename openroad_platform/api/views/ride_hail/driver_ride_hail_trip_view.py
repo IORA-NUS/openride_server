@@ -35,7 +35,9 @@ class DriverRideHailTripView:
 
         document = documents[0]
         try:
+            # print("Validating document on insert: {}".format(document))
             DriverRideHailTripController.validate(document)
+            # print("Document validation successful on insert: {}".format(document))
             # if document.get('passenger') is not None:
             #     document['state'] = RidehailDriverTripStateMachine.driver_received_trip.identifier
 
@@ -43,6 +45,7 @@ class DriverRideHailTripView:
                 document['_created'] = document['sim_clock']
                 document['_updated'] = document['sim_clock']
         except Exception as e:
+            # print(traceback.format_exc())
             abort(Response(str(e), status=403))
 
 
@@ -54,6 +57,7 @@ class DriverRideHailTripView:
             if updates.get('sim_clock') is not None:
                 updates['_updated'] = updates['sim_clock']
         except Exception as e:
+            # print(traceback.format_exc())
             abort(Response(str(e), status=403))
 
 
@@ -62,8 +66,11 @@ class DriverRideHailTripView:
         ''' '''
         document = documents[0]
         try:
+            # print("Adding waypoint for document: {}".format(document))
             DriverRideHailTripController.add_waypoint(document)
+            # print("Waypoint added successfully for document: {}".format(document))
         except Exception as e:
+            # print(traceback.format_exc())
             abort(Response(str(e), status=403))
 
     @classmethod
