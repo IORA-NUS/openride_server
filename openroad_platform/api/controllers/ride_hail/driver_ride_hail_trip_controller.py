@@ -79,10 +79,16 @@ class DriverRideHailTripController:
             try:
                 # machine = DriverRideHailTripStateMachine_Managed(start_value=document['state'])
                 machine = RidehailDriverTripStateMachine(start_value=document['state'])
-                machine.run(updates.get('transition'), updates)
-                updates['state'] = machine.current_state.identifier
-                updates['feasible_transitions'] = [t.identifier for t in machine.current_state.transitions]
+                transition = updates.get('transition')
+                if transition is not None:
+                    if not isinstance(transition, str):
+                        raise Exception(f"Transition attribute must be a string, got {type(transition)}: {transition}")
+                    getattr(machine, transition)(updates)
+
+                updates['state'] = machine.current_state.name
+                updates['feasible_transitions'] = [t.name for t in machine.allowed_events]
             except Exception as e:
+                logging.exception(f"Error during state transition '{updates.get('transition')}' with updates {updates}: {e}")
                 if updates.get('transition') is not None:
                     raise Exception(f"Error during state transition '{updates.get('transition')}' with updates {updates}: {e}")
 

@@ -23,3 +23,5 @@ from .engine_history_view import EngineHistoryView
 
 from .kpi_view import KpiView, KpiHistoryView
 
+from .state_machine_view import StateMachineView
+

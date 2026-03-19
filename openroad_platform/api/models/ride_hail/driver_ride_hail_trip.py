@@ -105,19 +105,19 @@ class DriverRideHailTrip:
 
         'state': {
             'type': 'string',
-            'allowed': [s.identifier for s in RidehailDriverTripStateMachine().states],
-            'default': RidehailDriverTripStateMachine().current_state.identifier,
+            'allowed': [s.name for s in RidehailDriverTripStateMachine().states],
+            'default': RidehailDriverTripStateMachine().current_state.name,
             'required': True,
             'readonly': True
         },
         'transition': {
             'type': 'string',
-            'allowed': [t.identifier for t in RidehailDriverTripStateMachine().transitions],
+            'allowed': [t.name for t in RidehailDriverTripStateMachine().events],
             'required': False,
         },
         'feasible_transitions': {
             'type': 'list',
-            'allowed': [t.identifier for t in RidehailDriverTripStateMachine().transitions],
+            'allowed': [t.name for t in RidehailDriverTripStateMachine().events],
             'default': [],
             'required': True,
             'readonly': True

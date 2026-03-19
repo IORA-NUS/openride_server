@@ -56,14 +56,14 @@ class RidehailDriverTripStateMachine(StateMachine):
     driver_received_trip = State('driver_received_trip') # alternate Initial State
     driver_rejected_trip = State('driver_rejected_trip')
     driver_accepted_trip = State('driver_accepted_trip')
-    driver_cancelled_trip = State('driver_cancelled_trip')
+    driver_cancelled_trip = State('driver_cancelled_trip', final=True)
     driver_moving_to_pickup = State('driver_moving_to_pickup')
     driver_waiting_to_pickup = State('driver_waiting_to_pickup')
     driver_pickedup = State('driver_pickedup')
     driver_moving_to_dropoff = State('driver_moving_to_dropoff')
     driver_waiting_to_dropoff = State('driver_waiting_to_dropoff')
     driver_droppedoff = State('driver_droppedoff')
-    driver_completed_trip = State('driver_completed_trip')
+    driver_completed_trip = State('driver_completed_trip', final=True)
 
 
     look_for_job = driver_init_trip.to(driver_looking_for_job)
@@ -101,18 +101,18 @@ class RidehailDriverTripStateMachine(StateMachine):
                         )
 
     WAITING_STATES = {
-        driver_waiting_to_pickup.identifier,
-        driver_waiting_to_dropoff.identifier,
+        driver_waiting_to_pickup.name,
+        driver_waiting_to_dropoff.name,
     }
 
     PASSENGER_CHANNEL_OPEN_STATES = {
-        driver_received_trip.identifier,
-        driver_accepted_trip.identifier,
-        driver_moving_to_pickup.identifier,
-        driver_waiting_to_pickup.identifier,
-        driver_pickedup.identifier,
-        driver_moving_to_dropoff.identifier,
-        driver_waiting_to_dropoff.identifier,
+        driver_received_trip.name,
+        driver_accepted_trip.name,
+        driver_moving_to_pickup.name,
+        driver_waiting_to_pickup.name,
+        driver_pickedup.name,
+        driver_moving_to_dropoff.name,
+        driver_waiting_to_dropoff.name,
     }
 
 

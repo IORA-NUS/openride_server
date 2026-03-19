@@ -17,3 +17,5 @@ from .waypoint import Waypoint
 
 from .kpi import Kpi
 from .run_config import RunConfig
+
+from .state_machine import StateMachine

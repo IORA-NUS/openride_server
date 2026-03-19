@@ -38,7 +38,7 @@ class DriverView:
     Note:
         Additional routes and hooks (such as pre_POST_callback and deregister) are present but commented out.
     """
-    
+
     blueprint = Blueprint('driver', __name__, url_prefix='/driver')
 
 
@@ -75,6 +75,19 @@ class DriverView:
                 if sim_clock is not None:
                     document['_created'] = sim_clock
                     document['_updated'] = sim_clock
+                # Lookup id using statemachine name and domain
+                statemachine = document.get('statemachine')
+                if statemachine:
+                    name = statemachine.get('name')
+                    domain = statemachine.get('domain')
+                    if name and domain:
+                        db = app.data.driver.db
+                        statemachine = db['statemachine'].find_one({'name': name, 'domain': domain})
+                        if statemachine:
+                            document['statemachine']['id'] = statemachine['_id']
+                        else:
+                            app.logger.warning(f"Statemachine not found for {name = }, {domain = }")
+
         except Exception as e:
             app.logger.error(f"Error updating driver document: {e}")
             abort(Response(f"An error occurred while updating the driver document: {str(e)}", status=403))
@@ -96,6 +109,18 @@ class DriverView:
             DriverController.validate(document, updates)
             if updates.get('sim_clock') is not None:
                 updates['_updated'] = updates['sim_clock']
+            # Lookup id using statemachine name and domain
+            statemachine = updates.get('statemachine')
+            if statemachine:
+                name = statemachine.get('name')
+                domain = statemachine.get('domain')
+                if name and domain:
+                    db = app.data.driver.db
+                    statemachine = db['statemachine'].find_one({'name': name, 'domain': domain})
+                if statemachine:
+                    updates['statemachine']['id'] = statemachine['_id']
+                else:
+                    app.logger.warning(f"Statemachine not found for {name = }, {domain = }")
         except Exception as e:
             abort(Response(str(e), status=403))
 

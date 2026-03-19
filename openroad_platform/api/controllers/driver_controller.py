@@ -35,6 +35,11 @@ class DriverController:
                 raise KeyError("The 'state' key is missing in the document.")
 
             machine = WorkflowStateMachine(start_value=document['state'])
-            machine.run(updates.get('transition'))
-            updates['state'] = machine.current_state.identifier
+            # machine.run(updates.get('transition'))
+            getattr(machine, updates.get('transition'))()
+            # check if transition occured else raise exception
+            # if machine.current_state.name != document['state']:
+            #     raise Exception(f"Transition '{updates.get('transition')}' did not occur. Current state: {machine.current_state.name}, {document['state'] =}")
+
+            updates['state'] = machine.current_state.name
 

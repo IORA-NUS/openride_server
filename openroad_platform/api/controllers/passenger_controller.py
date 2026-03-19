@@ -38,6 +38,8 @@ class PassengerController:
                 raise KeyError("The 'state' key is missing in the document.")
 
             machine = WorkflowStateMachine(start_value=document['state'])
-            machine.run(updates.get('transition'))
-            updates['state'] = machine.current_state.identifier
+            # machine.run(updates.get('transition'))
+            getattr(machine, updates.get('transition'))()
+
+            updates['state'] = machine.current_state.name
 

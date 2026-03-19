@@ -42,8 +42,9 @@ class VehicleController:
                 raise KeyError("The 'state' key is missing in the document.")
 
             machine = WorkflowStateMachine(start_value=document['state'])
-            machine.run(updates.get('transition'))
-            updates['state'] = machine.current_state.identifier
+            # machine.run(updates.get('transition'))
+            getattr(machine, updates.get('transition'))()
+            updates['state'] = machine.current_state.name
 
 
     @classmethod
@@ -51,7 +52,7 @@ class VehicleController:
         ''' '''
         try:
             # print(vehicle_id, driver_id)
-            # print(WorkflowStates().offline.identifier)
+            # print(WorkflowStates().offline.name)
             vehicle = app.data.find_one_raw('vehicle', _id=vehicle_id)
             if vehicle is None:
                 raise ValueError(f"Vehicle with ID {vehicle_id} does not exist.")

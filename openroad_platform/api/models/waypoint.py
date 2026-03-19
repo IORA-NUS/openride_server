@@ -47,7 +47,7 @@ class Waypoint:
     Notes:
         - The schemas are designed for use with a MongoDB backend and RESTful API endpoints.
         - Some fields and indexes are commented out for future extension or customization.
-        - State and transition fields leverage identifiers from trip state machines for both drivers and passengers.
+        - State and transition fields leverage names from trip state machines for both drivers and passengers.
     """
 
     event_schema = {
@@ -62,14 +62,14 @@ class Waypoint:
         },
         'state': {
             'type': 'string',
-            'allowed': [s.identifier for s in RidehailDriverTripStateMachine().states] + [s.identifier for s in RidehailPassengerTripStateMachine().states],
-            # 'default': DriverStates().current_state.identifier,
+            'allowed': [s.name for s in RidehailDriverTripStateMachine().states] + [s.name for s in RidehailPassengerTripStateMachine().states],
+            # 'default': DriverStates().current_state.name,
             'required': True,
             # 'readonly': True
         },
         # 'transition': {
         #     'type': 'string',
-        #     'allowed': [t.identifier for t in DriverStates().transitions] + [s.identifier for s in PassengerStates().transitions],
+        #     'allowed': [t.name for t in RidehailDriverTripStateMachine().events] + [t.name for t in RidehailPassengerTripStateMachine().events],
         #     'required': False,
         #     'readonly': True,
         # },

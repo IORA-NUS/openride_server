@@ -103,19 +103,19 @@ class PassengerRideHailTrip:
 
         'state': {
             'type': 'string',
-            'allowed': [s.identifier for s in RidehailPassengerTripStateMachine().states],
-            'default': RidehailPassengerTripStateMachine().current_state.identifier,
+            'allowed': [s.name for s in RidehailPassengerTripStateMachine().states],
+            'default': RidehailPassengerTripStateMachine().current_state.name,
             'required': True,
             'readonly': True
         },
         'transition': {
             'type': 'string',
-            'allowed': [t.identifier for t in RidehailPassengerTripStateMachine().transitions],
+            'allowed': [t.name for t in RidehailPassengerTripStateMachine().events],
             'required': False,
         },
         'feasible_transitions': {
             'type': 'list',
-            'allowed': [t.identifier for t in RidehailPassengerTripStateMachine().transitions],
+            'allowed': [t.name for t in RidehailPassengerTripStateMachine().events],
             'default': [],
             'required': True,
             'readonly': True

@@ -75,18 +75,23 @@ class PassengerRideHailTripController:
             try:
                 # machine = PassengerRideHailTripStateMachine_Managed(start_value=document['state'])
                 machine = RidehailPassengerTripStateMachine(start_value=document['state'])
-                machine.run(updates.get('transition'), updates)
-                updates['state'] = machine.current_state.identifier
-                updates['feasible_transitions'] = [t.identifier for t in machine.current_state.transitions]
+                transition = updates.get('transition')
+                if transition is not None:
+                    if not isinstance(transition, str):
+                        raise Exception(f"Transition attribute must be a string, got {type(transition)}: {transition}")
+                    getattr(machine, transition)(updates)
+                updates['state'] = machine.current_state.name
+                updates['feasible_transitions'] = [t.name for t in machine.allowed_events]
             except Exception as e:
+                logging.exception(f"Error during state transition '{updates.get('transition')}' with updates {updates}: {e}")
                 if updates.get('transition') is not None:
                     raise Exception(f"Error during state transition '{updates.get('transition')}' with updates {updates}: {e}")
 
             # # Update trip.is_active = False if the trip is ending
             # # check to ensure Only one active trip is allowed
             # # This is important as New trip can be active only if No active trips exist.
-            # if updates.get('state') in [machine.passenger_cancelled_trip.identifier,
-            #                         machine.passenger_completed_trip.identifier]:
+            # if updates.get('state') in [machine.passenger_cancelled_trip.name,
+            #                         machine.passenger_completed_trip.name]:
             #     # print('inside updating is_active')
             #     updates['is_active'] = False
         else:

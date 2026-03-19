@@ -18,6 +18,7 @@ from api.models import (User,
                         Engine, EngineHistory,
                         DriverRideHailTrip, PassengerRideHailTrip,
                         RunConfig,
+                        StateMachine
                     )
 
 from api.views.auth import auth_view
@@ -33,8 +34,8 @@ from api.views import (UserView, #user_bp,
                         DriverRideHailTripView, PassengerRideHailTripView,
                         DriverRideHailTripWorkflowView, PassengerRideHailTripWorkflowView,
                         # DriverRideHailTripCollectionView, PassengerRideHailTripCollectionView,
+                        StateMachineView,
                     )
-
 
 
 # from api.views import (DriverTripWorkflowView, PassengerTripWorkflowView)
@@ -125,6 +126,7 @@ def configure_extensions(app, cli):
 
 
 def get_settings_with_domain():
+
     settings['DOMAIN'] = {
         'user': User.model,
         # 'register_user': User.registration_model,
@@ -149,7 +151,8 @@ def get_settings_with_domain():
         'engine': Engine.model,
         'engine_history': EngineHistory.model,
 
-        'run_config': RunConfig.model
+        'run_config': RunConfig.model,
+        'statemachine': StateMachine.model,
     }
 
     return settings
@@ -221,6 +224,9 @@ def register_hooks(app):
     app.on_updated_engine += EngineView.on_updated
 
     app.on_insert_engine_history += EngineHistoryView.on_insert
+
+    app.on_insert_statemachine += StateMachineView.on_insert
+    app.on_update_statemachine += StateMachineView.on_update
 
 
 def register_flask_classful_views(app):

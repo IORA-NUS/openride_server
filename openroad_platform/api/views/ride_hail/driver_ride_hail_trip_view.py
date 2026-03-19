@@ -39,7 +39,7 @@ class DriverRideHailTripView:
             DriverRideHailTripController.validate(document)
             # print("Document validation successful on insert: {}".format(document))
             # if document.get('passenger') is not None:
-            #     document['state'] = RidehailDriverTripStateMachine.driver_received_trip.identifier
+            #     document['state'] = RidehailDriverTripStateMachine.driver_received_trip.name
 
             if document.get('sim_clock') is not None:
                 document['_created'] = document['sim_clock']
@@ -199,7 +199,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
 #         # print(lookup)
 
 #         payload = request.json
-#         payload['transition'] =  RidehailDriverTripStateMachine.look_for_job.identifier
+#         payload['transition'] =  RidehailDriverTripStateMachine.look_for_job.name
 
 #         response = patch_internal('driver_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -230,7 +230,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailDriverTripStateMachine.recieve.identifier
+#         payload['transition'] =  RidehailDriverTripStateMachine.recieve.name
 
 #         response = patch_internal('driver_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -261,7 +261,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailDriverTripStateMachine.confirm.identifier
+#         payload['transition'] =  RidehailDriverTripStateMachine.confirm.name
 
 #         response = patch_internal('driver_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -292,7 +292,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailDriverTripStateMachine.reject.identifier
+#         payload['transition'] =  RidehailDriverTripStateMachine.reject.name
 
 #         response = patch_internal('driver_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -323,7 +323,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailDriverTripStateMachine.cancel.identifier
+#         payload['transition'] =  RidehailDriverTripStateMachine.cancel.name
 
 #         response = patch_internal('driver_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -354,7 +354,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailDriverTripStateMachine.passenger_confirmed_trip.identifier
+#         payload['transition'] =  RidehailDriverTripStateMachine.passenger_confirmed_trip.name
 
 #         response = patch_internal('driver_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -385,7 +385,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailDriverTripStateMachine.wait_to_pickup.identifier
+#         payload['transition'] =  RidehailDriverTripStateMachine.wait_to_pickup.name
 
 #         response = patch_internal('driver_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -416,7 +416,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailDriverTripStateMachine.passenger_acknowledge_pickup.identifier
+#         payload['transition'] =  RidehailDriverTripStateMachine.passenger_acknowledge_pickup.name
 
 #         response = patch_internal('driver_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -447,7 +447,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailDriverTripStateMachine.move_to_dropoff.identifier
+#         payload['transition'] =  RidehailDriverTripStateMachine.move_to_dropoff.name
 
 #         response = patch_internal('driver_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -478,7 +478,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailDriverTripStateMachine.wait_to_dropoff.identifier
+#         payload['transition'] =  RidehailDriverTripStateMachine.wait_to_dropoff.name
 
 #         response = patch_internal('driver_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -509,7 +509,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailDriverTripStateMachine.passenger_acknowledge_dropoff.identifier
+#         payload['transition'] =  RidehailDriverTripStateMachine.passenger_acknowledge_dropoff.name
 
 #         response = patch_internal('driver_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -540,7 +540,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailDriverTripStateMachine.end_trip.identifier
+#         payload['transition'] =  RidehailDriverTripStateMachine.end_trip.name
 
 #         response = patch_internal('driver_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -571,7 +571,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailDriverTripStateMachine.force_quit.identifier
+#         payload['transition'] =  RidehailDriverTripStateMachine.force_quit.name
 #         payload['is_active'] =  False
 #         payload['force_quit'] =  True
 

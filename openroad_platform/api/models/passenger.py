@@ -74,14 +74,14 @@ class Passenger:
 
         'state': {
             'type': 'string',
-            'allowed': [s.identifier for s in WorkflowStateMachine().states],
-            'default': WorkflowStateMachine().current_state.identifier,
+            'allowed': [s.name for s in WorkflowStateMachine().states],
+            'default': WorkflowStateMachine().current_state.name,
             'required': True,
             'readonly': True
         },
         'transition': {
             'type': 'string',
-            'allowed': [t.identifier for t in WorkflowStateMachine().transitions],
+            'allowed': [t.name for t in WorkflowStateMachine().events],
             'required': False,
         },
 

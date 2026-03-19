@@ -221,7 +221,7 @@ class PassengerRideHailTripWorkflowView(FlaskView):
 #         # print(lookup)
 
 #         payload = request.json
-#         payload['transition'] =  RidehailPassengerTripStateMachine.assign.identifier
+#         payload['transition'] =  RidehailPassengerTripStateMachine.assign.name
 
 #         response = patch_internal('passenger_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -252,7 +252,7 @@ class PassengerRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailPassengerTripStateMachine.accept.identifier
+#         payload['transition'] =  RidehailPassengerTripStateMachine.accept.name
 
 #         response = patch_internal('passenger_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -283,7 +283,7 @@ class PassengerRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailPassengerTripStateMachine.reject.identifier
+#         payload['transition'] =  RidehailPassengerTripStateMachine.reject.name
 
 #         response = patch_internal('passenger_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -313,7 +313,7 @@ class PassengerRideHailTripWorkflowView(FlaskView):
 #         # print(lookup)
 
 #         payload = request.json
-#         payload['transition'] =  RidehailPassengerTripStateMachine.cancel.identifier
+#         payload['transition'] =  RidehailPassengerTripStateMachine.cancel.name
 #         # print(f"{payload=}")
 
 #         response = patch_internal('passenger_ride_hail_trip',
@@ -346,7 +346,7 @@ class PassengerRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailPassengerTripStateMachine.driver_confirmed_trip.identifier
+#         payload['transition'] =  RidehailPassengerTripStateMachine.driver_confirmed_trip.name
 
 #         response = patch_internal('passenger_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -377,7 +377,7 @@ class PassengerRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailPassengerTripStateMachine.wait_for_pickup.identifier
+#         payload['transition'] =  RidehailPassengerTripStateMachine.wait_for_pickup.name
 
 #         # print(f"{payload=}")
 
@@ -410,7 +410,7 @@ class PassengerRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailPassengerTripStateMachine.driver_cancelled_trip.identifier
+#         payload['transition'] =  RidehailPassengerTripStateMachine.driver_cancelled_trip.name
 
 #         response = patch_internal('passenger_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -451,7 +451,7 @@ class PassengerRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailPassengerTripStateMachine.driver_arrived_for_pickup.identifier
+#         payload['transition'] =  RidehailPassengerTripStateMachine.driver_arrived_for_pickup.name
 
 #         response = patch_internal('passenger_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -482,7 +482,7 @@ class PassengerRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailPassengerTripStateMachine.driver_move_for_dropoff.identifier
+#         payload['transition'] =  RidehailPassengerTripStateMachine.driver_move_for_dropoff.name
 
 #         response = patch_internal('passenger_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -513,7 +513,7 @@ class PassengerRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailPassengerTripStateMachine.driver_arrived_for_dropoff.identifier
+#         payload['transition'] =  RidehailPassengerTripStateMachine.driver_arrived_for_dropoff.name
 
 #         response = patch_internal('passenger_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -544,7 +544,7 @@ class PassengerRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailPassengerTripStateMachine.driver_waiting_for_dropoff.identifier
+#         payload['transition'] =  RidehailPassengerTripStateMachine.driver_waiting_for_dropoff.name
 
 #         response = patch_internal('passenger_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -575,7 +575,7 @@ class PassengerRideHailTripWorkflowView(FlaskView):
 
 #         payload = request.json
 
-#         payload['transition'] =  RidehailPassengerTripStateMachine.end_trip.identifier
+#         payload['transition'] =  RidehailPassengerTripStateMachine.end_trip.name
 
 #         response = patch_internal('passenger_ride_hail_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
@@ -607,7 +607,7 @@ class PassengerRideHailTripWorkflowView(FlaskView):
 #         payload = request.json
 
 #         try:
-#             payload['transition'] =  RidehailPassengerTripStateMachine.force_quit.identifier
+#             payload['transition'] =  RidehailPassengerTripStateMachine.force_quit.name
 #             payload['force_quit'] =  True
 #         except: pass
 

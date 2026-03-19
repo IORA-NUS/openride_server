@@ -21,5 +21,5 @@ def plot_state_machine(state_machine):
     dg = Digraph(comment=state_machine.__name__, engine='dot')
     for s in state_machine.states:
         for t in s.transitions:
-            dg.edge(t.source.name, t.destinations[0].name, label=t.identifier)
+            dg.edge(t.source.name, t.destinations[0].name, label=t.name)
     dg.render('state_transitions/{}.gv'.format(state_machine.__name__), format='png')
