@@ -7,7 +7,7 @@ import json, traceback
 # from flask_jwt_extended import get_jwt, jwt_required, verify_jwt_in_request
 from bson.objectid import ObjectId
 
-from api.utils import Status
+from api.utils import Status, patch_timestamps
 from api.controllers import PassengerRideHailTripController
 
 from eve.methods.get import get_internal
@@ -28,13 +28,10 @@ class PassengerRideHailTripView:
         if len(documents) > 1:
             abort(Response("Insert accepts only a single item", status=403))
 
-        document = documents[0]
-        # print(f"inside PassengerTripView.on_insert, {document.get('sim_clock') = }")
         try:
-            PassengerRideHailTripController.validate(document)
-            if document.get('sim_clock') is not None:
-                document['_created'] = document['sim_clock']
-                document['_updated'] = document['sim_clock']
+            for document in documents:
+                patch_timestamps(document)
+                PassengerRideHailTripController.validate(document)
         except Exception as e:
             abort(Response(str(e), status=403))
 
@@ -42,14 +39,10 @@ class PassengerRideHailTripView:
     @classmethod
     def on_update(cls, updates, document):
         ''' '''
-        # print(f"inside PassengerTripView.on_update, {document.get('sim_clock') = }")
         try:
-            # print('validating before update PassengerTripView')
+            patch_timestamps(updates, update_only=True)
             PassengerRideHailTripController.validate(document, updates)
-            if updates.get('sim_clock') is not None:
-                updates['_updated'] = updates['sim_clock']
         except Exception as e:
-            print(traceback.format_exc())
             abort(Response(str(e), status=403))
 
 

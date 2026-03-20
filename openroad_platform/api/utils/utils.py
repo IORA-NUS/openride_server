@@ -48,3 +48,12 @@ def itransform_lonlat_webmercator(lonlat_points):
 #   return TRAN_4326_TO_3857.transform(lon, lat)
   return TRAN_4326_TO_3857.itransform(lonlat_points)
 
+
+def patch_timestamps(doc, update_only=False):
+    sim_clock = doc.get('sim_clock')
+    if sim_clock is not None:
+        if update_only:
+            doc['_updated'] = sim_clock
+        else:
+            doc['_created'] = sim_clock
+            doc['_updated'] = sim_clock

@@ -5,7 +5,7 @@ from flask import abort, Response, request
 import json
 # from flask_jwt_extended import get_jwt
 
-from api.utils import Status
+from api.utils import Status, patch_timestamps
 from api.controllers import VehicleController
 
 # vehicle_bp = Blueprint('vehicle', __name__, url_prefix='/vehicle/<_id>')
@@ -44,10 +44,20 @@ class VehicleView:
         """
         try:
             for document in documents:
+                # Patch statemachine_id from statemachine lookup if needed
+                statemachine = document.get('statemachine')
+                if statemachine:
+                    name = statemachine.get('name')
+                    domain = statemachine.get('domain')
+                    if name and domain:
+                        db = app.data.driver.db
+                        sm_doc = db['statemachine'].find_one({'name': name, 'domain': domain})
+                        if sm_doc:
+                            document['statemachine']['id'] = sm_doc['_id']
+                        else:
+                            app.logger.warning(f"Statemachine not found for {name = }, {domain = }")
                 VehicleController.validate(document)
-                if document.get('sim_clock') is not None:
-                    document['_created'] = document['sim_clock']
-                    document['_updated'] = document['sim_clock']
+                patch_timestamps(document)
         except Exception as e:
             app.logger.error(f"Exception occurred: {e}")
             abort(Response(str(e), status=403))
@@ -71,9 +81,21 @@ class VehicleView:
             - Logs any exceptions that occur during processing.
         """
         try:
+            from api.utils import patch_timestamps
+            # Patch statemachine_id from statemachine lookup if needed
+            statemachine = updates.get('statemachine')
+            if statemachine:
+                name = statemachine.get('name')
+                domain = statemachine.get('domain')
+                if name and domain:
+                    db = app.data.driver.db
+                    sm_doc = db['statemachine'].find_one({'name': name, 'domain': domain})
+                    if sm_doc:
+                        updates['statemachine']['id'] = sm_doc['_id']
+                    else:
+                        app.logger.warning(f"Statemachine not found for {name = }, {domain = }")
             VehicleController.validate(document, updates)
-            if updates.get('sim_clock') is not None:
-                updates['_updated'] = updates['sim_clock']
+            patch_timestamps(updates, update_only=True)
         except Exception as e:
             app.logger.error(f"Exception occurred: {e}")
             abort(Response(str(e), status=403))

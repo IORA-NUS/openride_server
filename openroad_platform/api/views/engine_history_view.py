@@ -6,6 +6,7 @@ from bson.objectid import ObjectId
 
 from api.utils import Status
 # from api.controllers import DriverController
+from api.utils import patch_timestamps
 
 from eve.methods.get import get_internal
 from eve.auth import auth_field_and_value
@@ -48,9 +49,7 @@ class EngineHistoryView:
         """
         try:
             for document in documents:
-                if document.get('sim_clock', None) is not None:
-                    document['_created'] = document['sim_clock']
-                    document['_updated'] = document['sim_clock']
+                patch_timestamps(document)
         except Exception as e:
             abort(Response(str(e), status=403))
 
@@ -69,8 +68,7 @@ class EngineHistoryView:
             Aborts the request with a 403 status if an exception occurs.
         """
         try:
-            if updates.get('sim_clock', None) is not None:
-                updates['_updated'] = updates['sim_clock']
+            patch_timestamps(updates, update_only=True)
         except Exception as e:
             abort(Response(str(e), status=403))
 

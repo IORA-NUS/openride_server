@@ -37,14 +37,22 @@ class VehicleController:
         ''' '''
         updates = updates or {}
         # if updates is not None:
-        if updates.get('transition') is not None:
-            if 'state' not in document:
-                raise KeyError("The 'state' key is missing in the document.")
 
-            machine = WorkflowStateMachine(start_value=document['state'])
-            # machine.run(updates.get('transition'))
-            getattr(machine, updates.get('transition'))()
-            updates['state'] = machine.current_state.name
+        statemachine_id = (
+            (updates.get('statemachine') or {}).get('id')
+            or (document.get('statemachine') or {}).get('id')
+        )
+        if not statemachine_id:
+            raise Exception("statemachine_id is required for dynamic loading.")
+        from api.utils.state_machine_cache import get_state_machine, get_definition_func
+        StateMachineClass = get_state_machine(statemachine_id, get_definition_func)
+        machine = StateMachineClass(start_value=document['state'])
+        transition = updates.get('transition')
+        if transition is not None:
+            if not isinstance(transition, str):
+                raise Exception(f"Transition attribute must be a string, got {type(transition)}: {transition}")
+            getattr(machine, transition)()
+        updates['state'] = machine.current_state.name
 
 
     @classmethod

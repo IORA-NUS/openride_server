@@ -4,7 +4,7 @@ import json
 # from flask_jwt_extended import get_jwt, jwt_required
 from bson.objectid import ObjectId
 
-from api.utils import Status
+from api.utils import Status, patch_timestamps
 from api.controllers import DriverController
 from api.state_machine import RidehailDriverTripStateMachine
 
@@ -70,11 +70,8 @@ class DriverView:
         """
         try:
             for document in documents:
-                DriverController.validate(document)
                 sim_clock = document.get('sim_clock')
-                if sim_clock is not None:
-                    document['_created'] = sim_clock
-                    document['_updated'] = sim_clock
+                patch_timestamps(document)
                 # Lookup id using statemachine name and domain
                 statemachine = document.get('statemachine')
                 if statemachine:
@@ -87,6 +84,8 @@ class DriverView:
                             document['statemachine']['id'] = statemachine['_id']
                         else:
                             app.logger.warning(f"Statemachine not found for {name = }, {domain = }")
+
+                DriverController.validate(document)
 
         except Exception as e:
             app.logger.error(f"Error updating driver document: {e}")
@@ -106,9 +105,7 @@ class DriverView:
             abort: Aborts the request with a 403 status if validation fails or an exception occurs.
         """
         try:
-            DriverController.validate(document, updates)
-            if updates.get('sim_clock') is not None:
-                updates['_updated'] = updates['sim_clock']
+            patch_timestamps(updates, update_only=True)
             # Lookup id using statemachine name and domain
             statemachine = updates.get('statemachine')
             if statemachine:
@@ -121,6 +118,8 @@ class DriverView:
                     updates['statemachine']['id'] = statemachine['_id']
                 else:
                     app.logger.warning(f"Statemachine not found for {name = }, {domain = }")
+            DriverController.validate(document, updates)
+
         except Exception as e:
             abort(Response(str(e), status=403))
 

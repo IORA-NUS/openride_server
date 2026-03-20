@@ -1,7 +1,7 @@
 from flask import abort, Response
 import json
 
-from api.utils import Status
+from api.utils import Status, statemachine_schema
 # from .waypoint import WaypointEventSchema
 from api.state_machine import WorkflowStateMachine
 
@@ -55,6 +55,7 @@ class Vehicle:
             'required': True,
         }
     }
+
 
     schema = {
         'run_id': {
@@ -155,6 +156,14 @@ class Vehicle:
         #     },
         #     'required': False,
         # },
+
+        # Dynamic StateMachine fields
+        'statemachine': {
+            'type': 'dict',
+            'schema': statemachine_schema,
+            'required': True,
+            'readonly': True,
+        },
 
         'sim_clock': {
             'type': 'datetime',

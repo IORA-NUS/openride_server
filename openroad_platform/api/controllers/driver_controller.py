@@ -30,16 +30,22 @@ class DriverController:
     def validate(cls, document, updates=None):
         ''' '''
         updates = updates or {}
-        if updates.get('transition') is not None:
-            if 'state' not in document:
-                raise KeyError("The 'state' key is missing in the document.")
+        statemachine_id = (
+            (updates.get('statemachine') or {}).get('id')
+            or (document.get('statemachine') or {}).get('id')
+            )
+        if not statemachine_id:
+            raise Exception("statemachine_id is required for dynamic loading.")
 
-            machine = WorkflowStateMachine(start_value=document['state'])
-            # machine.run(updates.get('transition'))
-            getattr(machine, updates.get('transition'))()
-            # check if transition occured else raise exception
-            # if machine.current_state.name != document['state']:
-            #     raise Exception(f"Transition '{updates.get('transition')}' did not occur. Current state: {machine.current_state.name}, {document['state'] =}")
+        from api.utils.state_machine_cache import get_state_machine, get_definition_func
+        StateMachineClass = get_state_machine(statemachine_id, get_definition_func)
+        machine = StateMachineClass(start_value=document['state'])
+        transition = updates.get('transition')
 
-            updates['state'] = machine.current_state.name
+        if transition is not None:
+            if not isinstance(transition, str):
+                raise Exception(f"Transition attribute must be a string, got {type(transition)}: {transition}")
+            getattr(machine, transition)()
+
+        updates['state'] = machine.current_state.name
 

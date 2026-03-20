@@ -3,6 +3,7 @@ import json
 
 # from api.utils import Status
 # from .waypoint import WaypointEventSchema
+from api.utils import statemachine_schema
 
 from api.state_machine import WorkflowStateMachine
 
@@ -97,6 +98,14 @@ class Passenger:
             'type': 'dict',
             'schema': profile_schema,
             'required': True,
+        },
+
+        # Dynamic StateMachine fields
+        'statemachine': {
+            'type': 'dict',
+            'schema': statemachine_schema,
+            'required': True,
+            'readonly': True,
         },
 
         'sim_clock': {

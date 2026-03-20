@@ -5,6 +5,7 @@ import json
 # from .waypoint import WaypointEventSchema
 
 from api.state_machine import WorkflowStateMachine
+from api.utils import statemachine_schema
 # from statemachine import State, StateMachine
 # from .user import WorkflowStates
 
@@ -78,32 +79,6 @@ class Driver:
         },
     }
 
-    statemachine_schema = {
-        'name': {
-            'type': 'string',
-            'required': False,
-            'nullable': True,
-            'default': None
-        },
-        'domain': {
-            'type': 'string',
-            'required': False,
-            'nullable': True,
-            'default': None
-        },
-        'id': {
-            'type': 'objectid',
-            'required': False,
-            'nullable': True,
-            'data_relation': {
-                'resource': 'statemachine',
-                'field': '_id'
-            },
-            'default': None
-        },
-    }
-
-
     schema = {
         'run_id': {
             'type': 'string',
@@ -161,8 +136,8 @@ class Driver:
         'statemachine': {
             'type': 'dict',
             'schema': statemachine_schema,
-            'required': False,
-            'nullable': True,
+            'required': True,
+            'readonly': True,
         },
 
 

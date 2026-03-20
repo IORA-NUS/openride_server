@@ -4,7 +4,7 @@ import json
 # from flask_jwt_extended import get_jwt, jwt_required
 from bson.objectid import ObjectId
 
-from api.utils import Status
+from api.utils import Status, patch_timestamps
 from api.controllers import PassengerController
 
 from eve.methods.get import get_internal
@@ -71,10 +71,21 @@ class PassengerView:
         """
         try:
             for document in documents:
+                patch_timestamps(document)
+                # Patch statemachine_id from statemachine lookup if needed
+                statemachine = document.get('statemachine')
+                if statemachine:
+                    name = statemachine.get('name')
+                    domain = statemachine.get('domain')
+                    if name and domain:
+                        db = app.data.driver.db
+                        sm_doc = db['statemachine'].find_one({'name': name, 'domain': domain})
+                        if sm_doc:
+                            document['statemachine']['id'] = sm_doc['_id']
+                        else:
+                            app.logger.warning(f"Statemachine not found for {name = }, {domain = }")
+
                 PassengerController.validate(document)
-                if document.get('sim_clock', None) is not None:
-                    document['_created'] = document['sim_clock']
-                    document['_updated'] = document['sim_clock']
         except Exception as e:
             abort(Response(str(e), status=403))
 
@@ -92,9 +103,21 @@ class PassengerView:
             Aborts the request with a 403 status code if validation fails or an exception occurs.
         """
         try:
+            patch_timestamps(updates, update_only=True)
+            # Patch statemachine_id from statemachine lookup if needed
+            statemachine = updates.get('statemachine') 
+            if statemachine:
+                name = statemachine.get('name')
+                domain = statemachine.get('domain')
+                if name and domain:
+                    db = app.data.driver.db
+                    sm_doc = db['statemachine'].find_one({'name': name, 'domain': domain})
+                    if sm_doc:
+                        updates['statemachine']['id'] = sm_doc['_id']
+                    else:
+                        app.logger.warning(f"Statemachine not found for {name = }, {domain = }")
+
             PassengerController.validate(document, updates)
-            if updates.get('sim_clock') is not None:
-                updates['_updated'] = updates['sim_clock']
         except Exception as e:
             abort(Response(str(e), status=403))
 
