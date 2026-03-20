@@ -13,7 +13,7 @@ from eve.render import send_response
 # from flask_jwt_extended import get_jwt, jwt_required, verify_jwt_in_request
 from bson.objectid import ObjectId
 
-from api.utils import Status
+from api.utils import Status, patch_timestamps
 from api.controllers import DriverRideHailTripController
 
 from eve.methods.get import get_internal
@@ -29,35 +29,56 @@ class DriverRideHailTripView:
     @classmethod
     def on_insert(cls, documents):
         ''' '''
-        # print(documents)
         if len(documents) > 1:
             abort(Response("Insert accepts only a single item", status=403))
 
-        document = documents[0]
+        # document = documents[0]
+        # # Check for statemachine id
+        # statemachine_id = (document.get('statemachine') or {}).get('id')
+        # if not statemachine_id:
+        #     abort(Response("statemachine_id is required for dynamic loading.", status=403))
+        # try:
+        #     from api.utils import patch_timestamps
+        #     DriverRideHailTripController.validate(document)
+        #     patch_timestamps(document)
+        # except Exception as e:
+        #     abort(Response(str(e), status=403))
         try:
-            # print("Validating document on insert: {}".format(document))
-            DriverRideHailTripController.validate(document)
-            # print("Document validation successful on insert: {}".format(document))
-            # if document.get('passenger') is not None:
-            #     document['state'] = RidehailDriverTripStateMachine.driver_received_trip.name
+            for document in documents:
+                # sim_clock = document.get('sim_clock')
+                patch_timestamps(document)
+                # Lookup id using statemachine name and domain
+                statemachine = document.get('statemachine')
+                if statemachine:
+                    name = statemachine.get('name')
+                    domain = statemachine.get('domain')
+                    if name and domain:
+                        db = app.data.driver.db
+                        statemachine = db['statemachine'].find_one({'name': name, 'domain': domain})
+                        if statemachine:
+                            document['statemachine']['id'] = statemachine['_id']
+                        else:
+                            app.logger.warning(f"Statemachine not found for {name = }, {domain = }")
 
-            if document.get('sim_clock') is not None:
-                document['_created'] = document['sim_clock']
-                document['_updated'] = document['sim_clock']
+                DriverRideHailTripController.validate(document)
+
         except Exception as e:
-            # print(traceback.format_exc())
-            abort(Response(str(e), status=403))
+            app.logger.error(f"Error updating driver document: {e}")
+            abort(Response(f"An error occurred while updating the driver document: {str(e)}", status=403))
 
 
     @classmethod
     def on_update(cls, updates, document):
         ''' '''
+        # # Check for statemachine id
+        # statemachine_id = (updates.get('statemachine') or {}).get('id') or (document.get('statemachine') or {}).get('id')
+        # if not statemachine_id:
+        #     abort(Response("statemachine_id is required for dynamic loading.", status=403))
         try:
+            from api.utils import patch_timestamps
             DriverRideHailTripController.validate(document, updates)
-            if updates.get('sim_clock') is not None:
-                updates['_updated'] = updates['sim_clock']
+            patch_timestamps(updates)
         except Exception as e:
-            # print(traceback.format_exc())
             abort(Response(str(e), status=403))
 
 
