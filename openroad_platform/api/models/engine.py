@@ -1,6 +1,7 @@
 from flask import abort, Response
 import json
 
+from api.utils import persona_schema
 
 class Engine:
     """
@@ -76,6 +77,14 @@ class Engine:
             'type': 'datetime',
             'required': False
         },
+
+        'persona': {
+            'type': 'dict',
+            'schema': persona_schema,
+            'required': True,
+            # 'readonly': True,
+        },
+
 
     }
 

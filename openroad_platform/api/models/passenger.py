@@ -3,7 +3,7 @@ import json
 
 # from api.utils import Status
 # from .waypoint import WaypointEventSchema
-from api.utils import statemachine_schema
+from api.utils import statemachine_schema, persona_schema
 
 # from api.state_machine import WorkflowStateMachine
 
@@ -104,6 +104,13 @@ class Passenger:
         'statemachine': {
             'type': 'dict',
             'schema': statemachine_schema,
+            'required': True,
+            # 'readonly': True,
+        },
+
+        'persona': {
+            'type': 'dict',
+            'schema': persona_schema,
             'required': True,
             # 'readonly': True,
         },

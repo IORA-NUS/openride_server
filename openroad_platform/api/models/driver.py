@@ -5,7 +5,7 @@ import json
 # from .waypoint import WaypointEventSchema
 
 # from api.state_machine import WorkflowStateMachine
-from api.utils import statemachine_schema
+from api.utils import statemachine_schema, persona_schema
 # from statemachine import State, StateMachine
 # from .user import WorkflowStates
 
@@ -140,6 +140,12 @@ class Driver:
             # 'readonly': True,
         },
 
+        'persona': {
+            'type': 'dict',
+            'schema': persona_schema,
+            'required': True,
+            # 'readonly': True,
+        },
 
         'is_busy': {
             'type': 'boolean',

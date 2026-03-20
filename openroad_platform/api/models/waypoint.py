@@ -2,7 +2,7 @@ from datetime import datetime
 from api.utils import Status
 from statemachine import State, StateMachine
 
-from api.state_machine import RidehailDriverTripStateMachine, RidehailPassengerTripStateMachine
+# from api.state_machine import RidehailDriverTripStateMachine, RidehailPassengerTripStateMachine
 
 # from trip import TripStates
 # from .driver_trip import DriverTripStates
@@ -62,7 +62,7 @@ class Waypoint:
         },
         'state': {
             'type': 'string',
-            'allowed': [s.name for s in RidehailDriverTripStateMachine().states] + [s.name for s in RidehailPassengerTripStateMachine().states],
+            # 'allowed': [s.name for s in RidehailDriverTripStateMachine().states] + [s.name for s in RidehailPassengerTripStateMachine().states],
             # 'default': DriverStates().current_state.name,
             'required': True,
             # 'readonly': True

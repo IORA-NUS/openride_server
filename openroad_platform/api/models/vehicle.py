@@ -1,7 +1,7 @@
 from flask import abort, Response
 import json
 
-from api.utils import Status, statemachine_schema
+from api.utils import Status, statemachine_schema, persona_schema
 # from .waypoint import WaypointEventSchema
 # from api.state_machine import WorkflowStateMachine
 
@@ -161,6 +161,12 @@ class Vehicle:
         'statemachine': {
             'type': 'dict',
             'schema': statemachine_schema,
+            'required': True,
+            # 'readonly': True,
+        },
+        'persona': {
+            'type': 'dict',
+            'schema': persona_schema,
             'required': True,
             # 'readonly': True,
         },

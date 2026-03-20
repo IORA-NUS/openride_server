@@ -2,7 +2,7 @@ from datetime import datetime
 from api.utils import Status
 from statemachine import State, StateMachine
 
-from api.state_machine import RidehailDriverTripStateMachine, RidehailPassengerTripStateMachine
+# from api.state_machine import RidehailDriverTripStateMachine, RidehailPassengerTripStateMachine
 
 class Kpi:
     """
@@ -45,7 +45,6 @@ class Kpi:
             'default': 0,
             'required': True,
         },
-
         'sim_clock': {
             'type': 'datetime',
             'required': False

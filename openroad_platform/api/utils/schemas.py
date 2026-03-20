@@ -22,3 +22,16 @@ statemachine_schema = {
         'readonly': True
     },
 }
+
+persona_schema = {
+    'role': {
+        'type': 'string',
+        'required': True,
+        'default': None
+    },
+    'domain': {
+        'type': 'string',
+        'required': True,
+        'default': None
+    }
+}

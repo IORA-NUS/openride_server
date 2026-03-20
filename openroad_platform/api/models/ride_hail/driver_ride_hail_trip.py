@@ -1,6 +1,6 @@
 from datetime import datetime
-from api.utils import Status, statemachine_schema
-from api.state_machine import RidehailDriverTripStateMachine
+from api.utils import Status, statemachine_schema, persona_schema
+# from api.state_machine import RidehailDriverTripStateMachine
 
 class DriverRideHailTrip:
 
@@ -104,19 +104,19 @@ class DriverRideHailTrip:
 
         'state': {
             'type': 'string',
-            'allowed': [s.name for s in RidehailDriverTripStateMachine().states],
-            'default': RidehailDriverTripStateMachine().current_state.name,
+            # 'allowed': [s.name for s in RidehailDriverTripStateMachine().states],
+            # 'default': RidehailDriverTripStateMachine().current_state.name,
             'required': True,
-            'readonly': True
+            # 'readonly': True
         },
         'transition': {
             'type': 'string',
-            'allowed': [t.name for t in RidehailDriverTripStateMachine().events],
+            # 'allowed': [t.name for t in RidehailDriverTripStateMachine().events],
             'required': False,
         },
         'feasible_transitions': {
             'type': 'list',
-            'allowed': [t.name for t in RidehailDriverTripStateMachine().events],
+            # 'allowed': [t.name for t in RidehailDriverTripStateMachine().events],
             'default': [],
             'required': True,
             'readonly': True
@@ -238,6 +238,11 @@ class DriverRideHailTrip:
             'schema': statemachine_schema,
             'required': True,
             # 'readonly': True,
+        },
+        'persona': {
+            'type': 'dict',
+            'schema': persona_schema,
+            'required': True,
         },
 
         'sim_clock': {

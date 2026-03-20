@@ -5,6 +5,8 @@ Worker-level cache for state machine classes with robust definition checking.
 
 from threading import Lock
 from typing import Any, Dict, Tuple
+from orsim.utils import StateMachineSerializer
+
 
  # Example cache structure: {definition_id: (class_obj, version)}
 _cache: Dict[str, Tuple[Any, str]] = {}
@@ -47,7 +49,7 @@ def construct_state_machine_class(definition: dict) -> Any:
     Returns:
         State machine class
     """
-    from api.state_machine.state_machine_serializer import StateMachineSerializer
+    # from api.state_machine.state_machine_serializer import StateMachineSerializer
     return StateMachineSerializer.deserialize(definition)
 
 
