@@ -104,19 +104,6 @@ class PassengerView:
         """
         try:
             patch_timestamps(updates, update_only=True)
-            # Patch statemachine_id from statemachine lookup if needed
-            statemachine = updates.get('statemachine') 
-            if statemachine:
-                name = statemachine.get('name')
-                domain = statemachine.get('domain')
-                if name and domain:
-                    db = app.data.driver.db
-                    sm_doc = db['statemachine'].find_one({'name': name, 'domain': domain})
-                    if sm_doc:
-                        updates['statemachine']['id'] = sm_doc['_id']
-                    else:
-                        app.logger.warning(f"Statemachine not found for {name = }, {domain = }")
-
             PassengerController.validate(document, updates)
         except Exception as e:
             abort(Response(str(e), status=403))

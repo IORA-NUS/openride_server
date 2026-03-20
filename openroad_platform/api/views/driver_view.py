@@ -106,22 +106,10 @@ class DriverView:
         """
         try:
             patch_timestamps(updates, update_only=True)
-            # Lookup id using statemachine name and domain
-            statemachine = updates.get('statemachine')
-            if statemachine:
-                name = statemachine.get('name')
-                domain = statemachine.get('domain')
-                if name and domain:
-                    db = app.data.driver.db
-                    statemachine = db['statemachine'].find_one({'name': name, 'domain': domain})
-                if statemachine:
-                    updates['statemachine']['id'] = statemachine['_id']
-                else:
-                    app.logger.warning(f"Statemachine not found for {name = }, {domain = }")
             DriverController.validate(document, updates)
-
         except Exception as e:
-            abort(Response(str(e), status=403))
+            app.logger.error(f"Error updating driver document: {e}")
+            abort(Response(f"An error occurred while updating the driver document: {str(e)}", status=403))
 
 
     # @blueprint.route('/<id>/deregister', methods=['POST'])

@@ -1,7 +1,6 @@
 from datetime import datetime
-from api.utils import Status
+from api.utils import Status, statemachine_schema
 from api.state_machine import RidehailDriverTripStateMachine
-
 
 class DriverRideHailTrip:
 
@@ -232,6 +231,13 @@ class DriverRideHailTrip:
             'type': 'integer',
             # 'default': 0,
             'readonly': True
+        },
+
+        'statemachine': {
+            'type': 'dict',
+            'schema': statemachine_schema,
+            'required': True,
+            # 'readonly': True,
         },
 
         'sim_clock': {

@@ -18,6 +18,7 @@ statemachine_schema = {
             'resource': 'statemachine',
             'field': '_id'
         },
-        'default': None
+        # 'default': None
+        'readonly': True
     },
 }

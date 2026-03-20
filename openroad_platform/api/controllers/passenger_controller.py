@@ -5,7 +5,7 @@ import json
 # from api.utils import Status
 # from api.models import WorkflowStates
 
-from api.state_machine import WorkflowStateMachine
+# from api.state_machine import WorkflowStateMachine
 
 class PassengerController:
     """
@@ -48,6 +48,6 @@ class PassengerController:
                 if not isinstance(transition, str):
                     raise Exception(f"Transition attribute must be a string, got {type(transition)}: {transition}")
                 getattr(machine, transition)()
-                
+
             updates['state'] = machine.current_state.name
 

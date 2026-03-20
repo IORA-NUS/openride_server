@@ -7,7 +7,7 @@ from eve.methods.patch import patch_internal
 
 # from api.utils import Status
 # from api.models import WorkflowStates
-from api.state_machine import WorkflowStateMachine
+# from api.state_machine import WorkflowStateMachine
 
 class VehicleController:
     """

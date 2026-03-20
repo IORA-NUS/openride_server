@@ -1,5 +1,5 @@
 from datetime import datetime
-from api.utils import Status
+from api.utils import Status, statemachine_schema
 from api.state_machine import RidehailPassengerTripStateMachine
 
 
@@ -159,6 +159,15 @@ class PassengerRideHailTrip:
             'allowed': [True],
             'nullable': True,
         },
+
+        # Dynamic StateMachine fields
+        'statemachine': {
+            'type': 'dict',
+            'schema': statemachine_schema,
+            'required': True,
+            # 'readonly': True,
+        },
+
 
         'sim_clock': {
             'type': 'datetime',

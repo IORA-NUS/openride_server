@@ -23,30 +23,30 @@ class UserStateMachine(StateMachine):
     register = dormant.to(active)
     deregister = active.to(dormant)
 
-class WorkflowStateMachine(StateMachine):
-    """
-    WorkflowStateMachine defines the state transitions for an agent's workflow.
+# class WorkflowStateMachine(StateMachine):
+#     """
+#     WorkflowStateMachine defines the state transitions for an agent's workflow.
 
-    States:
-        - dormant: Initial state, agent is inactive.
-        - offline: Agent is registered but not online.
-        - online: Agent is actively online.
+#     States:
+#         - dormant: Initial state, agent is inactive.
+#         - offline: Agent is registered but not online.
+#         - online: Agent is actively online.
 
-    Transitions:
-        - register: Moves agent from 'dormant' to 'offline'.
-        - deregister: Moves agent from 'offline' to 'dormant'.
-        - login: Moves agent from 'offline' to 'online'.
-        - logout: Moves agent from 'online' to 'offline'.
-    """
+#     Transitions:
+#         - register: Moves agent from 'dormant' to 'offline'.
+#         - deregister: Moves agent from 'offline' to 'dormant'.
+#         - login: Moves agent from 'offline' to 'online'.
+#         - logout: Moves agent from 'online' to 'offline'.
+#     """
 
-    dormant = State('dormant', initial=True)
-    offline = State('offline')
-    online = State('online')
+#     dormant = State('dormant', initial=True)
+#     offline = State('offline')
+#     online = State('online')
 
-    register = dormant.to(offline)
-    deregister = offline.to(dormant)
-    login = offline.to(online)
-    logout = offline.from_(online)
+#     register = dormant.to(offline)
+#     deregister = offline.to(dormant)
+#     login = offline.to(online)
+#     logout = offline.from_(online)
 
 
 

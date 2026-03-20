@@ -4,7 +4,7 @@ import json
 # from api.utils import Status
 # from .waypoint import WaypointEventSchema
 
-from api.state_machine import WorkflowStateMachine
+# from api.state_machine import WorkflowStateMachine
 from api.utils import statemachine_schema
 # from statemachine import State, StateMachine
 # from .user import WorkflowStates
@@ -111,14 +111,14 @@ class Driver:
 
         'state': {
             'type': 'string',
-            'allowed': [s.name for s in WorkflowStateMachine().states],
-            'default': WorkflowStateMachine().current_state.name,
+            # 'allowed': [s.name for s in WorkflowStateMachine().states],
+            # 'default': WorkflowStateMachine().current_state.name,
             'required': True,
-            'readonly': True
+            # 'readonly': True
         },
         'transition': {
             'type': 'string',
-            'allowed': [t.name for t in WorkflowStateMachine().events],
+            # 'allowed': [t.name for t in WorkflowStateMachine().events],
             'required': False,
         },
 
@@ -137,7 +137,7 @@ class Driver:
             'type': 'dict',
             'schema': statemachine_schema,
             'required': True,
-            'readonly': True,
+            # 'readonly': True,
         },
 
 
