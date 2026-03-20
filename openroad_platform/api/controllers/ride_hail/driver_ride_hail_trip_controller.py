@@ -88,7 +88,7 @@ class DriverRideHailTripController:
                 if transition is not None:
                     if not isinstance(transition, str):
                         raise Exception(f"Transition attribute must be a string, got {type(transition)}: {transition}")
-                    getattr(machine, transition)(updates)
+                    getattr(machine, transition)()
 
                 updates['state'] = machine.current_state.name
                 updates['feasible_transitions'] = [t.name for t in machine.allowed_events]

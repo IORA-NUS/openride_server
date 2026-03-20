@@ -73,15 +73,25 @@ class PassengerRideHailTripController:
 
             # Update state
             try:
-                # machine = PassengerRideHailTripStateMachine_Managed(start_value=document['state'])
-                machine = RidehailPassengerTripStateMachine(start_value=document['state'])
+                from api.utils.state_machine_cache import get_state_machine, get_definition_func
+                statemachine_id = (
+                    (updates.get('statemachine') or {}).get('id')
+                    or (document.get('statemachine') or {}).get('id')
+                )
+                StateMachineClass = get_state_machine(statemachine_id, get_definition_func)
+                machine = StateMachineClass(start_value=document['state'])
                 transition = updates.get('transition')
                 if transition is not None:
                     if not isinstance(transition, str):
                         raise Exception(f"Transition attribute must be a string, got {type(transition)}: {transition}")
-                    getattr(machine, transition)(updates)
+                    getattr(machine, transition)()
+
                 updates['state'] = machine.current_state.name
                 updates['feasible_transitions'] = [t.name for t in machine.allowed_events]
+                # Final state check
+                if getattr(machine.current_state, 'final', False):
+                    updates['is_active'] = False
+
             except Exception as e:
                 logging.exception(f"Error during state transition '{updates.get('transition')}' with updates {updates}: {e}")
                 if updates.get('transition') is not None:

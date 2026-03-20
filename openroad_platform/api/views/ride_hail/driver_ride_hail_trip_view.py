@@ -77,7 +77,7 @@ class DriverRideHailTripView:
         try:
             from api.utils import patch_timestamps
             DriverRideHailTripController.validate(document, updates)
-            patch_timestamps(updates)
+            patch_timestamps(updates, update_only=True)
         except Exception as e:
             abort(Response(str(e), status=403))
 

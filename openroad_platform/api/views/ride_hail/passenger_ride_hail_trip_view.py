@@ -30,8 +30,23 @@ class PassengerRideHailTripView:
 
         try:
             for document in documents:
+                # sim_clock = document.get('sim_clock')
                 patch_timestamps(document)
-                PassengerRideHailTripController.validate(document)
+                # Lookup id using statemachine name and domain
+                statemachine = document.get('statemachine')
+                if statemachine:
+                    name = statemachine.get('name')
+                    domain = statemachine.get('domain')
+                    if name and domain:
+                        db = app.data.driver.db
+                        statemachine = db['statemachine'].find_one({'name': name, 'domain': domain})
+                        if statemachine:
+                            document['statemachine']['id'] = statemachine['_id']
+                        else:
+                            app.logger.warning(f"Statemachine not found for {name = }, {domain = }")
+
+                PassengerRideHailTripController().validate(document)
+
         except Exception as e:
             abort(Response(str(e), status=403))
 
