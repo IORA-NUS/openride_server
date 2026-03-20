@@ -70,7 +70,7 @@ class DriverView:
         """
         try:
             for document in documents:
-                sim_clock = document.get('sim_clock')
+                # sim_clock = document.get('sim_clock')
                 patch_timestamps(document)
                 # Lookup id using statemachine name and domain
                 statemachine = document.get('statemachine')
