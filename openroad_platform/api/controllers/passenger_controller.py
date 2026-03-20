@@ -32,7 +32,6 @@ class PassengerController:
     def validate(cls, document, updates=None):
         ''' '''
         updates = updates or {}
-        # if updates is not None:
         if updates.get('transition') is not None:
             statemachine_id = (
                 (updates.get('statemachine') or {}).get('id')
@@ -40,6 +39,7 @@ class PassengerController:
             )
             if not statemachine_id:
                 raise Exception("statemachine_id is required for dynamic loading.")
+
             from api.utils.state_machine_cache import get_state_machine, get_definition_func
             StateMachineClass = get_state_machine(statemachine_id, get_definition_func)
             machine = StateMachineClass(start_value=document['state'])

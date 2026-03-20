@@ -23,19 +23,11 @@ class StateMachineSerializer:
             all_targets.add(t['target'])
         final_states = all_targets - all_sources
 
-        # Create State objects
-        for state in definition['states']:
-            if isinstance(state, dict):
-                name = state['id']
-                label = state.get('label', state['id'])
-                is_initial = (name == initial)
-                is_final = name in final_states
-                states[name] = State(label, initial=is_initial, final=is_final)
-            else:
-                name = state
-                is_initial = (name == initial)
-                is_final = name in final_states
-                states[name] = State(name, initial=is_initial, final=is_final)
+        # Create State objects (states is a list of strings)
+        for name in definition['states']:
+            is_initial = (name == initial)
+            is_final = name in final_states
+            states[name] = State(name, initial=is_initial, final=is_final)
 
         # Debug print states and transitions
         print("[DEBUG] States:", list(states.keys()))
@@ -75,12 +67,44 @@ class StateMachineSerializer:
         for trigger, composed in trigger_map.items():
             class_dict[trigger] = composed
 
+
+        # Recreate user-defined methods from source code if present in definition
+        if 'methods' in definition:
+            dynamic_method_names = []
+            dynamic_method_sources = {}
+            for method_name, method_source in definition['methods'].items():
+                namespace = {}
+                try:
+                    exec(method_source, namespace)
+                    func = namespace.get(method_name)
+                    if func:
+                        class_dict[method_name] = func
+                        dynamic_method_names.append(method_name)
+                        dynamic_method_sources[method_name] = method_source
+                    else:
+                        def stub(self, *args, **kwargs):
+                            raise NotImplementedError(f"Method '{method_name}' could not be reconstructed.")
+                        stub.__name__ = method_name
+                        class_dict[method_name] = stub
+                        dynamic_method_names.append(method_name)
+                        dynamic_method_sources[method_name] = method_source
+                except Exception:
+                    def stub(self, *args, **kwargs):
+                        raise NotImplementedError(f"Method '{method_name}' could not be reconstructed.")
+                    stub.__name__ = method_name
+                    class_dict[method_name] = stub
+                    dynamic_method_names.append(method_name)
+                    dynamic_method_sources[method_name] = method_source
+            class_dict['_dynamic_methods'] = dynamic_method_names
+            class_dict['_dynamic_method_sources'] = dynamic_method_sources
+
         # Dynamically create a StateMachine subclass with states and transitions attached
         DynamicSM = type("DynamicSM", (StateMachine,), class_dict)
         return DynamicSM
 
     @staticmethod
     def serialize(sm_cls):
+        import inspect
         sm = sm_cls()
         states = [state.name for state in sm.states]
         transitions = []
@@ -98,6 +122,7 @@ class StateMachineSerializer:
             if state.initial:
                 initial = state.name
                 break
+
         return {
             'states': states,
             'transitions': transitions,
@@ -116,102 +141,23 @@ if __name__ == '__main__':
             {"trigger": "start", "source": "idle", "target": "running"},
             {"trigger": "finish", "source": "running", "target": "finished"}
         ],
-        "initial": "idle"
+        "initial": "idle",
+        "methods": {
+            "on_start": "def on_start(self, msg):\n    print('Before:', msg['hello'])\n    msg['hello'] = 'universe'\n    print('After:', msg['hello'])\n",
+            "on_finish": "def on_finish(self, msg):\n    print('Before:', msg['hello'])\n    msg['hello'] = 'universe'\n    print('After:', msg['hello'])\n"
+        }
     }
     DynamicSM = StateMachineSerializer.deserialize(definition)
     sm = DynamicSM()
     print_state(sm)  # 'idle'
-    sm.start()
+    msg = {'hello': 'world'}
+    sm.start(msg)
     print_state(sm)  # 'running'
-    sm.finish()
+    msg = {'hello': 'world'}
+    sm.finish(msg)
     print_state(sm)  # 'finished'
 
     # Serialize back
     serialized = StateMachineSerializer.serialize(DynamicSM)
     print("[SERIALIZED]", serialized)
 
-    definition = {
-        "states": [
-            "driver_init_trip",
-            "driver_looking_for_job",
-            "driver_received_trip",
-            "driver_rejected_trip",
-            "driver_accepted_trip",
-            "driver_cancelled_trip",
-            "driver_moving_to_pickup",
-            "driver_waiting_to_pickup",
-            "driver_pickedup",
-            "driver_moving_to_dropoff",
-            "driver_waiting_to_dropoff",
-            "driver_droppedoff",
-            "driver_completed_trip"
-        ],
-        "transitions": [
-            {"trigger": "look_for_job", "source": "driver_init_trip", "target": "driver_looking_for_job"},
-            {"trigger": "recieve", "source": "driver_init_trip", "target": "driver_received_trip"},
-            {"trigger": "end_trip", "source": "driver_init_trip", "target": "driver_completed_trip"},
-            {"trigger": "force_quit", "source": "driver_init_trip", "target": "driver_cancelled_trip"},
-            {"trigger": "end_trip", "source": "driver_looking_for_job", "target": "driver_completed_trip"},
-            {"trigger": "cancel", "source": "driver_looking_for_job", "target": "driver_cancelled_trip"},
-            {"trigger": "force_quit", "source": "driver_looking_for_job", "target": "driver_cancelled_trip"},
-            {"trigger": "confirm", "source": "driver_received_trip", "target": "driver_accepted_trip"},
-            {"trigger": "reject", "source": "driver_received_trip", "target": "driver_rejected_trip"},
-            {"trigger": "force_quit", "source": "driver_received_trip", "target": "driver_cancelled_trip"},
-            {"trigger": "end_trip", "source": "driver_rejected_trip", "target": "driver_completed_trip"},
-            {"trigger": "force_quit", "source": "driver_rejected_trip", "target": "driver_cancelled_trip"},
-            {"trigger": "passenger_confirmed_trip", "source": "driver_accepted_trip", "target": "driver_moving_to_pickup"},
-            {"trigger": "passenger_cancelled_trip", "source": "driver_accepted_trip", "target": "driver_completed_trip"},
-            {"trigger": "cancel", "source": "driver_accepted_trip", "target": "driver_cancelled_trip"},
-            {"trigger": "force_quit", "source": "driver_accepted_trip", "target": "driver_cancelled_trip"},
-            {"trigger": "wait_to_pickup", "source": "driver_moving_to_pickup", "target": "driver_waiting_to_pickup"},
-            {"trigger": "passenger_cancelled_trip", "source": "driver_moving_to_pickup", "target": "driver_completed_trip"},
-            {"trigger": "cancel", "source": "driver_moving_to_pickup", "target": "driver_cancelled_trip"},
-            {"trigger": "force_quit", "source": "driver_moving_to_pickup", "target": "driver_cancelled_trip"},
-            {"trigger": "passenger_cancelled_trip", "source": "driver_waiting_to_pickup", "target": "driver_completed_trip"},
-            {"trigger": "passenger_acknowledge_pickup", "source": "driver_waiting_to_pickup", "target": "driver_pickedup"},
-            {"trigger": "cancel", "source": "driver_waiting_to_pickup", "target": "driver_cancelled_trip"},
-            {"trigger": "force_quit", "source": "driver_waiting_to_pickup", "target": "driver_cancelled_trip"},
-            {"trigger": "move_to_dropoff", "source": "driver_pickedup", "target": "driver_moving_to_dropoff"},
-            {"trigger": "force_quit", "source": "driver_pickedup", "target": "driver_cancelled_trip"},
-            {"trigger": "wait_to_dropoff", "source": "driver_moving_to_dropoff", "target": "driver_waiting_to_dropoff"},
-            {"trigger": "force_quit", "source": "driver_moving_to_dropoff", "target": "driver_cancelled_trip"},
-            {"trigger": "passenger_acknowledge_dropoff", "source": "driver_waiting_to_dropoff", "target": "driver_droppedoff"},
-            {"trigger": "force_quit", "source": "driver_waiting_to_dropoff", "target": "driver_cancelled_trip"},
-            {"trigger": "end_trip", "source": "driver_droppedoff", "target": "driver_completed_trip"},
-            {"trigger": "force_quit", "source": "driver_droppedoff", "target": "driver_cancelled_trip"}
-        ],
-        "initial": "driver_init_trip"
-    }
-
-    DynamicSM = StateMachineSerializer.deserialize(definition)
-    sm = DynamicSM()
-
-    # Simulate a full trip lifecycle
-    print_state(sm)  # 'driver_init_trip'
-    sm.look_for_job()
-    print_state(sm)  # 'driver_looking_for_job'
-    sm.end_trip()
-    print_state(sm)  # 'driver_completed_trip'
-
-    # Reset and test more transitions
-    sm = DynamicSM()
-    print("\n--- New Trip ---")
-    print_state(sm)  # 'driver_init_trip'
-    sm.recieve()
-    print_state(sm)  # 'driver_received_trip'
-    sm.confirm()
-    print_state(sm)  # 'driver_accepted_trip'
-    sm.passenger_confirmed_trip()
-    print_state(sm)  # 'driver_moving_to_pickup'
-    sm.wait_to_pickup()
-    print_state(sm)  # 'driver_waiting_to_pickup'
-    sm.passenger_acknowledge_pickup()
-    print_state(sm)  # 'driver_pickedup'
-    sm.move_to_dropoff()
-    print_state(sm)  # 'driver_moving_to_dropoff'
-    sm.wait_to_dropoff()
-    print_state(sm)  # 'driver_waiting_to_dropoff'
-    sm.passenger_acknowledge_dropoff()
-    print_state(sm)  # 'driver_droppedoff'
-    sm.end_trip()
-    print_state(sm)  # 'driver_completed_trip'

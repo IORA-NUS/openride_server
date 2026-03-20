@@ -6,7 +6,7 @@ Worker-level cache for state machine classes with robust definition checking.
 from threading import Lock
 from typing import Any, Dict, Tuple
 
-# Example cache structure: {definition_id: (class_obj, version)}
+ # Example cache structure: {definition_id: (class_obj, version)}
 _cache: Dict[str, Tuple[Any, str]] = {}
 _cache_lock = Lock()
 
@@ -19,7 +19,7 @@ def get_state_machine(definition_id: str, get_definition_func) -> Any:
         definition_id: Unique identifier for the state machine definition.
         get_definition_func: Callable returning (definition, version) from DB.
     Returns:
-        Constructed state machine class.
+        State machine class
     """
     with _cache_lock:
         cached = _cache.get(definition_id)
@@ -44,6 +44,8 @@ def invalidate_state_machine(definition_id: str):
 def construct_state_machine_class(definition: dict) -> Any:
     """
     Construct a state machine class from a definition dict using StateMachineSerializer.
+    Returns:
+        State machine class
     """
     from api.state_machine.state_machine_serializer import StateMachineSerializer
     return StateMachineSerializer.deserialize(definition)

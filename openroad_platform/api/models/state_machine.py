@@ -12,6 +12,7 @@ class StateMachine:
                 'states': {'type': 'list', 'required': True, 'minlength': 1, 'schema': {'type': 'string'}},
                 'transitions': {'type': 'list', 'required': True, 'minlength': 1, 'schema': {'type': 'dict'}},
                 'initial': {'type': 'string', 'required': True},
+                # 'hooks': {'type': 'dict', 'required': False},
             }
         },
         # 'created_at': {'type': 'datetime', 'required': True, 'default': datetime.utcnow},

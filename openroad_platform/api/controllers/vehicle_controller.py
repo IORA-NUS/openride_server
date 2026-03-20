@@ -36,7 +36,6 @@ class VehicleController:
     def validate(cls, document, updates=None):
         ''' '''
         updates = updates or {}
-        # if updates is not None:
 
         statemachine_id = (
             (updates.get('statemachine') or {}).get('id')

@@ -33,7 +33,7 @@ class DriverController:
         statemachine_id = (
             (updates.get('statemachine') or {}).get('id')
             or (document.get('statemachine') or {}).get('id')
-            )
+        )
         if not statemachine_id:
             raise Exception("statemachine_id is required for dynamic loading.")
 
