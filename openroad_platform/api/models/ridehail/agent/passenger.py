@@ -4,6 +4,7 @@ import json
 # from api.utils import Status
 # from .waypoint import WaypointEventSchema
 from api.utils import statemachine_schema, persona_schema
+from api.config import simulation_domains
 
 # from api.state_machine import WorkflowStateMachine
 
@@ -125,7 +126,8 @@ class Passenger:
         'datasource': {
             'source': 'ridehail_passenger',
         },
-        'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/passenger',
+        # 'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/passenger',
+        'url': f"{simulation_domains['ridehail']}/<regex(\"[a-zA-Z0-9_-]*\"):run_id>/passenger",
         'schema': schema,
         # 'auto_add_user': True,
         'mongo_indexes': {

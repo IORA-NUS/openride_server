@@ -40,7 +40,7 @@ class PassengerView:
             Only allows the current user to deregister their own passenger resource.
     """
 
-    blueprint = Blueprint('passenger', __name__, url_prefix='/passenger')
+    # blueprint = Blueprint('passenger', __name__, url_prefix='/passenger')
 
 
     # @classmethod

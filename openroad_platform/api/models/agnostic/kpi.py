@@ -2,6 +2,7 @@ from datetime import datetime
 from api.utils import Status
 from statemachine import State, StateMachine
 
+from api.config import simulation_domains
 # from api.state_machine import RidehailDriverTripStateMachine, RidehailPassengerTripStateMachine
 
 class Kpi:
@@ -55,7 +56,8 @@ class Kpi:
         'datasource': {
             'source': 'kpi',
         },
-        'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/kpi',
+        # 'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/kpi',
+        'url': f"{simulation_domains['ridehail']}/<regex(\"[a-zA-Z0-9_-]*\"):run_id>/kpi",
         'schema': schema,
         'mongo_indexes': {
             'unique_metric_index': (
@@ -76,7 +78,7 @@ class Kpi:
         'datasource': {
             'source': 'kpi',
         },
-        'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/kpi/<regex("[a-zA-Z0-9_-]*"):metric>',
+        'url': f"{simulation_domains['ridehail']}/<regex(\"[a-zA-Z0-9_-]*\"):run_id>/kpi/<regex(\"[a-zA-Z0-9_-]*\"):metric>",
         'schema': schema,
 
         'resource_methods': ['GET', 'POST'],

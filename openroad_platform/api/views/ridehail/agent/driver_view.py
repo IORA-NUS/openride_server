@@ -40,7 +40,7 @@ class DriverView:
         Additional routes and hooks (such as pre_POST_callback and deregister) are present but commented out.
     """
 
-    blueprint = Blueprint('driver', __name__, url_prefix='/driver')
+    # blueprint = Blueprint('driver', __name__, url_prefix='/driver')
 
 
     # @classmethod

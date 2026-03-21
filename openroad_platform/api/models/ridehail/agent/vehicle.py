@@ -2,6 +2,7 @@ from flask import abort, Response
 import json
 
 from api.utils import Status, statemachine_schema, persona_schema
+from api.config import simulation_domains
 # from .waypoint import WaypointEventSchema
 # from api.state_machine import WorkflowStateMachine
 
@@ -182,7 +183,8 @@ class Vehicle:
         'datasource': {
             'source': 'ridehail_vehicle',
         },
-        'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/vehicle',
+        # 'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/vehicle',
+        'url': f"{simulation_domains['ridehail']}/<regex(\"[a-zA-Z0-9_-]*\"):run_id>/vehicle",
         'schema': schema,
         # 'auto_add_user': True,
         'mongo_indexes': {

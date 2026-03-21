@@ -1,7 +1,7 @@
 from datetime import datetime
 from api.utils import Status, statemachine_schema, persona_schema
 # from api.state_machine import RidehailPassengerTripStateMachine
-
+from api.config import simulation_domains
 
 
 class PassengerRideHailTrip:
@@ -191,7 +191,8 @@ class PassengerRideHailTrip:
         'datasource': {
             'source': 'ridehail_passenger_trip',
         },
-        'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/passenger/ride_hail/trip',
+        # 'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/passenger/ride_hail/trip',
+        'url': f"{simulation_domains['ridehail']}/<regex(\"[a-zA-Z0-9_-]*\"):run_id>/passenger/trip",
         'schema': schema,
         # 'auto_add_user': True,
         'mongo_indexes': {
@@ -275,7 +276,8 @@ class PassengerRideHailTrip:
                 ]
             }
         },
-        'url': 'passenger/ride_hail/trip/count_by_state',
+        # 'url': 'passenger/ride_hail/trip/count_by_state',
+        'url': f"{simulation_domains['ridehail']}/<regex(\"[a-zA-Z0-9_-]*\"):run_id>/passenger/trip/count_by_state",
         'pagination': False,
         'allowed_roles': ['admin'],
 
@@ -292,7 +294,8 @@ class PassengerRideHailTrip:
                 ]
             }
         },
-        'url': 'passenger/ride_hail/trip/count_active',
+        # 'url': 'passenger/ride_hail/trip/count_active',
+        'url': f"{simulation_domains['ridehail']}/<regex(\"[a-zA-Z0-9_-]*\"):run_id>/passenger/trip/count_active",
         'pagination': False,
         'allowed_roles': ['admin'],
     }

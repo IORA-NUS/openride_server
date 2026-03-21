@@ -1,6 +1,7 @@
 from flask import abort, Response
 import json
 
+from api.config import simulation_domains
 
 class EngineHistory:
     """
@@ -57,7 +58,8 @@ class EngineHistory:
         'datasource': {
             'source': 'ridehail_engine_history',
         },
-        'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/engine/<regex("[a-f0-9]{24}"):engine>/history',
+        # 'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/engine/<regex("[a-f0-9]{24}"):engine>/history',
+        'url': f"{simulation_domains['ridehail']}/<regex(\"[a-zA-Z0-9_-]*\"):run_id>/engine/<regex(\"[a-f0-9]{24}\"):engine>/history",
         'schema': schema,
         # 'auto_add_user': True,
         'allowed_roles': ['admin'],

@@ -2,6 +2,7 @@ from datetime import datetime
 from api.utils import Status
 from statemachine import State, StateMachine
 
+from api.config import simulation_domains
 # from api.state_machine import RidehailDriverTripStateMachine, RidehailPassengerTripStateMachine
 
 # from trip import TripStates
@@ -166,7 +167,8 @@ class Waypoint:
         'datasource': {
             'source': 'waypoint',
         },
-        'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/waypoint',
+        # 'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/waypoint',
+        'url': f"{simulation_domains['ridehail']}/<regex(\"[a-zA-Z0-9_-]*\"):run_id>/waypoint",
         'schema': schema,
         # 'auto_add_user': True,
         'mongo_indexes': {
@@ -260,7 +262,8 @@ class Waypoint:
         'datasource': {
             'source': 'waypoint',
         },
-        'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/waypoint/<regex("[a-f0-9]{24}"):trip>',
+        # 'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/waypoint/<regex("[a-f0-9]{24}"):trip>',
+        'url': f"{simulation_domains['ridehail']}/<regex(\"[a-zA-Z0-9_-]*\"):run_id>/waypoint/<regex(\"[a-f0-9]{24}\"):trip>",
         'schema': schema,
         # 'auto_add_user': True,
         # 'mongo_indexes': {

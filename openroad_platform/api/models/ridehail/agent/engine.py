@@ -2,6 +2,7 @@ from flask import abort, Response
 import json
 
 from api.utils import persona_schema
+from api.config import simulation_domains
 
 class Engine:
     """
@@ -92,7 +93,8 @@ class Engine:
         'datasource': {
             'source': 'ridehail_engine',
         },
-        'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/engine',
+        'url': f"{simulation_domains['ridehail']}/<regex(\"[a-zA-Z0-9_-]*\"):run_id>/engine",
+        # 'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/engine',
         'schema': schema,
         # 'auto_add_user': True,
         'allowed_roles': ['admin'],

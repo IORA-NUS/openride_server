@@ -1,5 +1,3 @@
-
-
 def get_country_from_location(location):
 
     # if location is None:
@@ -57,3 +55,17 @@ def patch_timestamps(doc, update_only=False):
         else:
             doc['_created'] = sim_clock
             doc['_updated'] = sim_clock
+
+
+def dump_all_routes_to_tmp(app, filename='api/tmp/openroad_routes.txt'):
+    """
+    Writes all registered routes of the Flask/Eve app to a file in /tmp.
+    Args:
+        app: The Flask/Eve app instance.
+        filename: The output file path (default: /tmp/openroad_routes.txt)
+    """
+    with open(filename, 'w') as f:
+        f.write("Registered routes:\n")
+        for rule in app.url_map.iter_rules():
+            methods = ','.join(sorted(rule.methods - {'HEAD', 'OPTIONS'}))
+            f.write(f"{rule.rule:50s} [{methods}] -> {rule.endpoint}\n")

@@ -16,7 +16,7 @@ from eve.auth import auth_field_and_value, requires_auth
 from eve.utils import config
 from eve.render import send_response
 
-
+from api.config import simulation_domains
 
 
 class PassengerRideHailTripView:
@@ -81,7 +81,8 @@ class PassengerRideHailTripView:
 
 class PassengerRideHailTripWorkflowView(FlaskView):
     ''' '''
-    route_prefix = '/<run_id>/passenger/ride_hail/trip/<_id>'
+    # route_prefix = '/<run_id>/passenger/ride_hail/trip/<_id>'
+    route_prefix = f"{simulation_domains['ridehail']}/<run_id>/passenger/trip/<_id>"
     route_base = '/'
     decorators = [requires_auth('ridehail_passenger_trip')]
 

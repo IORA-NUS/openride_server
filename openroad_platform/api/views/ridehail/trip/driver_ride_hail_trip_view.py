@@ -21,7 +21,7 @@ from eve.auth import auth_field_and_value
 
 from eve.methods.patch import patch_internal
 # from api.state_machine import RidehailDriverTripStateMachine
-
+from api.config import simulation_domains
 
 class DriverRideHailTripView:
     ''' '''
@@ -107,7 +107,8 @@ class DriverRideHailTripView:
 
 class DriverRideHailTripWorkflowView(FlaskView):
     ''' '''
-    route_prefix = '/<run_id>/driver/ride_hail/trip'
+    # route_prefix = '/<run_id>/driver/ride_hail/trip'
+    route_prefix = f"{simulation_domains['ridehail']}/<run_id>/driver/trip"
     route_base = '/'
     decorators = [requires_auth('ridehail_driver_trip')]
 

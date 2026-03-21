@@ -6,6 +6,7 @@ import json
 
 # from api.state_machine import WorkflowStateMachine
 from api.utils import statemachine_schema, persona_schema
+from api.config import simulation_domains
 # from statemachine import State, StateMachine
 # from .user import WorkflowStates
 
@@ -191,7 +192,8 @@ class Driver:
         'datasource': {
             'source': 'ridehail_driver',
         },
-        'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/driver',
+        'url': f"{simulation_domains['ridehail']}/<regex(\"[a-zA-Z0-9_-]*\"):run_id>/driver",
+        # 'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/driver',
         'schema': schema,
         # 'auto_add_user': True,
         'mongo_indexes': {

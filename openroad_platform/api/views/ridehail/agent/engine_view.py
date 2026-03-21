@@ -36,7 +36,7 @@ class EngineView:
             Aborts with HTTP 403 on error.
     """
 
-    blueprint = Blueprint('engine', __name__, url_prefix='/engine')
+    # blueprint = Blueprint('engine', __name__, url_prefix='/engine')
 
 
     @classmethod

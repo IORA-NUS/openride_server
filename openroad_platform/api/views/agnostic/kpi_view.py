@@ -20,7 +20,7 @@ from eve.auth import auth_field_and_value
 from datetime import date, datetime, tzinfo, timezone
 from pymongo.cursor import CursorType
 
-
+from api.config import simulation_domains
 
 class KpiView:
     """
@@ -91,7 +91,8 @@ class KpiHistoryView(FlaskView):
         #     (Commented out) Intended to provide a moving average of KPI data within a specified date range.
     """
 
-    route_prefix = '/<run_id>/kpi_history/<metric>'
+    # route_prefix = '/<run_id>/kpi_history/<metric>'
+    route_prefix = f"{simulation_domains['ridehail']}/<run_id>/kpi_history/<metric>"
     route_base = '/'
     decorators = [requires_auth('kpi')]
     db = None

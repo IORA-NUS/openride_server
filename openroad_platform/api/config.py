@@ -1,5 +1,6 @@
 from api.utils import Env
 
+
 DEBUG = Env.bool('DEBUG', True)
 SECRET_KEY = Env.string('SECRET_KEY', 'changeme')
 
@@ -66,4 +67,10 @@ settings = {
 
 }
 
+
+# Simulation domains mapping
+simulation_domains = {
+    'ridehail': 'ridehail-sim',
+    # Add other domains as needed
+}
 

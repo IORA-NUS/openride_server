@@ -32,7 +32,7 @@ class EngineHistoryView:
             exception occurs.
     """
 
-    blueprint = Blueprint('engine_history', __name__, url_prefix='/engine/<engine>/history')
+    # blueprint = Blueprint('engine_history', __name__, url_prefix='/engine/<engine>/history')
 
 
     @classmethod

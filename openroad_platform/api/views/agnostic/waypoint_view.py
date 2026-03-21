@@ -19,6 +19,7 @@ from eve.auth import auth_field_and_value
 from datetime import date, datetime, tzinfo, timezone
 from pymongo.cursor import CursorType
 
+from api.config import simulation_domains
 
 
 class WaypointView:
@@ -101,7 +102,8 @@ class WaypointHistoryView(FlaskView):
         The time range for queries must be provided via 'from' and 'to' query parameters in the format yyyymmddhhmmss.
     """
 
-    route_prefix = '/<run_id>/waypoint_history'
+    # route_prefix = '/<run_id>/waypoint_history'
+    route_prefix = f"{simulation_domains['ridehail']}/<run_id>/waypoint_history"
     route_base = '/'
     decorators = [requires_auth('waypoint')]
     db = None

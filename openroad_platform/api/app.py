@@ -128,6 +128,11 @@ def configure_extensions(app, cli):
 
 def get_settings_with_domain():
 
+    # IMPORTANT NOTE: The order of resources in this DOMAIN dict is critical!
+    # More specific resources (e.g., trip endpoints like /driver/trip/<id>)
+    # must be listed before more generic resources (e.g., /driver/<id>),
+    # to ensure correct routing and avoid conflicts.
+
     settings['DOMAIN'] = {
         'user': User.model,
         # 'register_user': User.registration_model,
@@ -155,7 +160,6 @@ def get_settings_with_domain():
         'run_config': RunConfig.model,
         'statemachine': StateMachine.model,
     }
-
     return settings
 
 def register_blueprints(app):
