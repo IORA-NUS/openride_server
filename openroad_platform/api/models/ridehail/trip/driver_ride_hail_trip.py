@@ -60,7 +60,7 @@ class DriverRideHailTrip:
         'driver': {
             'type': 'objectid',
             'data_relation': {
-                'resource': 'driver',
+                'resource': 'ridehail_driver',
                 'field': '_id',
                 'embeddable': True
             },
@@ -69,7 +69,7 @@ class DriverRideHailTrip:
         'vehicle': {
             'type': 'objectid',
             'data_relation': {
-                'resource': 'vehicle',
+                'resource': 'ridehail_vehicle',
                 'field': '_id'
             },
             'required': True,
@@ -86,16 +86,16 @@ class DriverRideHailTrip:
         'passenger': {
             'type': 'objectid',
             'data_relation': {
-                'resource': 'passenger',
+                'resource': 'ridehail_passenger',
                 'field': '_id'
             },
             'required': False,
         },
 
-        'passenger_ride_hail_trip': {
+        'ridehail_passenger_trip': {
             'type': 'objectid',
             # 'data_relation': {
-            #     'resource': 'passenger_ride_hail_trip',
+            #     'resource': 'ridehail_passenger_trip',
             #     'field': '_id'
             # },
             'required': False,
@@ -259,7 +259,7 @@ class DriverRideHailTrip:
 
     model = {
         'datasource': {
-            'source': 'driver_ride_hail_trip',
+            'source': 'ridehail_driver_trip',
         },
         'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/driver/ride_hail/trip',
         'schema': schema,
@@ -393,7 +393,7 @@ class DriverRideHailTrip:
 
     count_by_state = {
         'datasource': {
-            'source': 'driver_ride_hail_trip',
+            'source': 'ridehail_driver_trip',
             'aggregation': {
                 'pipeline': [
                     {'$match': {'run_id': '$run_id',
@@ -410,7 +410,7 @@ class DriverRideHailTrip:
 
     count_active = {
         'datasource': {
-            'source': 'driver_ride_hail_trip',
+            'source': 'ridehail_driver_trip',
             'aggregation': {
                 'pipeline': [
                     {'$match': {'run_id': '$run_id',

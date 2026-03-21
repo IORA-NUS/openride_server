@@ -45,7 +45,7 @@ class EngineController:
             engine_history['sim_clock'] = document['sim_clock']
 
         try:
-            resp, *other_values =  post_internal('engine_history', engine_history)
+            resp, *other_values =  post_internal('ridehail_engine_history', engine_history)
         except Exception as e:
             logging.error("An error occurred while adding engine history: %s", traceback.format_exc())
 

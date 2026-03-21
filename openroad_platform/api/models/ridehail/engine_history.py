@@ -32,7 +32,7 @@ class EngineHistory:
         'engine': {
             'type': 'objectid',
             'data_relation': {
-                'resource': 'engine',
+                'resource': 'ridehail_engine',
                 'field': '_id'
             },
             'required': True,
@@ -55,7 +55,7 @@ class EngineHistory:
 
     model = {
         'datasource': {
-            'source': 'engine_history',
+            'source': 'ridehail_engine_history',
         },
         'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/engine/<regex("[a-f0-9]{24}"):engine>/history',
         'schema': schema,

@@ -54,7 +54,7 @@ class PassengerRideHailTrip:
         'passenger': {
             'type': 'objectid',
             'data_relation': {
-                'resource': 'passenger',
+                'resource': 'ridehail_passenger',
                 'field': '_id',
                 'embeddable': True
             },
@@ -87,15 +87,15 @@ class PassengerRideHailTrip:
         'driver': {
             'type': 'objectid',
             # 'data_relation': {
-            #     'resource': 'driver',
+            #     'resource': 'ridehail_driver',
             #     'field': '_id'
             # },
             'required': False,
         },
-        'driver_ride_hail_trip': {
+        'ridehail_driver_trip': {
             'type': 'objectid',
             # 'data_relation': {
-            #     'resource': 'driver_ride_hail_trip',
+            #     'resource': 'ridehail_driver_trip',
             #     'field': '_id'
             # },
             'required': False,
@@ -189,7 +189,7 @@ class PassengerRideHailTrip:
 
     model = {
         'datasource': {
-            'source': 'passenger_ride_hail_trip',
+            'source': 'ridehail_passenger_trip',
         },
         'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/passenger/ride_hail/trip',
         'schema': schema,
@@ -266,7 +266,7 @@ class PassengerRideHailTrip:
 
     count_by_state = {
         'datasource': {
-            'source': 'passenger_ride_hail_trip',
+            'source': 'ridehail_passenger_trip',
             'aggregation': {
                 'pipeline': [
                     {'$match': {'run_id': '$run_id',
@@ -283,7 +283,7 @@ class PassengerRideHailTrip:
 
     count_active = {
         'datasource': {
-            'source': 'passenger_ride_hail_trip',
+            'source': 'ridehail_passenger_trip',
             'aggregation': {
                 'pipeline': [
                     {'$match': {'run_id': '$run_id',

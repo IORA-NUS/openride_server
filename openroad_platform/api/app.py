@@ -131,17 +131,17 @@ def get_settings_with_domain():
     settings['DOMAIN'] = {
         'user': User.model,
         # 'register_user': User.registration_model,
-        'driver': Driver.model,
-        'vehicle': Vehicle.model,
-        'passenger': Passenger.model,
+        'ridehail_driver': Driver.model,
+        'ridehail_vehicle': Vehicle.model,
+        'ridehail_passenger': Passenger.model,
 
-        'driver_ride_hail_trip': DriverRideHailTrip.model,
-        'driver_ride_hail_trip_count_by_state': DriverRideHailTrip.count_by_state,
-        'driver_ride_hail_trip_count_active': DriverRideHailTrip.count_active,
+        'ridehail_driver_trip': DriverRideHailTrip.model,
+        'ridehail_driver_trip_count_by_state': DriverRideHailTrip.count_by_state,
+        'ridehail_driver_trip_count_active': DriverRideHailTrip.count_active,
 
-        'passenger_ride_hail_trip': PassengerRideHailTrip.model,
-        'passenger_ride_hail_trip_count_by_state': PassengerRideHailTrip.count_by_state,
-        'passenger_ride_hail_trip_count_active': PassengerRideHailTrip.count_active,
+        'ridehail_passenger_trip': PassengerRideHailTrip.model,
+        'ridehail_passenger_trip_count_by_state': PassengerRideHailTrip.count_by_state,
+        'ridehail_passenger_trip_count_active': PassengerRideHailTrip.count_active,
 
         'waypoint': Waypoint.model,
         'trip_waypoints': Waypoint.trip_waypoints,
@@ -149,8 +149,8 @@ def get_settings_with_domain():
         'kpi': Kpi.model,
         'metric': Kpi.metric,
 
-        'engine': Engine.model,
-        'engine_history': EngineHistory.model,
+        'ridehail_engine': Engine.model,
+        'ridehail_engine_history': EngineHistory.model,
 
         'run_config': RunConfig.model,
         'statemachine': StateMachine.model,
@@ -195,39 +195,39 @@ def register_hooks(app):
     app.on_update_user += UserView.on_update
 
     # app.on_pre_POST_driver += DriverView.pre_POST_callback
-    app.on_insert_driver += DriverView.on_insert
-    app.on_update_driver += DriverView.on_update
+    app.on_insert_ridehail_driver += DriverView.on_insert
+    app.on_update_ridehail_driver += DriverView.on_update
 
     # app.on_pre_POST_passenger += PassengerView.pre_POST_callback
-    app.on_insert_passenger += PassengerView.on_insert
-    app.on_update_passenger += PassengerView.on_update
+    app.on_insert_ridehail_passenger += PassengerView.on_insert
+    app.on_update_ridehail_passenger += PassengerView.on_update
 
-    app.on_insert_vehicle += VehicleView.on_insert
-    app.on_update_vehicle += VehicleView.on_update
+    app.on_insert_ridehail_vehicle += VehicleView.on_insert
+    app.on_update_ridehail_vehicle += VehicleView.on_update
 
-    app.on_insert_driver_ride_hail_trip += DriverRideHailTripView.on_insert
-    app.on_update_driver_ride_hail_trip += DriverRideHailTripView.on_update
-    app.on_inserted_driver_ride_hail_trip += DriverRideHailTripView.on_inserted
-    app.on_updated_driver_ride_hail_trip += DriverRideHailTripView.on_updated
+    app.on_insert_ridehail_driver_trip += DriverRideHailTripView.on_insert
+    app.on_update_ridehail_driver_trip += DriverRideHailTripView.on_update
+    app.on_inserted_ridehail_driver_trip += DriverRideHailTripView.on_inserted
+    app.on_updated_ridehail_driver_trip += DriverRideHailTripView.on_updated
 
-    app.on_insert_passenger_ride_hail_trip += PassengerRideHailTripView.on_insert
-    app.on_update_passenger_ride_hail_trip += PassengerRideHailTripView.on_update
-    app.on_inserted_passenger_ride_hail_trip += PassengerRideHailTripView.on_inserted
-    app.on_updated_passenger_ride_hail_trip += PassengerRideHailTripView.on_updated
+    app.on_insert_ridehail_passenger_trip += PassengerRideHailTripView.on_insert
+    app.on_update_ridehail_passenger_trip += PassengerRideHailTripView.on_update
+    app.on_inserted_ridehail_passenger_trip += PassengerRideHailTripView.on_inserted
+    app.on_updated_ridehail_passenger_trip += PassengerRideHailTripView.on_updated
 
     app.on_insert_waypoint += WaypointView.on_insert
     # app.on_fetched_resource_waypoint += WaypointView.on_fetched
 
     app.on_insert_kpi += KpiView.on_insert
 
-    app.on_insert_engine += EngineView.on_insert
-    app.on_update_engine += EngineView.on_update
-    app.on_updated_engine += EngineView.on_updated
+    app.on_insert_ridehail_engine += EngineView.on_insert
+    app.on_update_ridehail_engine += EngineView.on_update
+    app.on_updated_ridehail_engine += EngineView.on_updated
 
-    app.on_insert_engine_history += EngineHistoryView.on_insert
+    app.on_insert_ridehail_engine_history += EngineHistoryView.on_insert
 
-    app.on_insert_statemachine += StateMachineView.on_insert
-    app.on_update_statemachine += StateMachineView.on_update
+    app.on_insert_ridehail_statemachine += StateMachineView.on_insert
+    app.on_update_ridehail_statemachine += StateMachineView.on_update
 
 
 def register_flask_classful_views(app):

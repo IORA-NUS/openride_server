@@ -83,7 +83,7 @@ class PassengerRideHailTripWorkflowView(FlaskView):
     ''' '''
     route_prefix = '/<run_id>/passenger/ride_hail/trip/<_id>'
     route_base = '/'
-    decorators = [requires_auth('passenger_ride_hail_trip')]
+    decorators = [requires_auth('ridehail_passenger_trip')]
 
 
     def before_patch(self, name, *args, **kwargs):
@@ -101,7 +101,7 @@ class PassengerRideHailTripWorkflowView(FlaskView):
             document = request.json
             PassengerRideHailTripController.validate(document)
         else: # NOTE Include validation for all methods that use PATCH
-            response = get_internal('passenger_ride_hail_trip', **kwargs)
+            response = get_internal('ridehail_passenger_trip', **kwargs)
             # print(response[0])
             document = response[0]['_items'][0] # Raises exception if document is not found.
             updates = request.json
@@ -142,12 +142,12 @@ class PassengerRideHailTripWorkflowView(FlaskView):
             payload['force_quit'] =  True
 
 
-        response = patch_internal('passenger_ride_hail_trip',
+        response = patch_internal('ridehail_passenger_trip',
                                     skip_validation=True, # Done to ensure sim_clock is updatable
                                     payload=payload,
                                     **lookup
                                 )
-        return send_response('passenger_ride_hail_trip', response)
+        return send_response('ridehail_passenger_trip', response)
 
     @route('/state/<state>', methods=['GET'])
     def list_by_state(self, **lookup): #run_id, _id):
@@ -160,13 +160,13 @@ class PassengerRideHailTripWorkflowView(FlaskView):
         projection = json.loads(request.args.get('projection'))
         # print(projection)
 
-        cursor = db['passenger_ride_hail_trip'].find(
+        cursor = db['ridehail_passenger_trip'].find(
             lookup,
             projection=projection
         )
 
         # return jsonify(data), 200
-        return send_response('passenger_ride_hail_trip', (list(cursor), None, None, 200, []))
+        return send_response('ridehail_passenger_trip', (list(cursor), None, None, 200, []))
 
 
 

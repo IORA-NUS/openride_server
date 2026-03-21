@@ -130,7 +130,7 @@ class Vehicle:
             'schema': {
                 'type': 'objectid',
                 'data_relation': {
-                    'resource': 'driver',
+                    'resource': 'ridehail_driver',
                     'field': '_id'
                 },
             },
@@ -180,7 +180,7 @@ class Vehicle:
 
     model = {
         'datasource': {
-            'source': 'vehicle',
+            'source': 'ridehail_vehicle',
         },
         'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/vehicle',
         'schema': schema,

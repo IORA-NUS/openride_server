@@ -109,7 +109,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
     ''' '''
     route_prefix = '/<run_id>/driver/ride_hail/trip'
     route_base = '/'
-    decorators = [requires_auth('driver_ride_hail_trip')]
+    decorators = [requires_auth('ridehail_driver_trip')]
 
 
     def before_patch(self, name, *args, **kwargs):
@@ -121,7 +121,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
             document = request.json
             DriverRideHailTripController.validate(document)
         else: # NOTE Include validation for all methods that use PATCH
-            response = get_internal('driver_ride_hail_trip', **kwargs)
+            response = get_internal('ridehail_driver_trip', **kwargs)
             document = response[0]['_items'][0] # Raises exception if document is not found.
             updates = request.json
             DriverRideHailTripController.validate(document, updates)
@@ -145,12 +145,12 @@ class DriverRideHailTripWorkflowView(FlaskView):
         payload = request.json
         payload['transition'] = lookup.pop('transition')
 
-        response = patch_internal('driver_ride_hail_trip',
+        response = patch_internal('ridehail_driver_trip',
                                     skip_validation=True, # Done to ensure sim_clock is updatable
                                     payload=payload,
                                     **lookup
                                 )
-        return send_response('driver_ride_hail_trip', response)
+        return send_response('ridehail_driver_trip', response)
 
     @route('/state/<state>', methods=['GET'])
     def list_by_state(self, **lookup): #run_id, _id):
@@ -163,19 +163,19 @@ class DriverRideHailTripWorkflowView(FlaskView):
         projection = json.loads(request.args.get('projection'))
         # print(projection)
 
-        cursor = db['driver_ride_hail_trip'].find(
+        cursor = db['ridehail_driver_trip'].find(
             lookup,
             projection=projection
         )
 
         # return jsonify(data), 200
-        return send_response('driver_ride_hail_trip', (list(cursor), None, None, 200, []))
+        return send_response('ridehail_driver_trip', (list(cursor), None, None, 200, []))
 
 # class DriverRideHailTripWorkflowView(FlaskView):
 #     ''' '''
 #     route_prefix = '/<run_id>/driver/ride_hail/trip/<_id>'
 #     route_base = '/'
-#     decorators = [requires_auth('driver_ride_hail_trip')]
+#     decorators = [requires_auth('ridehail_driver_trip')]
 
 
 #     def before_request(self, name, *args, **kwargs):
@@ -195,7 +195,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
 #             document = request.json
 #             DriverRideHailTripController.validate(document)
 #         else: # NOTE Include validation for all methods that use PATCH
-#             response = get_internal('driver_ride_hail_trip', **kwargs)
+#             response = get_internal('ridehail_driver_trip', **kwargs)
 #             # print(response[0])
 #             document = response[0]['_items'][0] # Raises exception if document is not found.
 #             updates = request.json
@@ -222,12 +222,12 @@ class DriverRideHailTripWorkflowView(FlaskView):
 #         payload = request.json
 #         payload['transition'] =  RidehailDriverTripStateMachine.look_for_job.name
 
-#         response = patch_internal('driver_ride_hail_trip',
+#         response = patch_internal('ridehail_driver_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
 #                                     payload=payload,
 #                                     **lookup
 #                                 )
-#         return send_response('driver_ride_hail_trip', response)
+#         return send_response('ridehail_driver_trip', response)
 
 #     @route('/recieve', methods=['PATCH'])
 #     def recieve(self, **lookup): #run_id, _id):
@@ -253,12 +253,12 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload['transition'] =  RidehailDriverTripStateMachine.recieve.name
 
-#         response = patch_internal('driver_ride_hail_trip',
+#         response = patch_internal('ridehail_driver_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
 #                                     payload=payload,
 #                                     **lookup
 #                                 )
-#         return send_response('driver_ride_hail_trip', response)
+#         return send_response('ridehail_driver_trip', response)
 
 #     @route('/confirm', methods=['PATCH'])
 #     def confirm(self, **lookup): #run_id, _id):
@@ -284,12 +284,12 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload['transition'] =  RidehailDriverTripStateMachine.confirm.name
 
-#         response = patch_internal('driver_ride_hail_trip',
+#         response = patch_internal('ridehail_driver_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
 #                                     payload=payload,
 #                                     **lookup
 #                                 )
-#         return send_response('driver_ride_hail_trip', response)
+#         return send_response('ridehail_driver_trip', response)
 
 #     @route('/reject', methods=['PATCH'])
 #     def reject(self, **lookup): #run_id, _id):
@@ -315,12 +315,12 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload['transition'] =  RidehailDriverTripStateMachine.reject.name
 
-#         response = patch_internal('driver_ride_hail_trip',
+#         response = patch_internal('ridehail_driver_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
 #                                     payload=payload,
 #                                     **lookup
 #                                 )
-#         return send_response('driver_ride_hail_trip', response)
+#         return send_response('ridehail_driver_trip', response)
 
 #     @route('/cancel', methods=['PATCH'])
 #     def cancel(self, **lookup): #run_id, _id):
@@ -346,12 +346,12 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload['transition'] =  RidehailDriverTripStateMachine.cancel.name
 
-#         response = patch_internal('driver_ride_hail_trip',
+#         response = patch_internal('ridehail_driver_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
 #                                     payload=payload,
 #                                     **lookup
 #                                 )
-#         return send_response('driver_ride_hail_trip', response)
+#         return send_response('ridehail_driver_trip', response)
 
 #     @route('/passenger_confirmed_trip', methods=['PATCH'])
 #     def passenger_confirmed_trip(self, **lookup): #run_id, _id):
@@ -377,12 +377,12 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload['transition'] =  RidehailDriverTripStateMachine.passenger_confirmed_trip.name
 
-#         response = patch_internal('driver_ride_hail_trip',
+#         response = patch_internal('ridehail_driver_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
 #                                     payload=payload,
 #                                     **lookup
 #                                 )
-#         return send_response('driver_ride_hail_trip', response)
+#         return send_response('ridehail_driver_trip', response)
 
 #     @route('/wait_to_pickup', methods=['PATCH'])
 #     def wait_to_pickup(self, **lookup): #run_id, _id):
@@ -408,12 +408,12 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload['transition'] =  RidehailDriverTripStateMachine.wait_to_pickup.name
 
-#         response = patch_internal('driver_ride_hail_trip',
+#         response = patch_internal('ridehail_driver_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
 #                                     payload=payload,
 #                                     **lookup
 #                                 )
-#         return send_response('driver_ride_hail_trip', response)
+#         return send_response('ridehail_driver_trip', response)
 
 #     @route('/passenger_acknowledge_pickup', methods=['PATCH'])
 #     def passenger_acknowledge_pickup(self, **lookup): #run_id, _id):
@@ -439,12 +439,12 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload['transition'] =  RidehailDriverTripStateMachine.passenger_acknowledge_pickup.name
 
-#         response = patch_internal('driver_ride_hail_trip',
+#         response = patch_internal('ridehail_driver_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
 #                                     payload=payload,
 #                                     **lookup
 #                                 )
-#         return send_response('driver_ride_hail_trip', response)
+#         return send_response('ridehail_driver_trip', response)
 
 #     @route('/move_to_dropoff', methods=['PATCH'])
 #     def move_to_dropoff(self, **lookup): #run_id, _id):
@@ -470,12 +470,12 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload['transition'] =  RidehailDriverTripStateMachine.move_to_dropoff.name
 
-#         response = patch_internal('driver_ride_hail_trip',
+#         response = patch_internal('ridehail_driver_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
 #                                     payload=payload,
 #                                     **lookup
 #                                 )
-#         return send_response('driver_ride_hail_trip', response)
+#         return send_response('ridehail_driver_trip', response)
 
 #     @route('/wait_to_dropoff', methods=['PATCH'])
 #     def wait_to_dropoff(self, **lookup): #run_id, _id):
@@ -501,12 +501,12 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload['transition'] =  RidehailDriverTripStateMachine.wait_to_dropoff.name
 
-#         response = patch_internal('driver_ride_hail_trip',
+#         response = patch_internal('ridehail_driver_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
 #                                     payload=payload,
 #                                     **lookup
 #                                 )
-#         return send_response('driver_ride_hail_trip', response)
+#         return send_response('ridehail_driver_trip', response)
 
 #     @route('/passenger_acknowledge_dropoff', methods=['PATCH'])
 #     def passenger_acknowledge_dropoff(self, **lookup): #run_id, _id):
@@ -532,12 +532,12 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload['transition'] =  RidehailDriverTripStateMachine.passenger_acknowledge_dropoff.name
 
-#         response = patch_internal('driver_ride_hail_trip',
+#         response = patch_internal('ridehail_driver_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
 #                                     payload=payload,
 #                                     **lookup
 #                                 )
-#         return send_response('driver_ride_hail_trip', response)
+#         return send_response('ridehail_driver_trip', response)
 
 #     @route('/end_trip', methods=['PATCH'])
 #     def end_trip(self, **lookup): #run_id, _id):
@@ -563,12 +563,12 @@ class DriverRideHailTripWorkflowView(FlaskView):
 
 #         payload['transition'] =  RidehailDriverTripStateMachine.end_trip.name
 
-#         response = patch_internal('driver_ride_hail_trip',
+#         response = patch_internal('ridehail_driver_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
 #                                     payload=payload,
 #                                     **lookup
 #                                 )
-#         return send_response('driver_ride_hail_trip', response)
+#         return send_response('ridehail_driver_trip', response)
 
 #     @route('/force_quit', methods=['PATCH'])
 #     def force_quit(self, **lookup): #run_id, _id):
@@ -596,13 +596,13 @@ class DriverRideHailTripWorkflowView(FlaskView):
 #         payload['is_active'] =  False
 #         payload['force_quit'] =  True
 
-#         response = patch_internal('driver_ride_hail_trip',
+#         response = patch_internal('ridehail_driver_trip',
 #                                     skip_validation=True, # Done to ensure sim_clock is updatable
 #                                     payload=payload,
 #                                     **lookup
 #                                 )
 
-#         return send_response('driver_ride_hail_trip', response)
+#         return send_response('ridehail_driver_trip', response)
 
 
 
@@ -610,7 +610,7 @@ class DriverRideHailTripWorkflowView(FlaskView):
 #     ''' '''
 #     route_prefix = '/<run_id>/driver/ride_hail/trip'
 #     route_base = '/'
-#     decorators = [requires_auth('driver_ride_hail_trip')]
+#     decorators = [requires_auth('ridehail_driver_trip')]
 
 
 #     @route('/state/<state>', methods=['GET'])
@@ -624,11 +624,11 @@ class DriverRideHailTripWorkflowView(FlaskView):
 #         projection = json.loads(request.args.get('projection'))
 #         # print(projection)
 
-#         cursor = db['driver_ride_hail_trip'].find(
+#         cursor = db['ridehail_driver_trip'].find(
 #             lookup,
 #             projection=projection
 #         )
 
 #         # return jsonify(data), 200
-#         return send_response('driver_ride_hail_trip', (list(cursor), None, None, 200, []))
+#         return send_response('ridehail_driver_trip', (list(cursor), None, None, 200, []))
 

@@ -102,17 +102,17 @@ class DriverRideHailTripController:
 
         else:
             # On Insert, check to ensure Only one active trip is allowed
-            driver_ride_hail_trip = db['driver_ride_hail_trip'].find_one({
+            ridehail_driver_trip = db['ridehail_driver_trip'].find_one({
                                                                     'run_id': document['run_id'],
                                                                     'user': document['user'],
                                                                     'driver': document['driver'],
                                                                     'is_active': True
                                                                 })
 
-            if driver_ride_hail_trip is None:
+            if ridehail_driver_trip is None:
                 document['is_active'] = True
             else:
-                raise Exception(f"Driver cannot have more than one active trip: {driver_ride_hail_trip['_id']}")
+                raise Exception(f"Driver cannot have more than one active trip: {ridehail_driver_trip['_id']}")
 
 
     @classmethod
@@ -183,7 +183,7 @@ class DriverRideHailTripController:
 
         waypoint_id = resp[0]['_id']
 
-        # res = db['driver_ride_hail_trip'].update({'_id': document['_id']},
+        # res = db['ridehail_driver_trip'].update({'_id': document['_id']},
         #                                 {
         #                                     "$inc": {
         #                                         'num_waypoints': 1
@@ -197,7 +197,7 @@ class DriverRideHailTripController:
         #     # print(f"{waypoint=}")
 
         #     if waypoint is not None:
-        #         res = db['driver_ride_hail_trip'].update({'_id': document['_id']},
+        #         res = db['ridehail_driver_trip'].update({'_id': document['_id']},
         #                                         {
         #                                             "$set": {
         #                                                 'stats': waypoint['cumulative_stats'],
@@ -210,7 +210,7 @@ class DriverRideHailTripController:
         waypoint = db['waypoint'].find_one({'_id': waypoint_id})
 
         if waypoint is not None:
-            res = db['driver_ride_hail_trip'].update_one({'_id': document['_id']},
+            res = db['ridehail_driver_trip'].update_one({'_id': document['_id']},
                 {
                     "$set": {
                         'last_waypoint': waypoint

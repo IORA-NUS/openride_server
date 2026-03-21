@@ -106,17 +106,17 @@ class PassengerRideHailTripController:
             #     updates['is_active'] = False
         else:
             # On Insert, check to ensure Only one active trip is allowed
-            passenger_ride_hail_trip = db['passenger_ride_hail_trip'].find_one({
+            ridehail_passenger_trip = db['ridehail_passenger_trip'].find_one({
                                                                         'run_id': document['run_id'],
                                                                         'user': document['user'],
                                                                         'passenger': document['passenger'],
                                                                         'is_active': True
                                                                     })
 
-            if passenger_ride_hail_trip is None:
+            if ridehail_passenger_trip is None:
                 document['is_active'] = True
             else:
-                raise Exception(f"Passenger cannot have more than one active trip: {passenger_ride_hail_trip['_id']}")
+                raise Exception(f"Passenger cannot have more than one active trip: {ridehail_passenger_trip['_id']}")
 
     @classmethod
     def add_waypoint(cls, document, updates={}):
@@ -176,7 +176,7 @@ class PassengerRideHailTripController:
 
         waypoint_id = resp[0]['_id']
 
-        # res = db['passenger_ride_hail_trip'].update({'_id': document['_id']},
+        # res = db['ridehail_passenger_trip'].update({'_id': document['_id']},
         #                                 {
         #                                     "$inc": {
         #                                         'num_waypoints': 1
@@ -190,7 +190,7 @@ class PassengerRideHailTripController:
         #     # print(f"{waypoint=}")
 
         #     if waypoint is not None:
-        #         res = db['passenger_ride_hail_trip'].update({'_id': document['_id']},
+        #         res = db['ridehail_passenger_trip'].update({'_id': document['_id']},
         #                                                 {
         #                                                     "$set": {
         #                                                         'stats': waypoint['cumulative_stats'],
@@ -201,7 +201,7 @@ class PassengerRideHailTripController:
         waypoint = db['waypoint'].find_one({'_id': waypoint_id})
 
         if waypoint is not None:
-            res = db['passenger_ride_hail_trip'].update_one({'_id': document['_id']},
+            res = db['ridehail_passenger_trip'].update_one({'_id': document['_id']},
                 {
                     "$set": {
                         'last_waypoint': waypoint

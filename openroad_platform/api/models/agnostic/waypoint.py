@@ -78,7 +78,7 @@ class Waypoint:
     agent_schema = {
         'type': {
             'type': 'string',
-            'allowed': ['driver', 'passenger'],
+            # 'allowed': ['driver', 'passenger'],
             'required': True,
         },
         'id': {

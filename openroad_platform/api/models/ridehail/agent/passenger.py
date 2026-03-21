@@ -123,7 +123,7 @@ class Passenger:
 
     model = {
         'datasource': {
-            'source': 'passenger',
+            'source': 'ridehail_passenger',
         },
         'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/passenger',
         'schema': schema,

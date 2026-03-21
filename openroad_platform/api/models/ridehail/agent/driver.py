@@ -189,7 +189,7 @@ class Driver:
 
     model = {
         'datasource': {
-            'source': 'driver',
+            'source': 'ridehail_driver',
         },
         'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/driver',
         'schema': schema,

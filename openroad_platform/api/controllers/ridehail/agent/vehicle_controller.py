@@ -60,7 +60,7 @@ class VehicleController:
         try:
             # print(vehicle_id, driver_id)
             # print(WorkflowStates().offline.name)
-            vehicle = app.data.find_one_raw('vehicle', _id=vehicle_id)
+            vehicle = app.data.find_one_raw('ridehail_vehicle', _id=vehicle_id)
             if vehicle is None:
                 raise ValueError(f"Vehicle with ID {vehicle_id} does not exist.")
             # # print(vehicle)

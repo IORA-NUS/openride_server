@@ -106,7 +106,7 @@ class EngineFactory():
         """
 
         db = app.data.driver.db
-        collection = db['engine_history']
+        collection = db['ridehail_engine_history']
         # formula = payload.get('formula')
 
         if len(run_id_list) != 1:
@@ -120,7 +120,7 @@ class EngineFactory():
                 }
             }, {
                 '$lookup': {
-                    'from': 'engine',
+                    'from': 'ridehail_engine',
                     'localField': 'engine',
                     'foreignField': '_id',
                     'as': 'engine'

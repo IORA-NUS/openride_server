@@ -90,7 +90,7 @@ class Engine:
 
     model = {
         'datasource': {
-            'source': 'engine',
+            'source': 'ridehail_engine',
         },
         'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/engine',
         'schema': schema,
