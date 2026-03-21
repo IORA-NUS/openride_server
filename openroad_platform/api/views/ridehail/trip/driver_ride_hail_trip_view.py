@@ -14,7 +14,7 @@ from eve.render import send_response
 from bson.objectid import ObjectId
 
 from api.utils import Status, patch_timestamps
-from api.controllers import DriverRideHailTripController
+from api.controllers.ridehail import DriverRideHailTripController
 
 from eve.methods.get import get_internal
 from eve.auth import auth_field_and_value

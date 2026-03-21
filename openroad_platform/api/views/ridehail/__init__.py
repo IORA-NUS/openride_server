@@ -1,4 +1,4 @@
-# from .auth import *
+# # from .auth import *
 
 # from .driver_view import DriverView
 # from .passenger_view import PassengerView
@@ -13,16 +13,17 @@
 #                         # PassengerRideHailTripCollectionView
 #                         )
 
-from .user_view import UserView #, user_bp
+# from .user_view import UserView #, user_bp
 # from .vehicle_view import VehicleView #, vehicle_bp
 
-from .waypoint_view import WaypointView, WaypointHistoryView
+# from .waypoint_view import WaypointView, WaypointHistoryView
 
 # from .engine_view import EngineView
-# from .engine_history_view import EngineHistoryView
+from .engine_history_view import EngineHistoryView
 
-from .kpi_view import KpiView, KpiHistoryView
+# from .kpi_view import KpiView, KpiHistoryView
 
-from .state_machine_view import StateMachineView
+# from .state_machine_view import StateMachineView
 
-# from .ridehail import *
+from .agent import *
+from .trip import *

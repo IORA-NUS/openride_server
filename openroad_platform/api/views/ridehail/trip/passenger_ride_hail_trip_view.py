@@ -8,7 +8,7 @@ import json, traceback
 from bson.objectid import ObjectId
 
 from api.utils import Status, patch_timestamps
-from api.controllers import PassengerRideHailTripController
+from api.controllers.ridehail import PassengerRideHailTripController
 
 from eve.methods.get import get_internal
 from eve.methods.patch import patch_internal

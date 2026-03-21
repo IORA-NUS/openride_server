@@ -10,33 +10,34 @@ from eve_swagger import get_swagger_blueprint, add_documentation
 from api.extensions import jwt
 
 from api.models import (User,
-                        Driver, #RideHailDriverTrip,
-                        Vehicle,
-                        Passenger, #RideHailPassengerTrip,
+                        # Driver, #RideHailDriverTrip,
+                        # Vehicle,
+                        # Passenger, #RideHailPassengerTrip,
                         Waypoint,
                         Kpi,
-                        Engine, EngineHistory,
-                        DriverRideHailTrip, PassengerRideHailTrip,
+                        # Engine, EngineHistory,
+                        # DriverRideHailTrip, PassengerRideHailTrip,
                         RunConfig,
                         StateMachine
                     )
+from api.models.ridehail import *
 
 from api.views.auth import auth_view
 from api.views.admin import admin_view
 
 from api.views import (UserView, #user_bp,
-                        DriverView, #DriverTripView,
-                        PassengerView, #PassengerTripView,
-                        VehicleView, #vehicle_bp,
+                        # DriverView, #DriverTripView,
+                        # PassengerView, #PassengerTripView,
+                        # VehicleView, #vehicle_bp,
                         WaypointView, WaypointHistoryView,
                         KpiView, KpiHistoryView,
-                        EngineView, EngineHistoryView,
-                        DriverRideHailTripView, PassengerRideHailTripView,
-                        DriverRideHailTripWorkflowView, PassengerRideHailTripWorkflowView,
+                        # EngineView, EngineHistoryView,
+                        # DriverRideHailTripView, PassengerRideHailTripView,
+                        # DriverRideHailTripWorkflowView, PassengerRideHailTripWorkflowView,
                         # DriverRideHailTripCollectionView, PassengerRideHailTripCollectionView,
                         StateMachineView,
                     )
-
+from api.views.ridehail import *
 
 # from api.views import (DriverTripWorkflowView, PassengerTripWorkflowView)
 # from api.views import DriverTripBP

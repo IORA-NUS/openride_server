@@ -5,7 +5,8 @@ import json
 from bson.objectid import ObjectId
 
 from api.utils import Status, patch_timestamps
-from api.controllers import DriverController
+# from api.controllers import DriverController
+from api.controllers.ridehail import DriverController
 # from api.state_machine import RidehailDriverTripStateMachine
 
 from eve.methods.get import get_internal

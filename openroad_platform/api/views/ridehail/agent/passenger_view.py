@@ -5,7 +5,7 @@ import json
 from bson.objectid import ObjectId
 
 from api.utils import Status, patch_timestamps
-from api.controllers import PassengerController
+from api.controllers.ridehail import PassengerController
 
 from eve.methods.get import get_internal
 from eve.auth import auth_field_and_value

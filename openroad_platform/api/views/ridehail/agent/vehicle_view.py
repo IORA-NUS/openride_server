@@ -6,7 +6,7 @@ import json
 # from flask_jwt_extended import get_jwt
 
 from api.utils import Status, patch_timestamps
-from api.controllers import VehicleController
+from api.controllers.ridehail import VehicleController
 
 # vehicle_bp = Blueprint('vehicle', __name__, url_prefix='/vehicle/<_id>')
 
