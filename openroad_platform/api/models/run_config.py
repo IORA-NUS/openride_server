@@ -62,7 +62,7 @@ class RunConfig:
         'datasource': {
             'source': 'run_config',
         },
-        'url': 'run_config',
+        'url': 'run-config',
         'schema': schema,
         'mongo_indexes': {
             'run_id_index': (

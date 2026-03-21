@@ -6,7 +6,7 @@ Registered routes:
 /auth/signup                                       [POST] -> auth.signup
 /auth/login                                        [POST] -> auth.login
 /statemachine                                      [GET,POST] -> statemachine|resource
-/run_config                                        [GET,POST] -> run_config|resource
+/run-config                                        [GET,POST] -> run_config|resource
 /api-docs                                          [GET] -> eve_swagger.index_json
 /user                                              [GET] -> user|resource
 /docs                                              [GET] -> eve_swagger.index
@@ -52,8 +52,8 @@ Registered routes:
 /ridehail-sim/<regex("[a-zA-Z0-9_-]*"):run_id>/kpi [GET,POST] -> kpi|resource
 /statemachine/<regex("[a-f0-9]{24}"):_id>          [GET,PATCH] -> statemachine|item_lookup
 /statemachine/<regex("[a-f0-9]{24}"):_id>          [POST] -> statemachine|item_post_override
-/run_config/<regex("[a-f0-9]{24}"):_id>            [GET,PATCH] -> run_config|item_lookup
-/run_config/<regex("[a-f0-9]{24}"):_id>            [POST] -> run_config|item_post_override
+/run-config/<regex("[a-f0-9]{24}"):_id>            [GET,PATCH] -> run_config|item_lookup
+/run-config/<regex("[a-f0-9]{24}"):_id>            [POST] -> run_config|item_post_override
 /static/<path:filename>                            [GET] -> static
 /user/<regex("[a-f0-9]{24}"):_id>                  [GET,PATCH] -> user|item_lookup
 /user/<regex("[a-f0-9]{24}"):_id>                  [POST] -> user|item_post_override
