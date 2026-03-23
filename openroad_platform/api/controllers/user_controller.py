@@ -28,8 +28,10 @@ class UserController:
                 raise KeyError("The 'state' key is missing in the document.")
 
             machine = UserStateMachine(start_value=document['state'])
-            machine.run(updates.get('transition'))
-            updates['state'] = machine.current_state.identifier
+            # machine.run(updates.get('transition'))
+            getattr(machine, updates.get('transition'))()
+
+            updates['state'] = machine.current_state.name
 
 
     # @classmethod
@@ -37,8 +39,8 @@ class UserController:
     #     ''' '''
     #     try:
     #         print(vehicle_id, driver_id)
-    #         # print(VehicleStates().offline.identifier)
-    #         vehicle = app.data.find_one_raw('vehicle', _id=vehicle_id, state=VehicleStates().offline.identifier)
+    #         # print(VehicleStates().offline.name)
+    #         vehicle = app.data.find_one_raw('vehicle', _id=vehicle_id, state=VehicleStates().offline.name)
     #         # print(vehicle)
     #         driver = app.data.find_one_raw('driver', _id=driver_id)
     #         # print(driver)

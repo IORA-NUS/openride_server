@@ -6,12 +6,13 @@ blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 
 
 from api.utils import plot_state_machine
-from api.state_machine import (RidehailDriverTripStateMachine,
-                    RidehailPassengerTripStateMachine,
-                    WorkflowStateMachine,
+from api.state_machine import (#RidehailDriverTripStateMachine,
+                    # RidehailPassengerTripStateMachine,
+                    # WorkflowStateMachine,
                     UserStateMachine,
-                    HLDeliveryDriverTourStateMachine,
-                    HLDeliveryPackageTripStateMachine)
+                    # HLDeliveryDriverTourStateMachine,
+                    # HLDeliveryPackageTripStateMachine
+                    )
 
 # from api.models import (
 #     UserStates,
@@ -19,7 +20,7 @@ from api.state_machine import (RidehailDriverTripStateMachine,
 #     # DriverTripStates,
 #     PassengerTripStates
 # )
-
+# This should be drprecated and the plotter should also use dynamic statemachines depending on the domain
 @blueprint.route('/plot_state_machines', methods=['POST'])
 def state_machine_plotter():
     """
@@ -33,11 +34,12 @@ def state_machine_plotter():
         tuple: A JSON response with the message 'Success' and HTTP status code 200.
     """
     for sm in [UserStateMachine,
-            WorkflowStateMachine,
-            RidehailDriverTripStateMachine,
-            RidehailPassengerTripStateMachine,
-            HLDeliveryDriverTourStateMachine,
-            HLDeliveryPackageTripStateMachine]:
+            # WorkflowStateMachine,
+            # RidehailDriverTripStateMachine,
+            # RidehailPassengerTripStateMachine,
+            # HLDeliveryDriverTourStateMachine,
+            # HLDeliveryPackageTripStateMachine
+            ]:
         plot_state_machine(sm)
 
     return jsonify('Success'), 200

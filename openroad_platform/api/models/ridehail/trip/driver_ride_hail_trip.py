@@ -1,0 +1,452 @@
+from datetime import datetime
+from api.utils import Status, statemachine_schema, persona_schema
+# from api.state_machine import RidehailDriverTripStateMachine
+from api.config import simulation_domains
+
+class DriverRideHailTrip:
+
+    stats_schema = {
+        'distance': {
+            'type': 'float',
+            'required': True,
+            'default': 0
+        },
+        'duration': {
+            'type': 'float',
+            'required': True,
+            'default': 0
+        },
+        'speed':{
+            'type': 'float',
+            # 'min_value': 0,
+            'required': True,
+            'default': 0
+        }
+    }
+
+    driver_route_types_schema = {
+                'looking_for_job': {
+                    'type': 'dict',
+                    'required': False,
+                },
+                'moving_to_pickup': {
+                    'type': 'dict',
+                    'required': False,
+                },
+                'moving_to_dropoff': {
+                    'type': 'dict',
+                    'required': False,
+                },
+            }
+
+    routes_schema = {
+        'planned': {
+            'type': 'dict',
+            'required': False,
+            'schema': driver_route_types_schema,
+        },
+        'actual': {
+            'type': 'dict',
+            'required': False,
+            'schema': driver_route_types_schema,
+        },
+    }
+
+
+    schema = {
+        'run_id': {
+            'type': 'string',
+            'required': True,
+        },
+        'driver': {
+            'type': 'objectid',
+            'data_relation': {
+                'resource': 'ridehail_driver',
+                'field': '_id',
+                'embeddable': True
+            },
+            'required': True,
+        },
+        'vehicle': {
+            'type': 'objectid',
+            'data_relation': {
+                'resource': 'ridehail_vehicle',
+                'field': '_id'
+            },
+            'required': True,
+        },
+        'current_loc': {
+            'type': 'point',
+            'required': True,
+        },
+        'next_dest_loc': {
+            'type': 'point',
+            'required': True,
+        }, # next_est_loc should always be updated to reflect the current leg of the Driver trip
+
+        'passenger': {
+            'type': 'objectid',
+            'data_relation': {
+                'resource': 'ridehail_passenger',
+                'field': '_id'
+            },
+            'required': False,
+        },
+
+        'ridehail_passenger_trip': {
+            'type': 'objectid',
+            # 'data_relation': {
+            #     'resource': 'ridehail_passenger_trip',
+            #     'field': '_id'
+            # },
+            'required': False,
+        },
+
+
+        'state': {
+            'type': 'string',
+            # 'allowed': [s.name for s in RidehailDriverTripStateMachine().states],
+            # 'default': RidehailDriverTripStateMachine().current_state.name,
+            'required': True,
+            # 'readonly': True
+        },
+        'transition': {
+            'type': 'string',
+            # 'allowed': [t.name for t in RidehailDriverTripStateMachine().events],
+            'required': False,
+        },
+        'feasible_transitions': {
+            'type': 'list',
+            # 'allowed': [t.name for t in RidehailDriverTripStateMachine().events],
+            'default': [],
+            'required': True,
+            'readonly': True
+        },
+
+        # Laden Trip Geolocations
+        # NOTE might extend for multiple Pickup and dropoff
+                # 'start_loc': {
+                #     'type': 'point',
+                #     'required': True,
+                # },
+                # 'end_loc': {
+                #     'type': 'point',
+                #     'required': False,
+                # },
+        'trip_start_loc': {
+            'type': 'point',
+            'required': False,
+        }, # Set to current loc when Driver accepts trip
+        'pickup_loc': {
+            'type': 'point',
+            'required': False,
+        }, # From Passenger trip pickup_loc
+        'dropoff_loc': {
+            'type': 'point',
+            'required': False,
+        },# From Passenger trip dropoff_loc
+
+
+
+        'is_occupied': {
+            # False: No passenger. Driver is moving without any jod on hand.
+            # True: Assigned passenger. Driver is in process of serving the passenger
+            'type': 'boolean',
+            'required': True,
+            'default': False,
+        },
+        'is_active': {
+            # Only one trip can exist with is_active=True
+            'type': 'boolean',
+            # 'readonly': True,
+        },
+
+        'routes': {
+            'type': 'dict',
+            'required': False,
+            'schema': routes_schema,
+        },
+        'traversed_path': {
+            'type': 'list',
+            'required': False,
+            'nullable': True,
+        },
+        # 'current_route_coords': {
+        'projected_path': {
+            'type': 'list',
+            'required': False,
+            'nullable': True,
+        },
+
+        'force_quit': {
+            'type': 'boolean',
+            'required': False,
+            'allowed': [True],
+            'nullable': True,
+        },
+        # 'route_moving_to_pickup': {
+        #     'type': 'dict',
+        #     'required': False,
+        # },
+        # 'route_moving_to_dropoff': {
+        #     'type': 'dict',
+        #     'required': False,
+        # },
+
+        # 'route_off_service': {
+        #     'type': 'dict',
+        #     'required': False,
+        # },
+
+
+        # 'last_known': {
+        #     'type': 'boolean',
+        #     'required': True,
+        # },
+        # 'event': {
+        #     'type': 'dict',
+        #     'schema': event_schema,
+        #     'required': False
+        # },
+        # 'latest_waypoint': {
+        #     'type': 'objectid',
+        #     'required': False,
+        # },
+        # 'stats': {
+        #     'type': 'dict',
+        #     'schema': stats_schema,
+        #     'required': False,
+        #     'readonly': True
+        # },
+        'stats': {
+            'type': 'dict',
+            'required': False,
+            'readonly': True
+        },
+        'last_waypoint': {
+            'type': 'dict',
+            'required': False,
+            'readonly': True
+        },
+        'num_waypoints': {
+            'type': 'integer',
+            # 'default': 0,
+            'readonly': True
+        },
+
+        'statemachine': {
+            'type': 'dict',
+            'schema': statemachine_schema,
+            'required': True,
+            # 'readonly': True,
+        },
+        'persona': {
+            'type': 'dict',
+            'schema': persona_schema,
+            'required': True,
+        },
+
+        'sim_clock': {
+            'type': 'datetime',
+            'required': False
+        },
+
+        'meta': {
+            'type': 'dict',
+            'required': False
+        }
+
+    }
+
+    model = {
+        'datasource': {
+            'source': 'ridehail_driver_trip',
+        },
+        # 'url': '<regex("[a-zA-Z0-9_-]*"):run_id>/driver/ride_hail/trip',
+        'url': f"{simulation_domains['ridehail']}/<regex(\"[a-zA-Z0-9_-]*\"):run_id>/driver/trip",
+        'schema': schema,
+        # 'auto_add_user': True,
+        'mongo_indexes': {
+            'run_id_index':[
+                ('run_id', 1),
+                ('sim_clock', 1),
+                ('is_active', 1),
+            ],
+            'trip_by_user_index':[
+                ('run_id', 1),
+                ('user', 1),
+                ('is_active', 1),
+                ('is_occupied', 1),
+            ],
+            'trip_by_driver_index':[
+                ('run_id', 1),
+                ('driver', 1),
+                ('is_active', 1),
+                ('is_occupied', 1),
+            ],
+            'trip_by_vehicle_index':[
+                ('run_id', 1),
+                ('vehicle', 1),
+                ('is_active', 1),
+                ('is_occupied', 1),
+            ],
+            # 'driver_history_index': [
+            #     ('run_id', 1),
+            #     ('user', 1),
+            #     ('driver', 1),
+            #     ('_created', -1),
+            # ],
+            # 'vehicle_history_index': [
+            #     ('run_id', 1),
+            #     ('user', 1),
+            #     ('vehicle', 1),
+            #     ('driver', 1),
+            #     # ('is_occupied', 1),
+            #     ('_created', -1),
+            # ],
+            # 'passenger_history_index': [
+            #     ('run_id', 1),
+            #     ('user', 1),
+            #     ('passenger', 1),
+            #     ('driver', 1),
+            #     ('_created', -1),
+            # ],
+            # 'driver_trip_occupied_index':[
+            #     ('run_id', 1),
+            #     ('user', 1),
+            #     ('is_occupied', 1),
+            # ],
+            'assignment_index':[
+                ('run_id', 1),
+                ('state', 1),
+                ('is_active', 1),
+                ('is_occupied', 1),
+                ('current_loc', '2dsphere'),
+            ],
+        #    'active_trips_index': [
+        #         ('run_id', 1),
+        #         ('user', 1),
+        #         ('is_active', 1),
+        #     ],
+            'state_loc_index':[
+                ('run_id', 1),
+                ('state', 1),
+                ('current_loc', '2dsphere'),
+            ],
+            'state_index':[
+                ('run_id', 1),
+                ('state', 1),
+                ('sim_clock', 1),
+            ],
+            'state_index':[
+                ('run_id', 1),
+                ('state', 1),
+                ('is_occupied', 1),
+                ('sim_clock', 1),
+            ],
+            # 'driver_distance_index': [
+            #     ('is_occupied', 1),
+            #     ('driver', 1),
+            #     ('stats.distance', -1),
+            # ],
+            # 'vehicle_distance_index': [
+            #     ('is_occupied', 1),
+            #     ('vehicle', 1),
+            #     ('stats.distance', -1),
+            # ],
+            # 'passenger_distance_index': [
+            #     ('passenger', 1),
+            #     ('stats.distance', -1),
+            # ],
+            'current_loc_index': [
+                ('run_id', 1),
+                ('user', 1),
+                ('current_loc', '2dsphere'),
+                ('is_active', 1),
+                # ('_created', -1),
+            ],
+            'pickup_loc_index': [
+                ('run_id', 1),
+                ('user', 1),
+                ('pickup_loc', '2dsphere'),
+                ('is_active', 1),
+                # ('_created', -1),
+            ],
+            'dropoff_loc_index': [
+                ('run_id', 1),
+                ('user', 1),
+                ('dropoff_loc', '2dsphere'),
+                ('is_active', 1),
+                # ('_created', -1),
+            ],
+            'force_quit_trip_index': (
+                [
+                    ('run_id', 1),
+                    ('user', 1),
+                    ('force_quit', 1)
+                    # ('_created', -1),
+                ],
+                {'sparse': True}
+            )
+        },
+        'resource_methods': ['GET', 'POST'],
+        'item_methods': ['GET', 'PATCH'],
+    }
+
+    count_by_state = {
+        'datasource': {
+            'source': 'ridehail_driver_trip',
+            'aggregation': {
+                'pipeline': [
+                    {'$match': {'run_id': '$run_id',
+                                'state': '$state',
+                                'is_occupied': '$is_occupied'}},
+                    {'$count': 'num_trips'}
+                ]
+            }
+        },
+        # 'url': 'driver/ride_hail/trip/count_by_state',
+        'url': f"{simulation_domains['ridehail']}/<regex(\"[a-zA-Z0-9_-]*\"):run_id>/driver/trip/count_by_state",
+        'pagination': False,
+        'allowed_roles': ['admin'],
+    }
+
+    count_active = {
+        'datasource': {
+            'source': 'ridehail_driver_trip',
+            'aggregation': {
+                'pipeline': [
+                    {'$match': {'run_id': '$run_id',
+                                'is_active': '$is_active'}},
+                    {'$count': 'num_trips'}
+                ]
+            }
+        },
+        # 'url': 'driver/ride_hail/trip/count_active',
+        'url': f"{simulation_domains['ridehail']}/<regex(\"[a-zA-Z0-9_-]*\"):run_id>/driver/trip/count_active",
+        'pagination': False,
+        'allowed_roles': ['admin'],
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+# class WaypointEvent(EmbeddedDocument):
+#     location = PointField(required=True)
+#     timestamp = DateTimeField(required=False) #, default=datetime.utcnow)
+#     activity = EnumField(enum=Status, required=False) #, default=ActivityStatus.others)
+
+
+# class WaypointStats(EmbeddedDocument):
+#     distance = IntField(required=True, default=0) # in meters
+#     time = IntField(required=True, default=0) # in seconds
+#     speed = FloatField(required=True, default=0) # m/sec
+

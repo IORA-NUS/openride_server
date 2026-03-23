@@ -5,6 +5,7 @@ from flask import abort, Response
 # from api.utils import Status
 # from api.models import UserStates
 from api.controllers import UserController
+from api.utils import patch_timestamps
 
 # user_bp = Blueprint('user', __name__, url_prefix='/user/<_id>')
 
@@ -46,11 +47,8 @@ class UserView:
         """
         try:
             for document in documents:
-                # UserStates.validate(document)
+                patch_timestamps(document)
                 UserController.validate(document)
-                if document.get('sim_clock') is not None:
-                    document['_created'] = document['sim_clock']
-                    document['_updated'] = document['sim_clock']
         except Exception as e:
             app.logger.error(f"Exception occurred: {e}")
             abort(Response(str(e), status=403))
@@ -68,12 +66,9 @@ class UserView:
         Raises:
             werkzeug.exceptions.HTTPException: If validation fails, aborts the request with a 403 status and logs the exception.
         """
-        # print(f'inside userview.on_update')
         try:
-            # UserStates.validate(document, updates)
+            patch_timestamps(updates, update_only=True)
             UserController.validate(document, updates)
-            if updates.get('sim_clock') is not None:
-                updates['_updated'] = updates['sim_clock']
         except Exception as e:
             app.logger.error(f"Exception occurred: {e}")
             abort(Response(str(e), status=403))

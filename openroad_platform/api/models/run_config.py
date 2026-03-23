@@ -2,7 +2,7 @@ from datetime import datetime
 from api.utils import Status
 from statemachine import State, StateMachine
 
-from api.state_machine import RidehailDriverTripStateMachine, RidehailPassengerTripStateMachine
+# from api.state_machine import RidehailDriverTripStateMachine, RidehailPassengerTripStateMachine
 
 
 class RunConfig:
@@ -62,7 +62,7 @@ class RunConfig:
         'datasource': {
             'source': 'run_config',
         },
-        'url': 'run_config',
+        'url': 'run-config',
         'schema': schema,
         'mongo_indexes': {
             'run_id_index': (

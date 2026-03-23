@@ -48,7 +48,7 @@ class User:
         role (str): User's role, allowed values are 'admin' or 'client'. Defaults to 'client'.
         public_key (str): User's public key. Required.
         state (str): User's current state, allowed values from UserStateMachine. Required, read-only.
-        transition (str): State transition identifier, allowed values from UserStateMachine. Optional.
+        transition (str): State transition name, allowed values from UserStateMachine. Optional.
         sim_clock (datetime): Simulation clock timestamp. Optional.
 
     MongoDB Indexes:
@@ -111,14 +111,14 @@ class User:
         # },
         'state': {
             'type': 'string',
-            'allowed': [s.identifier for s in UserStateMachine().states],
-            'default': UserStateMachine().current_state.identifier,
+            'allowed': [s.name for s in UserStateMachine().states],
+            'default': UserStateMachine().current_state.name,
             'required': True,
             'readonly': True
         },
         'transition': {
             'type': 'string',
-            'allowed': [t.identifier for t in UserStateMachine().transitions],
+            'allowed': [t.name for t in UserStateMachine().events],
             'required': False,
         },
 

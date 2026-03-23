@@ -164,7 +164,7 @@ class TripFactory():
         NOTE:
             This query can be slow and should ideally be moved to a precomputed KPI.
         """
- 
+
         db = app.data.driver.db
         sim_step_size = 30
 
@@ -198,12 +198,12 @@ class TripFactory():
         df = pd.DataFrame(columns=['sim_clock', 'run_id', 'metric', 'value']).astype({'value': 'int32'})
 
         if metric == 'active_driver_count':
-            driver_collection = db.driver_ride_hail_trip
+            driver_collection = db.ridehail_driver_trip
             driver_cursor = driver_collection.aggregate(query)
             docs = list(driver_cursor)
 
         elif metric == 'active_passenger_count':
-            pax_collection = db.passenger_ride_hail_trip
+            pax_collection = db.ridehail_passenger_trip
             pax_cursor = pax_collection.aggregate(query)
             docs = list(pax_cursor)
 
