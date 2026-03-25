@@ -1,5 +1,5 @@
 # using a python small basic image
-FROM python:3.12-slim
+FROM python:3.10
 # set environment variables
 ENV DOCKER=true
 ENV MONGODB_HOST=host.docker.internal
@@ -7,9 +7,16 @@ ENV MONGODB_HOST=host.docker.internal
 EXPOSE 11655
 # creates a dir for our application
 WORKDIR /app
+# install build dependencies needed for packages with C extensions
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    python3-dev \
+    && rm -rf /var/lib/apt/lists/*
 # copy our requirements.txt file and install dependencies
+RUN pip install --upgrade pip setuptools wheel importlib-metadata
+RUN python -c "import pkg_resources; pkg_resources.working_set" || true
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 # copy the rest of our application
 COPY . /app
 # run the application
