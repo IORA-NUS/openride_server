@@ -88,6 +88,7 @@ class PassengerRideHailTripController:
 
                 updates['state'] = machine.current_state.name
                 updates['feasible_transitions'] = [t.name for t in machine.allowed_events]
+                # NOTE feasible_transitions is weird in the DB
                 # Final state check
                 if getattr(machine.current_state, 'final', False):
                     updates['is_active'] = False

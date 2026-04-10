@@ -98,6 +98,7 @@ class Passenger:
         'profile': {
             'type': 'dict',
             'schema': profile_schema,
+            'allow_unknown': True,
             'required': True,
         },
 
