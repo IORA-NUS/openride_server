@@ -7,13 +7,26 @@ services:
         volumes:
             - mongo_data:/data/db
         stop_grace_period: 30s
+        ulimits:
+            nofile:
+                soft: 65535
+                hard: 65535
 
     api:
         build: openroad_platform
         environment:
             - MONGODB_HOST=mongodb
+            # Cap PyMongo pool per gunicorn worker to avoid exhausting MongoDB fds under load
+            - MONGO_MAX_POOL_SIZE=25
+        ulimits:
+            nofile:
+                soft: 65535
+                hard: 65535
         depends_on:
             - mongodb
+        networks:
+            - kafka_bridge
+            - default
 
     analytics:
         build: openroad_analytics
@@ -21,16 +34,30 @@ services:
             - 11655:11655
         environment:
             - MONGODB_HOST=mongodb
+        ulimits:
+            nofile:
+                soft: 65535
+                hard: 65535
         depends_on:
             - mongodb
-
+        networks:
+            - kafka_bridge
+            - default
     nginx:
         container_name: nginx
         build: nginx
         ports:
             - 11654:11654
+        ulimits:
+            nofile:
+                soft: 65535
+                hard: 65535
         depends_on:
             - api
+        networks:
+            - kafka_bridge
+            - default
+
     
     osrm-extract:
         image: osrm/osrm-backend
@@ -74,3 +101,9 @@ services:
 
 volumes:
     mongo_data:
+    kafka_data:
+
+networks:
+    kafka_bridge:
+        external: true
+        name: kafka-server-bridge

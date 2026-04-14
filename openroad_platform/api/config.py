@@ -11,6 +11,8 @@ SECRET_KEY = Env.string('SECRET_KEY', 'changeme')
 MONGODB_HOST = Env.string('MONGODB_HOST', 'localhost')
 MONGODB_PORT = Env.int('MONGODB_PORT', 27017)
 MONGODB_NAME = Env.string('MONGODB_NAME', 'OpenRoadDB')
+# Per-process cap for PyMongo (gunicorn runs multiple workers; each has its own client)
+MONGO_MAX_POOL_SIZE = Env.int('MONGO_MAX_POOL_SIZE', 25)
 # MONGODB_NAME = Env.string('MONGODB_NAME', 'OpenRoadDB_20211124')
 
 # MONGODB_SETTINGS = [{
@@ -54,6 +56,12 @@ settings = {
     'MONGO_HOST': MONGODB_HOST,
     'MONGO_PORT': MONGODB_PORT,
     'MONGO_DBNAME': MONGODB_NAME,
+    'MONGO_OPTIONS': {
+        'maxPoolSize': MONGO_MAX_POOL_SIZE,
+        'minPoolSize': 0,
+        'serverSelectionTimeoutMS': 10_000,
+        'connectTimeoutMS': 10_000,
+    },
 
     # Swagger documentation
     'SWAGGER_INFO': SWAGGER_INFO,

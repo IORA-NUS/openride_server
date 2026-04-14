@@ -57,7 +57,10 @@ class WaypointController:
                     distance = LineString(traversed_path).length
                     # print(f"{distance=}")
                 except:
-                    distance = hs.haversine(prev_waypoint['event']['location']['coordinates'][:2], document['event']['location']['coordinates'][:2], unit=hs.Unit.METERS)
+                    prev_coords = prev_waypoint['event']['location']['coordinates'][:2]
+                    curr_coords = document['event']['location']['coordinates'][:2]
+                    # GeoJSON is [lon, lat], haversine expects (lat, lon)
+                    distance = hs.haversine((prev_coords[1], prev_coords[0]), (curr_coords[1], curr_coords[0]), unit=hs.Unit.METERS)
 
                 duration = (document['_created'].replace(tzinfo=None) - prev_waypoint['_created'].replace(tzinfo=None)).total_seconds()
                 # print(document['_created'], prev_waypoint['_created'].replace(tzinfo=None), duration)
