@@ -21,6 +21,7 @@ from api.models import (User,
                         StateMachine
                     )
 from api.models.ridehail import *
+from api.models.container_logistics import *
 
 from api.views.auth import auth_view
 from api.views.admin import admin_view
@@ -38,6 +39,7 @@ from api.views import (UserView, #user_bp,
                         StateMachineView,
                     )
 from api.views.ridehail import *
+from api.views.container_logistics import *
 
 # from api.views import (DriverTripWorkflowView, PassengerTripWorkflowView)
 # from api.views import DriverTripBP
@@ -157,6 +159,14 @@ def get_settings_with_domain():
         'ridehail_engine': Engine.model,
         'ridehail_engine_history': EngineHistory.model,
 
+        # --- Container logistics (truck-only initial support) ---
+        # Order matters: trip endpoints before base resource endpoints.
+        'container_logistics_haul_trip': HaulTrip.model,
+        'container_logistics_truck': Truck.model,
+        'container_logistics_truck_idle_trip': TruckIdleTrip.model,
+        'container_logistics_order': Order.model,
+        'container_logistics_facility': Facility.model,
+
         'run_config': RunConfig.model,
         'statemachine': StateMachine.model,
     }
@@ -233,6 +243,22 @@ def register_hooks(app):
     app.on_insert_ridehail_statemachine += StateMachineView.on_insert
     app.on_update_ridehail_statemachine += StateMachineView.on_update
 
+    # Container logistics hooks
+    app.on_insert_container_logistics_truck += TruckView.on_insert
+    app.on_update_container_logistics_truck += TruckView.on_update
+
+    app.on_insert_container_logistics_haul_trip += HaulTripView.on_insert
+    app.on_update_container_logistics_haul_trip += HaulTripView.on_update
+
+    app.on_insert_container_logistics_truck_idle_trip += TruckIdleTripView.on_insert
+    app.on_update_container_logistics_truck_idle_trip += TruckIdleTripView.on_update
+
+    app.on_insert_container_logistics_order += OrderView.on_insert
+    app.on_update_container_logistics_order += OrderView.on_update
+
+    app.on_insert_container_logistics_facility += FacilityView.on_insert
+    app.on_update_container_logistics_facility += FacilityView.on_update
+
 
 def register_flask_classful_views(app):
     ''' '''
@@ -241,6 +267,10 @@ def register_flask_classful_views(app):
 
     PassengerRideHailTripWorkflowView.register(app)
     # PassengerRideHailTripCollectionView.register(app)
+
+    HaulTripWorkflowView.register(app)
+    OrderWorkflowView.register(app)
+    FacilityWorkflowView.register(app)
 
     WaypointHistoryView.register(app)
     KpiHistoryView.register(app)

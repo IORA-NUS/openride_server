@@ -79,6 +79,6 @@ settings = {
 # Simulation domains mapping
 simulation_domains = {
     'ridehail': 'ridehail-sim',
-    # Add other domains as needed
+    'container_logistics': 'container-logistics-sim',
 }
 

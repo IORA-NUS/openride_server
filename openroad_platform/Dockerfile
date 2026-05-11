@@ -21,5 +21,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app
 # COPY . .
 # run the application
-# CMD gunicorn --statsd-host=localhost:9125 --statsd-prefix=helloworld --log-level=INFO --limit-request-line 0 --workers 8 --worker-class eventlet  --bind 0.0.0.0:11654 wsgi:app --reload
-CMD gunicorn --log-level=WARNING --limit-request-line 0 --workers 8 --worker-class eventlet  --bind 0.0.0.0:11654 wsgi:app --reload
+# Default to sync worker for compatibility across gunicorn builds.
+# (Some environments do not provide the "eventlet" worker entrypoint.)
+CMD gunicorn --log-level=WARNING --limit-request-line 0 --workers 4 --bind 0.0.0.0:11654 wsgi:app --reload
